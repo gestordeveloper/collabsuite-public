@@ -1,0 +1,85 @@
+/* Background music: the "Música" tab and the music layers of the timeline (js/music.js) */
+
+/* ---- Timeline lanes ---- */
+.track-music { height: var(--music-lane-h, 44px); }
+.track-music .track-content { overflow: hidden; }
+.track-music .track-label { flex-direction: column; gap: 2px; padding: 0 4px; cursor: pointer; border-left: 3px solid transparent; box-sizing: border-box; }
+.track-music.active .track-label { border-left-color: var(--mc); color: var(--text-primary); }
+.track-music .tl-name { font-size: 9px; white-space: nowrap; }
+.tl-mute { background: transparent; border: 0; padding: 0; font-size: 11px; line-height: 1; cursor: pointer; opacity: 0.85; }
+.tl-mute:hover { opacity: 1; }
+.track-music.muted .music-clip { opacity: 0.38; filter: grayscale(0.7); }
+
+.music-clip {
+  position: absolute; top: 3px; height: calc(var(--music-lane-h, 44px) - 6px);
+  background: color-mix(in srgb, var(--mc) 16%, var(--surface-0)); border: 1.5px solid var(--mc); border-radius: var(--radius-xs);
+  overflow: hidden; cursor: grab; box-sizing: border-box; user-select: none;
+}
+.music-clip:hover { background: color-mix(in srgb, var(--mc) 24%, var(--surface-0)); }
+.music-clip.selected { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); z-index: 5; }
+.music-clip.missing { background: repeating-linear-gradient(45deg, #2a1416, #2a1416 6px, #1c0d0f 6px, #1c0d0f 12px); border-color: var(--danger); }
+.mc-wave { position: absolute; top: 0; left: 0; display: block; pointer-events: none; }
+.mc-label {
+  position: absolute; top: 2px; left: 10px; right: 10px; font-family: var(--font-mono); font-size: 9px; font-weight: 500; color: #fff;
+  text-shadow: 0 1px 2px #000, 0 0 3px #000; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; pointer-events: none;
+}
+.mc-handle { position: absolute; top: 0; width: 7px; height: 100%; background: rgba(255, 255, 255, 0.16); cursor: ew-resize; z-index: 3; }
+.mc-handle:hover { background: var(--accent); }
+.mc-handle.left { left: 0; }
+.mc-handle.right { right: 0; }
+.mc-fade {
+  position: absolute; bottom: 2px; width: 9px; height: 9px; border-radius: 2px; background: #fff; border: 1px solid rgba(0, 0, 0, 0.6);
+  cursor: ew-resize; z-index: 4; opacity: 0; transition: opacity var(--transition-fast);
+}
+.music-clip:hover .mc-fade, .music-clip.selected .mc-fade { opacity: 0.9; }
+.music-clip.tiny .mc-label, .music-clip.tiny .mc-handle, .music-clip.tiny .mc-fade { display: none; }
+
+/* ---- Panel ---- */
+.music-layer { border: 1px solid var(--border-subtle); border-left: 3px solid var(--mc); border-radius: var(--radius-sm); padding: 8px 10px; margin-bottom: 8px; background: var(--bg-surface); cursor: pointer; }
+.music-layer.active { border-color: var(--mc); background: color-mix(in srgb, var(--mc) 8%, var(--bg-surface)); }
+.music-layer.muted { opacity: 0.6; }
+.ml-head { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
+.ml-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--mc); flex-shrink: 0; }
+.ml-name { flex: 1; min-width: 0; padding: 4px 8px; font-size: 12px; }
+.ml-btn { background: transparent; border: 0; cursor: pointer; font-size: 14px; padding: 2px 4px; opacity: 0.8; }
+.ml-btn:hover { opacity: 1; }
+.music-layer .grade-row { margin-bottom: 0; }
+
+.mclip-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px; font-size: 13px; }
+.mclip-head strong { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mclip-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 10px; }
+.mclip-grid .text-input { width: 100%; box-sizing: border-box; padding: 6px 6px; }
+.mclip-grid label { font-size: 10px; line-height: 1.2; min-height: 24px; }
+
+.music-list { display: flex; flex-direction: column; gap: 6px; margin: 6px 0; max-height: 330px; overflow-y: auto; padding-right: 2px; scrollbar-width: thin; scrollbar-color: var(--gray-700) transparent; }
+.mrow-lic { margin-top: 2px; }
+.mrow-lic .mbadge { display: inline-block; white-space: nowrap; margin-left: 0; }
+.mrow { display: grid; grid-template-columns: 30px 1fr; gap: 4px 8px; align-items: center; padding: 8px; border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); background: var(--bg-surface); }
+.mrow.used { border-color: rgba(155, 123, 255, 0.45); }
+.mrow-play { width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--border-medium); background: transparent; color: var(--text-primary); cursor: pointer; font-size: 12px; }
+.mrow-play:hover, .mrow-play.playing { background: var(--accent); border-color: var(--accent); }
+.mrow-info { min-width: 0; }
+.mrow-title { font-size: 12px; font-weight: 600; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mrow-meta { font-size: 10px; color: var(--text-muted); line-height: 1.5; }
+.mrow-actions { grid-column: 2; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.mrow-del { margin-left: auto; background: transparent; border: 0; cursor: pointer; font-size: 13px; opacity: 0.6; }
+.mrow-del:hover { opacity: 1; }
+.mbadge { font-size: 9px; padding: 1px 5px; margin-left: 4px; }
+.mbadge.credit { background: var(--warning-soft); color: var(--warning); }
+.mbadge.free { background: var(--success-soft); color: var(--success); }
+.mbadge.used { background: var(--violet-soft); color: var(--violet); }
+.field-hint.warn { color: var(--warning); }
+
+.music-search { display: flex; flex-direction: column; gap: 8px; border: 1px dashed var(--border-medium); border-radius: var(--radius-sm); padding: 10px; margin: 8px 0; }
+.music-search .seg-toggle { margin-bottom: 0; }
+.music-search .seg-toggle button { font-size: 11px; }
+.ms-row { display: flex; gap: 6px; }
+.ms-row .text-input { flex: 1; min-width: 0; }
+.ms-chips { display: flex; flex-wrap: wrap; gap: 5px; }
+.ms-chip { background: transparent; border: 1px solid var(--border-medium); color: var(--text-secondary); border-radius: var(--radius-full); padding: 3px 9px; font-size: 11px; cursor: pointer; font-family: inherit; }
+.ms-chip:hover { color: var(--text-primary); }
+.ms-chip.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+#music-credits { width: 100%; box-sizing: border-box; resize: vertical; font-size: 11px; line-height: 1.45; }
+.ml-btn, .tl-mute, .mrow-del { color: var(--text-secondary); }
+.ml-btn:hover, .tl-mute:hover, .mrow-del:hover { color: var(--text-primary); }
+.tl-mute { display: inline-flex; }

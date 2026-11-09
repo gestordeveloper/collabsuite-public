@@ -1,0 +1,52 @@
+/* Motion graphics (Remotion): the "Motion" tab and its single lane in the timeline (js/motion.js) */
+
+:root { --motion-color: var(--info); }
+
+/* ---- Timeline lane ---- */
+.track-motion { height: var(--music-lane-h, 44px); }
+.track-motion .track-content { overflow: hidden; }
+.track-motion .track-label { flex-direction: column; gap: 2px; padding: 0 4px; box-sizing: border-box; border-left: 3px solid var(--motion-color); }
+.track-motion .tl-name { font-size: 9px; white-space: nowrap; color: var(--motion-color); }
+
+.motion-clip {
+  position: absolute; top: 3px; height: calc(var(--music-lane-h, 44px) - 6px);
+  background: color-mix(in srgb, var(--motion-color) 16%, var(--surface-0)); border: 1.5px solid var(--motion-color);
+  border-radius: var(--radius-xs); overflow: hidden; cursor: grab; box-sizing: border-box; user-select: none;
+}
+.motion-clip:hover { background: color-mix(in srgb, var(--motion-color) 24%, var(--surface-0)); }
+.motion-clip.selected { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); z-index: 5; }
+.motion-clip.mo-not-ready { background: repeating-linear-gradient(45deg, color-mix(in srgb, var(--motion-color) 10%, var(--surface-0)), color-mix(in srgb, var(--motion-color) 10%, var(--surface-0)) 6px, var(--surface-0) 6px, var(--surface-0) 12px); }
+.motion-clip.tiny .mc-label, .motion-clip.tiny .mc-handle { display: none; }
+
+/* ---- Panel: item list ---- */
+.motion-row { display: flex; align-items: center; gap: 6px; border: 1px solid var(--border-subtle); border-left: 3px solid var(--motion-color); border-radius: var(--radius-sm); padding: 7px 9px; margin-bottom: 6px; background: var(--bg-surface); cursor: pointer; }
+.motion-row.active { border-color: var(--motion-color); background: color-mix(in srgb, var(--motion-color) 8%, var(--bg-surface)); }
+.mo-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--motion-color); flex-shrink: 0; }
+.mo-row-name { flex: 1; min-width: 0; font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mo-status { font-size: 9px; }
+.mo-status-done { background: var(--success-soft); color: var(--success); }
+.mo-status-error { background: var(--danger-soft); color: var(--danger); }
+.mo-status-rendering, .mo-status-queued { background: var(--warning-soft); color: var(--warning); }
+
+/* ---- Panel: selected item ---- */
+#motion-item-box .mclip-head strong { color: var(--motion-color); }
+#motion-props input[type="color"] { width: 46px; height: 30px; padding: 2px; border-radius: var(--radius-xs); border: 1px solid var(--border-medium); background: transparent; cursor: pointer; }
+#motion-scope-toggle, #motion-clip-pick-box { margin-top: 6px; }
+
+/* ---- Live preview (js/motionplayer.js): @remotion/player over the video, same slot convention as
+   #live-headline/#live-subtitles (position:absolute; inset:0; pointer-events:none). ---- */
+.motion-preview-layer { position: absolute; inset: 0; pointer-events: none; z-index: 1; }
+.motion-preview-item { position: absolute; inset: 0; width: 100%; height: 100%; overflow: hidden; }
+.motion-preview-item iframe { border: 0; }
+
+/* Items that follow a face / hand / point: shifted by the live preview (js/motiontrack.js) */
+.motion-preview-item { will-change: transform; }
+
+/* "Escolher no vídeo": a click-catching layer over the picture while the user points at what to follow */
+.motion-pick-layer { position: absolute; inset: 0; z-index: 9; cursor: crosshair; background: rgba(0, 0, 0, .18); outline: 2px dashed var(--accent); outline-offset: -3px; }
+.motion-pick-hint { position: absolute; left: 50%; top: 10px; transform: translateX(-50%); padding: 5px 12px; border-radius: 999px; background: var(--accent); color: #fff; font-size: 12px; font-weight: 600; pointer-events: none; white-space: nowrap; }
+#motion-create-text { width: 100%; resize: vertical; min-height: 54px; font-family: inherit; }
+#motion-follow-box { margin-top: 12px; }
+#motion-follow-target button:disabled { opacity: .4; cursor: not-allowed; }
+
+.mo-code { width: 100%; font-family: Consolas, 'Courier New', monospace; font-size: 11px; line-height: 1.35; resize: vertical; white-space: pre; }

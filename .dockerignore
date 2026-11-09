@@ -1,0 +1,14 @@
+node_modules
+dist
+.git
+.env
+.env.local
+*.log
+npm-debug.log*
+.DS_Store
+uploads
+studiox/.venv
+studiox/storage
+studiox/motion/node_modules
+studiox/motion/.bundle
+**/__pycache__

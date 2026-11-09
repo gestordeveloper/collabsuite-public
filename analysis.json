@@ -1,0 +1,822 @@
+[
+  {
+    "file": "src/components/common/EmojiPicker.tsx",
+    "line": 36,
+    "reasons": "bg-white without dark:bg-, light border without dark:border-"
+  },
+  {
+    "file": "src/components/common/EmojiPicker.tsx",
+    "line": 45,
+    "reasons": "bg-slate-100 without dark:bg-"
+  },
+  {
+    "file": "src/components/common/Modal.tsx",
+    "line": 22,
+    "reasons": "bg-white without dark:bg-, light border without dark:border-"
+  },
+  {
+    "file": "src/components/common/Modal.tsx",
+    "line": 26,
+    "reasons": "bg-slate-50 without dark:bg-"
+  },
+  {
+    "file": "src/components/dashboard/NewDashboardView.tsx",
+    "line": 157,
+    "reasons": "bg-white without dark:bg-"
+  },
+  {
+    "file": "src/components/dashboard/NewDashboardView.tsx",
+    "line": 158,
+    "reasons": "bg-white without dark:bg-"
+  },
+  {
+    "file": "src/components/dashboard/NewDashboardView.tsx",
+    "line": 176,
+    "reasons": "bg-slate-100 without dark:bg-"
+  },
+  {
+    "file": "src/components/dashboard/NewDashboardView.tsx",
+    "line": 188,
+    "reasons": "bg-slate-100 without dark:bg-"
+  },
+  {
+    "file": "src/components/dashboard/NewDashboardView.tsx",
+    "line": 240,
+    "reasons": "bg-slate-50 without dark:bg-"
+  },
+  {
+    "file": "src/components/editor/nodes/CommentThread.tsx",
+    "line": 32,
+    "reasons": "bg-slate-50 without dark:bg-, light border without dark:border-"
+  },
+  {
+    "file": "src/components/editor/nodes/CommentThread.tsx",
+    "line": 51,
+    "reasons": "dark text without dark:text-"
+  },
+  {
+    "file": "src/components/editor/nodes/CommentThread.tsx",
+    "line": 67,
+    "reasons": "bg-white without dark:bg-, light border without dark:border-"
+  },
+  {
+    "file": "src/components/editor/nodes/TaskChecklist.tsx",
+    "line": 36,
+    "reasons": "bg-white without dark:bg-, light border without dark:border-"
+  },
+  {
+    "file": "src/components/editor/nodes/TaskChecklist.tsx",
+    "line": 52,
+    "reasons": "bg-slate-50 without dark:bg-"
+  },
+  {
+    "file": "src/components/editor/SlashMenu.tsx",
+    "line": 130,
+    "reasons": "bg-white without dark:bg-, light border without dark:border-"
+  },
+  {
+    "file": "src/components/editor/SlashMenu.tsx",
+    "line": 143,
+    "reasons": "bg-slate-100 without dark:bg-"
+  },
+  {
+    "file": "src/components/kanban/KanbanColumn.tsx",
+    "line": 33,
+    "reasons": "light border without dark:border-"
+  },
+  {
+    "file": "src/components/kanban/TaskCard.tsx",
+    "line": 79,
+    "reasons": "bg-slate-100 without dark:bg-"
+  },
+  {
+    "file": "src/components/layout/Header.tsx",
+    "line": 18,
+    "reasons": "bg-white without dark:bg-, light border without dark:border-"
+  },
+  {
+    "file": "src/components/layout/Header.tsx",
+    "line": 27,
+    "reasons": "bg-slate-50 without dark:bg-, light border without dark:border-"
+  },
+  {
+    "file": "src/components/layout/Header.tsx",
+    "line": 33,
+    "reasons": "bg-slate-100 without dark:bg-, light border without dark:border-"
+  },
+  {
+    "file": "src/components/layout/Header.tsx",
+    "line": 41,
+    "reasons": "bg-slate-100 without dark:bg-"
+  },
+  {
+    "file": "src/components/layout/Header.tsx",
+    "line": 53,
+    "reasons": "bg-white without dark:bg-, light border without dark:border-"
+  },
+  {
+    "file": "src/components/layout/Header.tsx",
+    "line": 56,
+    "reasons": "dark text without dark:text-"
+  },
+  {
+    "file": "src/components/modals/EditProjectModal.tsx",
+    "line": 34,
+    "reasons": "dark text without dark:text-"
+  },
+  {
+    "file": "src/components/modals/EditProjectModal.tsx",
+    "line": 41,
+    "reasons": "light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/EditProjectModal.tsx",
+    "line": 46,
+    "reasons": "light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/EditProjectModal.tsx",
+    "line": 60,
+    "reasons": "bg-white without dark:bg-"
+  },
+  {
+    "file": "src/components/modals/EditProjectModal.tsx",
+    "line": 66,
+    "reasons": "bg-slate-50 without dark:bg-, light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/ManageMembersModal.tsx",
+    "line": 76,
+    "reasons": "dark text without dark:text-"
+  },
+  {
+    "file": "src/components/modals/ManageMembersModal.tsx",
+    "line": 89,
+    "reasons": "bg-white without dark:bg-, light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/ManageMembersModal.tsx",
+    "line": 110,
+    "reasons": "light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/ManageMembersModal.tsx",
+    "line": 117,
+    "reasons": "bg-slate-50 without dark:bg-, light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/ManageMembersModal.tsx",
+    "line": 125,
+    "reasons": "dark text without dark:text-"
+  },
+  {
+    "file": "src/components/modals/ManageMembersModal.tsx",
+    "line": 148,
+    "reasons": "bg-slate-50 without dark:bg-, light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/NewProjectModal.tsx",
+    "line": 30,
+    "reasons": "dark text without dark:text-"
+  },
+  {
+    "file": "src/components/modals/NewProjectModal.tsx",
+    "line": 38,
+    "reasons": "light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/NewProjectModal.tsx",
+    "line": 43,
+    "reasons": "light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/NewProjectModal.tsx",
+    "line": 52,
+    "reasons": "bg-slate-50 without dark:bg-, light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/NewStageModal.tsx",
+    "line": 30,
+    "reasons": "dark text without dark:text-"
+  },
+  {
+    "file": "src/components/modals/NewStageModal.tsx",
+    "line": 38,
+    "reasons": "light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/NewStageModal.tsx",
+    "line": 42,
+    "reasons": "bg-slate-50 without dark:bg-, light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/NewTaskModal.tsx",
+    "line": 47,
+    "reasons": "dark text without dark:text-"
+  },
+  {
+    "file": "src/components/modals/NewTaskModal.tsx",
+    "line": 53,
+    "reasons": "bg-slate-100 without dark:bg-"
+  },
+  {
+    "file": "src/components/modals/NewTaskModal.tsx",
+    "line": 57,
+    "reasons": "bg-white without dark:bg-, dark text without dark:text-"
+  },
+  {
+    "file": "src/components/modals/NewTaskModal.tsx",
+    "line": 64,
+    "reasons": "bg-white without dark:bg-, dark text without dark:text-"
+  },
+  {
+    "file": "src/components/modals/NewTaskModal.tsx",
+    "line": 76,
+    "reasons": "light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/NewTaskModal.tsx",
+    "line": 81,
+    "reasons": "light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/NewTaskModal.tsx",
+    "line": 87,
+    "reasons": "light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/NewTaskModal.tsx",
+    "line": 94,
+    "reasons": "light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/NewTaskModal.tsx",
+    "line": 104,
+    "reasons": "light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/NewTaskModal.tsx",
+    "line": 109,
+    "reasons": "light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/NewTaskModal.tsx",
+    "line": 118,
+    "reasons": "light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/NewTaskModal.tsx",
+    "line": 124,
+    "reasons": "light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/NewTaskModal.tsx",
+    "line": 130,
+    "reasons": "light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/NewTaskModal.tsx",
+    "line": 132,
+    "reasons": "bg-slate-50 without dark:bg-, light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/TaskDetailModal.tsx",
+    "line": 265,
+    "reasons": "bg-slate-100 without dark:bg-"
+  },
+  {
+    "file": "src/components/modals/TaskDetailModal.tsx",
+    "line": 271,
+    "reasons": "bg-white without dark:bg-, light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/TaskDetailModal.tsx",
+    "line": 282,
+    "reasons": "bg-slate-50 without dark:bg-, bg-slate-100 without dark:bg-, light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/TaskDetailModal.tsx",
+    "line": 292,
+    "reasons": "bg-white without dark:bg-, dark text without dark:text-, light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/TaskDetailModal.tsx",
+    "line": 306,
+    "reasons": "bg-white without dark:bg-, light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/TaskDetailModal.tsx",
+    "line": 314,
+    "reasons": "bg-white without dark:bg-, light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/TaskDetailModal.tsx",
+    "line": 325,
+    "reasons": "bg-slate-50 without dark:bg-"
+  },
+  {
+    "file": "src/components/modals/TaskDetailModal.tsx",
+    "line": 333,
+    "reasons": "bg-slate-50 without dark:bg-"
+  },
+  {
+    "file": "src/components/modals/TaskDetailModal.tsx",
+    "line": 349,
+    "reasons": "light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/TaskDetailModal.tsx",
+    "line": 356,
+    "reasons": "light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/TaskDetailModal.tsx",
+    "line": 393,
+    "reasons": "bg-slate-50 without dark:bg-, bg-slate-100 without dark:bg-, light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/TaskDetailModal.tsx",
+    "line": 409,
+    "reasons": "dark text without dark:text-"
+  },
+  {
+    "file": "src/components/modals/TaskDetailModal.tsx",
+    "line": 418,
+    "reasons": "bg-slate-100 without dark:bg-, light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/TaskDetailModal.tsx",
+    "line": 440,
+    "reasons": "bg-slate-100 without dark:bg-, light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/TaskDetailModal.tsx",
+    "line": 496,
+    "reasons": "bg-white without dark:bg-, light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/TaskDetailModal.tsx",
+    "line": 498,
+    "reasons": "bg-slate-50 without dark:bg-, light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/TaskDetailModal.tsx",
+    "line": 499,
+    "reasons": "dark text without dark:text-"
+  },
+  {
+    "file": "src/components/modals/TaskDetailModal.tsx",
+    "line": 511,
+    "reasons": "bg-slate-50 without dark:bg-"
+  },
+  {
+    "file": "src/components/modals/TaskDetailModal.tsx",
+    "line": 512,
+    "reasons": "bg-white without dark:bg-, light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/TaskDetailModal.tsx",
+    "line": 545,
+    "reasons": "light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/TaskDetailModal.tsx",
+    "line": 558,
+    "reasons": "bg-white without dark:bg-"
+  },
+  {
+    "file": "src/components/modals/TaskDetailModal.tsx",
+    "line": 574,
+    "reasons": "bg-white without dark:bg-"
+  },
+  {
+    "file": "src/components/modals/TaskDetailModal.tsx",
+    "line": 590,
+    "reasons": "bg-white without dark:bg-"
+  },
+  {
+    "file": "src/components/modals/TaskDetailModal.tsx",
+    "line": 627,
+    "reasons": "light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/TaskDetailModal.tsx",
+    "line": 657,
+    "reasons": "bg-white without dark:bg-, light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/TaskDetailModal.tsx",
+    "line": 675,
+    "reasons": "bg-white without dark:bg-, light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/TaskDetailModal.tsx",
+    "line": 681,
+    "reasons": "bg-slate-50 without dark:bg-"
+  },
+  {
+    "file": "src/components/modals/TaskDetailModal.tsx",
+    "line": 703,
+    "reasons": "light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/TaskDetailModal.tsx",
+    "line": 727,
+    "reasons": "light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/TaskDetailModal.tsx",
+    "line": 751,
+    "reasons": "light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/TaskDetailModal.tsx",
+    "line": 772,
+    "reasons": "light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/TaskDetailModal.tsx",
+    "line": 844,
+    "reasons": "bg-white without dark:bg-, light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/TaskDetailModal.tsx",
+    "line": 851,
+    "reasons": "dark text without dark:text-"
+  },
+  {
+    "file": "src/components/modals/TaskDetailModal.tsx",
+    "line": 858,
+    "reasons": "bg-slate-50 without dark:bg-"
+  },
+  {
+    "file": "src/components/modals/TaskDetailModal.tsx",
+    "line": 867,
+    "reasons": "bg-slate-100 without dark:bg-"
+  },
+  {
+    "file": "src/components/modals/TaskDetailModal.tsx",
+    "line": 873,
+    "reasons": "bg-white without dark:bg-, light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/TaskDetailModal.tsx",
+    "line": 884,
+    "reasons": "bg-slate-50 without dark:bg-, bg-slate-100 without dark:bg-, light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/TaskDetailModal.tsx",
+    "line": 892,
+    "reasons": "bg-white without dark:bg-, light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/TaskDetailModal.tsx",
+    "line": 903,
+    "reasons": "bg-slate-50 without dark:bg-"
+  },
+  {
+    "file": "src/components/modals/TaskDetailModal.tsx",
+    "line": 911,
+    "reasons": "bg-slate-50 without dark:bg-"
+  },
+  {
+    "file": "src/components/modals/TaskDetailModal.tsx",
+    "line": 927,
+    "reasons": "light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/TaskDetailModal.tsx",
+    "line": 934,
+    "reasons": "light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/TaskDetailModal.tsx",
+    "line": 969,
+    "reasons": "bg-slate-50 without dark:bg-, bg-slate-100 without dark:bg-, light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/TaskDetailModal.tsx",
+    "line": 986,
+    "reasons": "dark text without dark:text-"
+  },
+  {
+    "file": "src/components/modals/TaskDetailModal.tsx",
+    "line": 1005,
+    "reasons": "bg-slate-50 without dark:bg-, bg-slate-100 without dark:bg-"
+  },
+  {
+    "file": "src/components/modals/TaskDetailModal.tsx",
+    "line": 1030,
+    "reasons": "light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/TaskDetailModal.tsx",
+    "line": 1032,
+    "reasons": "bg-slate-100 without dark:bg-, light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/TaskDetailModal.tsx",
+    "line": 1048,
+    "reasons": "bg-slate-50 without dark:bg-, light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/TaskDetailModal.tsx",
+    "line": 1065,
+    "reasons": "light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/TaskDetailModal.tsx",
+    "line": 1075,
+    "reasons": "bg-slate-50 without dark:bg-"
+  },
+  {
+    "file": "src/components/modals/TaskDetailModal.tsx",
+    "line": 1081,
+    "reasons": "bg-white without dark:bg-, light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/TaskDetailModal.tsx",
+    "line": 1094,
+    "reasons": "bg-white without dark:bg-, light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/TaskDetailModal.tsx",
+    "line": 1112,
+    "reasons": "bg-white without dark:bg-, light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/TaskDetailModal.tsx",
+    "line": 1118,
+    "reasons": "bg-slate-50 without dark:bg-"
+  },
+  {
+    "file": "src/components/modals/TaskDetailModal.tsx",
+    "line": 1141,
+    "reasons": "light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/TaskDetailModal.tsx",
+    "line": 1167,
+    "reasons": "light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/TaskDetailModal.tsx",
+    "line": 1210,
+    "reasons": "light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/TaskDetailModal.tsx",
+    "line": 1219,
+    "reasons": "light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/TaskDetailModal.tsx",
+    "line": 1240,
+    "reasons": "light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/TaskDetailModal.tsx",
+    "line": 1254,
+    "reasons": "light border without dark:border-"
+  },
+  {
+    "file": "src/components/modals/TaskDetailModal.tsx",
+    "line": 1259,
+    "reasons": "bg-white without dark:bg-, light border without dark:border-"
+  },
+  {
+    "file": "src/pages/DashboardPage.tsx",
+    "line": 136,
+    "reasons": "bg-slate-50 without dark:bg-, dark text without dark:text-"
+  },
+  {
+    "file": "src/pages/DashboardPage.tsx",
+    "line": 182,
+    "reasons": "bg-white without dark:bg-"
+  },
+  {
+    "file": "src/pages/DashboardPage.tsx",
+    "line": 199,
+    "reasons": "bg-white without dark:bg-, light border without dark:border-"
+  },
+  {
+    "file": "src/pages/DashboardPage.tsx",
+    "line": 203,
+    "reasons": "bg-slate-100 without dark:bg-, light border without dark:border-"
+  },
+  {
+    "file": "src/pages/DashboardPage.tsx",
+    "line": 210,
+    "reasons": "bg-slate-50 without dark:bg-, light border without dark:border-"
+  },
+  {
+    "file": "src/pages/DashboardPage.tsx",
+    "line": 216,
+    "reasons": "bg-slate-100 without dark:bg-, light border without dark:border-"
+  },
+  {
+    "file": "src/pages/DashboardPage.tsx",
+    "line": 318,
+    "reasons": "bg-slate-50 without dark:bg-, bg-slate-100 without dark:bg-, light border without dark:border-"
+  },
+  {
+    "file": "src/pages/DashboardPage.tsx",
+    "line": 321,
+    "reasons": "bg-slate-50 without dark:bg-, light border without dark:border-"
+  },
+  {
+    "file": "src/pages/DashboardPage.tsx",
+    "line": 324,
+    "reasons": "bg-slate-50 without dark:bg-, bg-slate-100 without dark:bg-, light border without dark:border-"
+  },
+  {
+    "file": "src/pages/DashboardPage.tsx",
+    "line": 388,
+    "reasons": "light border without dark:border-"
+  },
+  {
+    "file": "src/pages/DashboardPage.tsx",
+    "line": 390,
+    "reasons": "bg-slate-50 without dark:bg-, light border without dark:border-"
+  },
+  {
+    "file": "src/pages/DashboardPage.tsx",
+    "line": 392,
+    "reasons": "bg-slate-100 without dark:bg-, light border without dark:border-"
+  },
+  {
+    "file": "src/pages/DashboardPage.tsx",
+    "line": 482,
+    "reasons": "bg-white without dark:bg-, light border without dark:border-"
+  },
+  {
+    "file": "src/pages/DashboardPage.tsx",
+    "line": 485,
+    "reasons": "dark text without dark:text-"
+  },
+  {
+    "file": "src/pages/DashboardPage.tsx",
+    "line": 492,
+    "reasons": "bg-slate-50 without dark:bg-, light border without dark:border-"
+  },
+  {
+    "file": "src/pages/DashboardPage.tsx",
+    "line": 508,
+    "reasons": "bg-slate-100 without dark:bg-, light border without dark:border-"
+  },
+  {
+    "file": "src/pages/DashboardPage.tsx",
+    "line": 534,
+    "reasons": "bg-slate-50 without dark:bg-, light border without dark:border-"
+  },
+  {
+    "file": "src/pages/DashboardPage.tsx",
+    "line": 568,
+    "reasons": "bg-white without dark:bg-, light border without dark:border-"
+  },
+  {
+    "file": "src/pages/DashboardPage.tsx",
+    "line": 581,
+    "reasons": "bg-slate-50 without dark:bg-, light border without dark:border-"
+  },
+  {
+    "file": "src/pages/DashboardPage.tsx",
+    "line": 583,
+    "reasons": "dark text without dark:text-"
+  },
+  {
+    "file": "src/pages/DashboardPage.tsx",
+    "line": 591,
+    "reasons": "bg-white without dark:bg-"
+  },
+  {
+    "file": "src/pages/DashboardPage.tsx",
+    "line": 596,
+    "reasons": "bg-slate-50 without dark:bg-, light border without dark:border-"
+  },
+  {
+    "file": "src/pages/DashboardPage.tsx",
+    "line": 597,
+    "reasons": "dark text without dark:text-"
+  },
+  {
+    "file": "src/pages/DashboardPage.tsx",
+    "line": 605,
+    "reasons": "bg-white without dark:bg-, dark text without dark:text-, light border without dark:border-"
+  },
+  {
+    "file": "src/pages/ProjectsPage.tsx",
+    "line": 200,
+    "reasons": "bg-white without dark:bg-"
+  },
+  {
+    "file": "src/pages/ProjectsPage.tsx",
+    "line": 201,
+    "reasons": "bg-white without dark:bg-"
+  },
+  {
+    "file": "src/pages/PublicCalendarPage.tsx",
+    "line": 58,
+    "reasons": "bg-slate-50 without dark:bg-"
+  },
+  {
+    "file": "src/pages/PublicCalendarPage.tsx",
+    "line": 60,
+    "reasons": "bg-white without dark:bg-, light border without dark:border-"
+  },
+  {
+    "file": "src/pages/PublicCalendarPage.tsx",
+    "line": 67,
+    "reasons": "dark text without dark:text-"
+  },
+  {
+    "file": "src/pages/PublicCalendarPage.tsx",
+    "line": 75,
+    "reasons": "bg-white without dark:bg-, light border without dark:border-"
+  },
+  {
+    "file": "src/pages/PublicCalendarPage.tsx",
+    "line": 77,
+    "reasons": "dark text without dark:text-"
+  },
+  {
+    "file": "src/pages/PublicCalendarPage.tsx",
+    "line": 81,
+    "reasons": "bg-slate-50 without dark:bg-"
+  },
+  {
+    "file": "src/pages/PublicCalendarPage.tsx",
+    "line": 87,
+    "reasons": "bg-slate-50 without dark:bg-"
+  },
+  {
+    "file": "src/pages/PublicCalendarPage.tsx",
+    "line": 97,
+    "reasons": "bg-slate-50 without dark:bg-"
+  },
+  {
+    "file": "src/pages/PublicCalendarPage.tsx",
+    "line": 111,
+    "reasons": "bg-slate-50 without dark:bg-, light border without dark:border-"
+  },
+  {
+    "file": "src/pages/PublicCalendarPage.tsx",
+    "line": 117,
+    "reasons": "bg-white without dark:bg-, light border without dark:border-"
+  },
+  {
+    "file": "src/pages/PublicCalendarPage.tsx",
+    "line": 123,
+    "reasons": "dark text without dark:text-"
+  },
+  {
+    "file": "src/pages/PublicCalendarPage.tsx",
+    "line": 133,
+    "reasons": "dark text without dark:text-"
+  },
+  {
+    "file": "src/pages/PublicCalendarPage.tsx",
+    "line": 146,
+    "reasons": "light border without dark:border-"
+  },
+  {
+    "file": "src/pages/PublicCalendarPage.tsx",
+    "line": 150,
+    "reasons": "light border without dark:border-"
+  },
+  {
+    "file": "src/pages/PublicCalendarPage.tsx",
+    "line": 153,
+    "reasons": "light border without dark:border-"
+  },
+  {
+    "file": "src/pages/PublicCalendarPage.tsx",
+    "line": 158,
+    "reasons": "light border without dark:border-"
+  },
+  {
+    "file": "src/pages/PublicCalendarPage.tsx",
+    "line": 161,
+    "reasons": "light border without dark:border-"
+  },
+  {
+    "file": "src/pages/PublicCalendarPage.tsx",
+    "line": 166,
+    "reasons": "light border without dark:border-"
+  },
+  {
+    "file": "src/pages/PublicCalendarPage.tsx",
+    "line": 169,
+    "reasons": "light border without dark:border-"
+  },
+  {
+    "file": "src/pages/PublicCalendarPage.tsx",
+    "line": 173,
+    "reasons": "light border without dark:border-"
+  },
+  {
+    "file": "src/pages/PublicCalendarPage.tsx",
+    "line": 183,
+    "reasons": "bg-white without dark:bg-, light border without dark:border-"
+  }
+]

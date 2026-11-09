@@ -1,0 +1,8 @@
+{
+  "name": "collabsuite-cli-agent",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Agente local que deixa a CollabSuite usar os CLIs de IA (Claude Code, Codex, Gemini...) instalados no seu computador.",
+  "scripts": { "start": "node index.mjs" }
+}

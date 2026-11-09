@@ -1,0 +1,1438 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StudioX | Editor Visual & Pipeline de Vídeo com IA</title>
+  <link rel="icon" type="image/svg+xml" href="images/icon.svg">
+  <meta name="description" content="Interface moderna e profissional para o StudioX. Corte automático de silêncios, timeline interativa, templates de legendas virais, headlines e renderização FFmpeg.">
+  
+  <meta name="theme-color" content="#0B0B0D">
+
+  <!-- Google Fonts: Sora (titles), Geist (interface), Geist Mono (timecodes, counters) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/tokens.css?v=1">
+  <link rel="stylesheet" href="css/studio.css?v=11">
+  <link rel="stylesheet" href="css/subtitles.css?v=6">
+  <link rel="stylesheet" href="css/facetrack.css?v=1">
+  <link rel="stylesheet" href="css/headlines.css?v=3">
+  <link rel="stylesheet" href="css/pages.css?v=15">
+  <link rel="stylesheet" href="css/music.css?v=3">
+  <link rel="stylesheet" href="css/motion.css?v=2">
+  <link rel="stylesheet" href="css/looks.css?v=5">
+  <link rel="stylesheet" href="css/embed.css?v=1">
+  <script src="js/embed.js?v=1"></script>
+</head>
+<body class="dark-theme editor-page">
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Navegação principal">
+      <a href="/studiox/" class="sidebar-brand brand-link" title="StudioX" aria-label="StudioX">
+        <img src="images/logo-white.svg" alt="StudioX" class="brand-logo">
+        <img src="images/icon.svg" alt="" class="brand-icon">
+      </a>
+      <nav class="sidebar-nav" aria-label="Telas">
+        <span class="nav-label">Workspace</span>
+        <a href="/studiox/" class="nav-item" title="Projetos">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="9" rx="1.5"></rect><rect x="14" y="3" width="7" height="5" rx="1.5"></rect><rect x="14" y="12" width="7" height="9" rx="1.5"></rect><rect x="3" y="16" width="7" height="5" rx="1.5"></rect></svg>
+          <span class="nav-text">Projetos</span>
+        </a>
+        <a href="/studiox/clips.html" class="nav-item" title="Cortes com IA">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path></svg>
+          <span class="nav-text">Cortes com IA</span>
+        </a>
+        <a href="/studiox/queue.html" class="nav-item" title="Fila de edição">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h11M4 12h11M4 18h7"></path><path d="m18 14 4 3-4 3z"></path></svg>
+          <span class="nav-text">Fila de edição</span><span class="nav-count" id="nav-queue-count"></span>
+        </a>
+        <a href="/studiox/editor.html" class="nav-item active" title="Editor" aria-current="page">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6" cy="6" r="3"></circle><circle cx="6" cy="18" r="3"></circle><path d="M20 4 8.12 15.88M14.47 14.48 20 20M8.12 8.12 12 12"></path></svg>
+          <span class="nav-text">Editor</span>
+        </a>
+        <a href="/studiox/settings.html" class="nav-item" title="Configurações">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"></path><circle cx="15" cy="6" r="2"></circle><circle cx="9" cy="12" r="2"></circle><circle cx="17" cy="18" r="2"></circle></svg>
+          <span class="nav-text">Configurações</span>
+        </a>
+      </nav>
+    </aside>
+
+    <div class="app-main">
+      <!-- Top bar: breadcrumb + project state + actions -->
+      <header class="app-header">
+        <div class="header-left">
+          <nav class="crumbs" aria-label="Você está em"><span class="crumb-root">StudioX</span><span class="crumb-sep">/</span><span class="crumb-current">Editor</span></nav>
+          <div class="project-indicator">
+            <span class="project-dot"></span>
+            <span id="project-title" class="project-title">Sem projeto ativo</span>
+            <span id="save-status" class="save-status" role="status"></span>
+          </div>
+        </div>
+        <div class="header-right">
+          <button id="btn-upload-trigger" class="btn btn-primary btn-sm">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"></path>
+              <path d="M12 12v9"></path>
+              <path d="m16 16-4-4-4 4"></path>
+            </svg>
+            Upload de Vídeo
+          </button>
+          <input type="file" id="file-input" accept="video/mp4,video/quicktime,video/webm" style="display:none;">
+
+          <button id="btn-save-template" class="btn btn-secondary btn-sm" disabled title="Guarda a legenda, o headline, o color grade, o LUT, a transição e o zoom atuais como um template para a fila automática">
+            Salvar template
+          </button>
+
+          <button id="btn-render-modal" class="btn btn-accent btn-sm" disabled>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+              <polygon points="5 3 19 12 5 21 5 3"></polygon>
+            </svg>
+            Renderizar
+          </button>
+        </div>
+      </header>
+
+      <!-- Main Workspace -->
+      <main class="workspace-layout">
+        <!-- Left Panel: Takes & Media Info -->
+        <aside class="panel media-panel">
+          <div class="panel-header">
+            <div class="panel-title">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect>
+                <line x1="7" y1="2" x2="7" y2="22"></line>
+                <line x1="17" y1="2" x2="17" y2="22"></line>
+                <line x1="2" y1="12" x2="22" y2="12"></line>
+                <line x1="2" y1="7" x2="7" y2="7"></line>
+                <line x1="2" y1="17" x2="7" y2="17"></line>
+                <line x1="17" y1="17" x2="22" y2="17"></line>
+                <line x1="17" y1="7" x2="22" y2="7"></line>
+              </svg>
+              Mídia & Takes
+            </div>
+            <span class="badge" id="take-count">0 takes</span>
+          </div>
+
+          <div class="media-body">
+            <div id="empty-media-state" class="empty-state">
+              <div class="empty-icon">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+                  <circle cx="8" cy="10" r="2"></circle>
+                  <path d="m21 15-5-5L5 21"></path>
+                </svg>
+              </div>
+              <p class="empty-title">Nenhum vídeo carregado</p>
+              <p class="empty-desc">Arraste seu arquivo MP4/MOV ou use o botão de Upload acima para iniciar.</p>
+              <a href="/studiox/" class="btn btn-secondary btn-sm empty-link">Abrir um projeto salvo</a>
+            </div>
+
+            <div id="media-details" class="media-details hidden">
+              <div class="source-card">
+                <div class="source-card-header">
+                  <span id="source-name" class="source-name">video.mp4</span>
+                  <span id="source-aspect" class="badge badge-subtle">16:9</span>
+                </div>
+                <div class="source-meta-grid">
+                  <div class="meta-item">
+                    <span class="meta-label">Duração</span>
+                    <span id="meta-duration" class="meta-value">00:00</span>
+                  </div>
+                  <div class="meta-item">
+                    <span class="meta-label">Resolução</span>
+                    <span id="meta-res" class="meta-value">1920x1080</span>
+                  </div>
+                  <div class="meta-item">
+                    <span class="meta-label">FPS</span>
+                    <span id="meta-fps" class="meta-value">30 fps</span>
+                  </div>
+                  <div class="meta-item">
+                    <span class="meta-label">Tamanho</span>
+                    <span id="meta-size" class="meta-value">0 MB</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- StudioX Intelligence Card -->
+              <div class="ai-actions-card">
+                <div class="card-title">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path>
+                  </svg>
+                  Inteligência StudioX
+                </div>
+                <p class="card-desc">Corte pausas mortas automaticamente e transcreva palavra por palavra.</p>
+            
+                <button id="btn-auto-cut" class="btn btn-warning btn-block">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="6" cy="6" r="3"></circle>
+                    <circle cx="6" cy="18" r="3"></circle>
+                    <line x1="20" y1="4" x2="8.12" y2="15.88"></line>
+                    <line x1="14.47" y1="14.48" x2="20" y2="20"></line>
+                    <line x1="8.12" y1="8.12" x2="12" y2="12"></line>
+                  </svg>
+                  Corte Automático de Silêncios
+                </button>
+
+                <button id="btn-ai-analyze-trigger" class="btn btn-ai-purple btn-block">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path>
+                  </svg>
+                  Analisar Erros com IA
+                </button>
+
+                <div class="form-group" style="margin:0 0 8px">
+                  <label for="transcribe-engine" class="field-hint" style="display:block;margin:0 0 4px">Motor da transcrição</label>
+                  <select id="transcribe-engine" class="text-input"><option value="auto">Automático</option><option value="elevenlabs">ElevenLabs Scribe</option><option value="groq">Groq Whisper (large-v3)</option><option value="groq_turbo">Groq Whisper (turbo, mais rápido)</option><option value="whisper">Whisper local</option></select>
+                </div>
+                <button id="btn-transcribe" class="btn btn-secondary btn-block">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path>
+                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                    <line x1="12" y1="19" x2="12" y2="22"></line>
+                  </svg>
+                  Transcrever o áudio
+                </button>
+              </div>
+
+              <!-- Transcript Preview Section -->
+              <div class="transcript-section">
+                <div class="section-header">
+                  <span class="section-title">Transcrição & Frases</span>
+                  <span id="transcription-status" class="badge badge-dim">Aguardando</span>
+                </div>
+                <button type="button" id="btn-edit-caption" class="btn btn-ghost btn-xs btn-block" style="margin-bottom:6px" title="Também funciona com duplo clique na legenda do vídeo">✎ Editar a legenda que está na tela</button>
+                <div id="transcript-list" class="transcript-list">
+                  <div class="transcript-placeholder">Clique em transcrever para gerar legendas e cortes de frases.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Center: Preview Player & Canvas -->
+        <section class="player-stage">
+          <div class="player-wrapper">
+            <div class="video-container" id="video-container">
+              <video id="main-video" playsinline preload="auto"></video>
+          
+              <!-- Live Overlays Canvas/Layer -->
+              <div id="overlay-layer" class="overlay-layer">
+                <!-- Dynamic Headline Mount: canvas drawn by js/headlines.js + a drag handle over the block -->
+                <div id="live-headline" class="live-headline hidden">
+                  <canvas id="hl-canvas"></canvas>
+                  <div id="hl-hit" class="hl-hit" tabindex="0" title="Arraste para reposicionar o headline"></div>
+                </div>
+
+                <!-- Dynamic Subtitles Mount (styled and positioned by js/subtitles.js) -->
+                <div id="live-subtitles" class="live-subtitles hidden" tabindex="0" title="Arraste para reposicionar · duplo clique para corrigir o texto">
+                  <div id="sub-shadow" class="sub-layer sub-shadow hidden" aria-hidden="true"></div>
+                  <div id="sub-main" class="sub-layer sub-main"></div>
+                </div>
+                <div id="sub-sample-badge" class="sub-sample-badge hidden">Prévia do estilo</div>
+
+                <!-- Drag-to-reposition hit area for js/canvasframe.js, shown only on the "Formato" tab -->
+                <div id="frame-hit" class="frame-hit hidden" tabindex="0" title="Arraste para reposicionar o vídeo · roda do mouse para zoom"></div>
+              </div>
+
+              <!-- Fallback Play Overlay -->
+              <div id="play-overlay" class="play-overlay">
+                <button id="btn-big-play" class="btn-big-play">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Video Controls Bar -->
+            <div class="playback-controls">
+              <div class="controls-left">
+                <button id="btn-play-pause" class="icon-btn" title="Play/Pause (Espaço)">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" id="play-icon">
+                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                  </svg>
+                </button>
+                <button id="btn-prev-frame" class="icon-btn" title="Voltar 1s (J)">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="19 20 9 12 19 4 19 20"></polygon>
+                    <line x1="5" y1="19" x2="5" y2="5"></line>
+                  </svg>
+                </button>
+                <button id="btn-next-frame" class="icon-btn" title="Avançar 1s (L)">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="5 4 15 12 5 20 5 4"></polygon>
+                    <line x1="19" y1="5" x2="19" y2="19"></line>
+                  </svg>
+                </button>
+            
+                <div class="timecode-display">
+                  <span id="time-current" class="time-current">00:00:00.00</span>
+                  <span class="time-separator">/</span>
+                  <span id="time-total" class="time-total">00:00:00.00</span>
+                </div>
+              </div>
+
+              <div class="controls-center">
+                <div class="action-tools">
+                  <button id="btn-split-cut" class="tool-btn" title="Cortar clipe na posição da agulha (S)">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="6" cy="6" r="3"></circle>
+                      <circle cx="6" cy="18" r="3"></circle>
+                      <line x1="20" y1="4" x2="8.12" y2="15.88"></line>
+                      <line x1="14.47" y1="14.48" x2="20" y2="20"></line>
+                      <line x1="8.12" y1="8.12" x2="12" y2="12"></line>
+                    </svg>
+                    Dividir (Split)
+                  </button>
+
+                  <button id="btn-delete-clip" class="tool-btn danger" title="Deletar clipe selecionado (Del)">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polyline points="3 6 5 6 21 6"></polyline>
+                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    </svg>
+                    Excluir Clipe
+                  </button>
+                </div>
+              </div>
+
+              <div class="controls-right">
+                <div class="zoom-controller">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    <line x1="8" y1="11" x2="14" y2="11"></line>
+                  </svg>
+                  <input type="range" id="timeline-zoom" min="0" max="100" step="0.5" value="50" title="Zoom da Timeline (Ctrl + roda do mouse)">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    <line x1="11" y1="8" x2="11" y2="14"></line>
+                    <line x1="8" y1="11" x2="14" y2="11"></line>
+                  </svg>
+                  <button id="btn-zoom-fit" class="tool-btn" title="Ajustar a timeline inteira à tela">Ajustar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Right Panel: Templates & Inspector -->
+        <aside class="panel inspector-panel">
+          <div class="inspector-main">
+            <!-- Tabs Navigation: a narrow icon rail (like a docked Photoshop panel), not a text tab bar -->
+            <nav class="inspector-tabs">
+              <button class="tab-btn" data-tab="tab-templates" title="Templates" aria-label="Templates">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect></svg>
+              </button>
+              <button class="tab-btn active" data-tab="tab-subtitles" title="Legendas" aria-label="Legendas">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"></rect><line x1="7" y1="9" x2="12" y2="9"></line><line x1="7" y1="13" x2="17" y2="13"></line></svg>
+              </button>
+              <button class="tab-btn" data-tab="tab-headlines" title="Headlines" aria-label="Headlines">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"></polyline><line x1="9" y1="20" x2="15" y2="20"></line><line x1="12" y1="4" x2="12" y2="20"></line></svg>
+              </button>
+              <button class="tab-btn" data-tab="tab-transitions" title="Transições" aria-label="Transições">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>
+              </button>
+              <button class="tab-btn" data-tab="tab-grading" title="Color Grade" aria-label="Color Grade">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line><line x1="17" y1="16" x2="23" y2="16"></line></svg>
+              </button>
+              <button class="tab-btn" data-tab="tab-split" title="Tela dividida" aria-label="Tela dividida">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"></rect><line x1="12" y1="3" x2="12" y2="21"></line></svg>
+              </button>
+              <button class="tab-btn" data-tab="tab-music" title="Música" aria-label="Música">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
+              </button>
+              <button class="tab-btn" data-tab="tab-frame" title="Formato" aria-label="Formato">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2v14a2 2 0 0 0 2 2h14"></path><path d="M18 22V8a2 2 0 0 0-2-2H2"></path></svg>
+              </button>
+              <button class="tab-btn" data-tab="tab-track" title="Rastrear rosto" aria-label="Rastrear rosto">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M4 8V5a1 1 0 0 1 1-1h3"></path><path d="M16 4h3a1 1 0 0 1 1 1v3"></path><path d="M20 16v3a1 1 0 0 1-1 1h-3"></path><path d="M8 20H5a1 1 0 0 1-1-1v-3"></path></svg>
+              </button>
+              <button class="tab-btn" data-tab="tab-motion" title="Motion graphics" aria-label="Motion graphics">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+              </button>
+            </nav>
+
+            <div class="inspector-body">
+            <!-- Templates Tab -->
+            <div id="tab-templates" class="tab-content">
+              <div class="option-group">
+                <p class="field-hint" style="margin:0 0 10px">Aplique um template salvo a este vídeo (legenda, headline, color grade, LUT, transição e zoom). Os cortes não mudam.</p>
+                <button type="button" id="btn-tab-save-template" class="btn btn-secondary btn-sm" disabled title="Guarda o visual atual do editor como um novo template">Salvar visual atual como template</button>
+              </div>
+              <div class="tpl-list" id="editor-tpl-list"></div>
+            </div>
+
+            <!-- Subtitles Tab -->
+            <div id="tab-subtitles" class="tab-content active">
+              <div class="option-group">
+                <label class="toggle-switch">
+                  <input type="checkbox" id="toggle-subtitles" checked>
+                  <span class="switch-slider"></span>
+                  <span class="switch-label">Ativar Legendas Dinâmicas</span>
+                </label>
+                <p class="field-hint">Gera e queima legendas com o padrão de alta retenção do StudioX.</p>
+              </div>
+
+              <label class="label-heading">Estilos prontos <span id="preset-modified" class="badge badge-dim hidden">editado</span></label>
+              <div class="preset-strip" id="subtitle-template-list">
+                <!-- Dynamic Subtitle Preset Cards -->
+              </div>
+
+              <!-- Full editor: font (Google Fonts), colors, outline, shadow, position (built by js/subtitles.js) -->
+              <div class="sub-editor" id="sub-editor"></div>
+            </div>
+
+            <!-- Headlines Tab -->
+            <div id="tab-headlines" class="tab-content">
+              <div class="option-group">
+                <label class="toggle-switch">
+                  <input type="checkbox" id="toggle-headline" checked>
+                  <span class="switch-slider"></span>
+                  <span class="switch-label">Ativar Headline / Hook</span>
+                </label>
+                <p class="field-hint">Adiciona uma chamada de atenção no vídeo, com animação de entrada e saída.</p>
+              </div>
+
+              <div class="form-group">
+                <label for="headline-input-text">Texto do headline</label>
+                <textarea id="headline-input-text" class="text-input hl-textarea" rows="3" spellcheck="false" placeholder="Digite a chamada de impacto..."></textarea>
+                <span class="field-hint">Enter quebra a linha. Coloque *asteriscos* em volta de uma palavra para destacá-la com a cor de destaque.</span>
+              </div>
+
+              <div class="form-group">
+                <label for="headline-input-tag">Tag / Categoria</label>
+                <input type="text" id="headline-input-tag" class="text-input" maxlength="40" placeholder="Opcional (ex.: TUTORIAL). Vazio = sem etiqueta">
+              </div>
+
+              <div class="form-row form-row-even">
+                <div class="form-group">
+                  <label for="headline-start">Aparece em (s)</label>
+                  <input type="number" id="headline-start" class="text-input" min="0" max="3600" value="0" step="0.5">
+                </div>
+                <div class="form-group">
+                  <label for="headline-duration">Duração (s)</label>
+                  <input type="number" id="headline-duration" class="text-input" min="0.5" max="60" value="4" step="0.5">
+                </div>
+              </div>
+
+              <button type="button" class="btn btn-ghost btn-xs" id="btn-headline-play" title="Toca o trecho do headline no vídeo para ver a animação">▶ Ver animação no vídeo</button>
+
+              <label class="label-heading">Estilos prontos <span id="hl-preset-modified" class="badge badge-dim hidden">editado</span></label>
+              <div class="preset-strip" id="headline-template-list">
+                <!-- Dynamic Headline Preset Cards (js/headlines.js) -->
+              </div>
+
+              <!-- Full editor: font, colours, card, accent, tag, shadow, position, animation -->
+              <div class="sub-editor" id="hl-editor"></div>
+            </div>
+
+            <!-- Transitions Tab -->
+            <div id="tab-transitions" class="tab-content">
+              <!-- Auto zoom on the cuts -->
+              <div class="option-group">
+                <label class="toggle-switch">
+                  <input type="checkbox" id="zoom-enabled">
+                  <span class="switch-slider"></span>
+                  <span class="switch-label">Zoom automático nos cortes (estilo viral)</span>
+                </label>
+                <div id="zoom-config" class="hidden">
+                  <div class="seg-toggle" id="zoom-style" style="margin-top:10px">
+                    <button type="button" data-style="alternate">Alternar</button>
+                    <button type="button" data-style="punch">Impacto</button>
+                    <button type="button" data-style="push">Aproximar</button>
+                  </div>
+                  <p class="field-hint" id="zoom-style-hint" style="margin:0 0 8px"></p>
+                  <div class="grade-row">
+                    <div class="grade-row-head"><label for="zoom-amount">Intensidade do zoom</label><span class="grade-val" id="zoom-amount-val"></span></div>
+                    <input type="range" id="zoom-amount" min="3" max="50" step="1">
+                  </div>
+                  <div class="grade-row">
+                    <div class="grade-row-head"><label for="zoom-focus">Ponto de enquadramento</label><span class="grade-val" id="zoom-focus-val"></span></div>
+                    <input type="range" id="zoom-focus" min="0" max="100" step="1">
+                    <div class="grade-hint">O zoom cresce a partir deste ponto: para quem fala em vídeo vertical, deixe um pouco acima do centro.</div>
+                  </div>
+                </div>
+              </div>
+
+              <label class="label-heading">Transição entre cortes</label>
+              <div class="tx-demo-box" id="tx-demo-box">
+                <div class="tx-demo-stage">
+                  <canvas id="tx-demo" width="320" height="180"></canvas>
+                  <div class="tx-demo-veil" id="tx-demo-veil"></div>
+                </div>
+                <div class="tx-demo-label" id="tx-demo-label"></div>
+              </div>
+              <div class="template-list" id="transition-template-list">
+                <!-- Dynamic Transition Template Cards -->
+              </div>
+
+              <div class="option-group">
+                <div class="grade-row">
+                  <div class="grade-row-head"><label for="tx-scale">Duração do efeito</label><span class="grade-val" id="tx-scale-val"></span></div>
+                  <input type="range" id="tx-scale" min="50" max="200" step="5">
+                  <div class="grade-hint">mais rápida ← → mais lenta. O vídeo mantém exatamente a mesma duração: legendas, headline e música seguem no lugar.</div>
+                </div>
+                <button type="button" class="btn btn-secondary btn-sm" id="btn-tx-preview" title="Toca o trecho ao redor de um corte para você ver a transição no seu vídeo">▶ Ver no vídeo</button>
+              </div>
+
+              <div class="option-group">
+                <div class="tx-actions">
+                  <button type="button" class="btn btn-secondary btn-sm" id="btn-tx-new">＋ Criar transição</button>
+                  <button type="button" class="btn btn-secondary btn-sm" id="btn-tx-import" title="Use um vídeo (WebM/MOV/MP4) ou PNG seu como transição">⬆ Importar vídeo/PNG</button>
+                </div>
+                <p class="field-hint" style="margin:8px 0 0">Monte a sua combinando efeitos, ou importe um arquivo (light leak, glitch, fumaça…). Ela vira um cartão acima, como as prontas. Os cartões “Personalizar” criam uma cópia para você alterar.</p>
+                <input type="file" id="tx-media-file" class="hidden" accept=".webm,.mov,.mp4,.m4v,.png,.jpg,.jpeg,.webp">
+              </div>
+
+              <label class="label-heading">Som nos cortes</label>
+              <div class="option-group" id="tx-sound-box">
+                <p class="field-hint" style="margin:0 0 8px">Um efeito sonoro (whoosh, impacto…) que toca no instante de cada transição. Vale para todos os cortes; para mudar só um, clique na bolinha dele na timeline.</p>
+                <select id="tx-sound" class="text-input"></select>
+                <div class="tx-sound-extra">
+                  <div class="grade-row"><div class="grade-row-head"><label for="tx-sound-volume">Volume</label><span class="grade-val" id="tx-sound-volume-val"></span></div>
+                    <input type="range" id="tx-sound-volume" min="0" max="150" step="5"></div>
+                  <div class="grade-row"><div class="grade-row-head"><label for="tx-sound-offset">Ajuste de tempo</label><span class="grade-val" id="tx-sound-offset-val"></span></div>
+                    <input type="range" id="tx-sound-offset" min="-60" max="60" step="5">
+                    <div class="grade-hint">O pico do som cai exatamente no corte. Use para adiantar (−) ou atrasar (+).</div></div>
+                </div>
+                <div class="tx-actions">
+                  <button type="button" class="btn btn-secondary btn-sm" id="btn-tx-sound-play">▶ Ouvir</button>
+                  <button type="button" class="btn btn-secondary btn-sm" id="btn-tx-sound-upload" title="WAV, MP3, OGG, M4A… até 15 segundos">⬆ Enviar meu som</button>
+                  <button type="button" class="btn btn-ghost btn-sm hidden" id="btn-tx-sound-del">✕ Excluir este som</button>
+                </div>
+                <input type="file" id="tx-sound-file" class="hidden" accept=".wav,.mp3,.ogg,.m4a,.aac,.flac,.opus,audio/*">
+                <p class="field-hint" id="tx-cuts-summary" style="margin:10px 0 4px"></p>
+                <button type="button" class="btn btn-ghost btn-sm hidden" id="btn-tx-cuts-clear">Voltar todos os cortes ao padrão</button>
+              </div>
+            </div>
+
+            <!-- Color Grading Tab -->
+            <div id="tab-grading" class="tab-content">
+              <div class="info-alert">
+                Ordem da cor: LUT → preset → ajuste fino. O pipeline é aplicado no FFmpeg com fidelidade máxima de tons de pele.
+              </div>
+
+              <label class="label-heading">LUT</label>
+              <p class="field-hint" style="margin:-4px 0 8px">Um look de cor pronto (ou o seu arquivo .cube), aplicado antes do preset e dos ajustes. Vale no preview e no vídeo final.</p>
+              <div id="lut-list" class="lut-grid"></div>
+              <div id="lut-strength-box" class="hidden">
+                <div class="grade-row">
+                  <div class="grade-row-head"><label for="lut-intensity">Intensidade do LUT</label><span class="grade-val" id="lut-intensity-val"></span></div>
+                  <input type="range" id="lut-intensity" min="0" max="100" step="1">
+                </div>
+                <p class="field-hint" id="lut-desc" style="margin:0"></p>
+              </div>
+              <div class="split-actions">
+                <button type="button" class="btn btn-secondary btn-sm" id="lut-upload-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M6 10l6-6 6 6M4 20h16"></path></svg>Enviar LUT (.cube)</button>
+                <input type="file" id="lut-file" accept=".cube" hidden>
+              </div>
+              <p class="field-hint" id="lut-status" style="margin:0"></p>
+
+              <label class="label-heading" style="margin-top:16px">Ajuste fino</label>
+              <p class="field-hint" style="margin:-4px 0 8px">Mexe por cima do preset escolhido (abaixo). Vale no preview e no vídeo final.</p>
+              <div id="grade-controls" class="grade-controls"></div>
+
+              <label class="label-heading" style="margin-top:16px">Presets de Color Grade</label>
+              <div class="template-grid" id="grading-template-list">
+                <!-- Dynamic Grade Template Cards -->
+              </div>
+
+            </div>
+
+            <!-- Split Screen Tab -->
+            <div id="tab-split" class="tab-content">
+              <div class="option-group">
+                <label class="label-heading">Tela dividida</label>
+                <div class="seg-toggle" id="split-mode">
+                  <button type="button" data-mode="off" class="active">Desligada</button>
+                  <button type="button" data-mode="full">Vídeo inteiro</button>
+                  <button type="button" data-mode="scenes">Só algumas cenas</button>
+                </div>
+                <p class="field-hint" id="split-mode-hint"></p>
+              </div>
+
+              <div id="split-config" class="hidden">
+                <label class="label-heading">Onde fica a imagem/vídeo</label>
+                <div class="layout-picker" id="split-layout">
+                  <button type="button" data-layout="top"><span class="lay lay-top"><i></i></span>Em cima</button>
+                  <button type="button" data-layout="bottom"><span class="lay lay-bottom"><i></i></span>Embaixo</button>
+                  <button type="button" data-layout="left"><span class="lay lay-left"><i></i></span>Esquerda</button>
+                  <button type="button" data-layout="right"><span class="lay lay-right"><i></i></span>Direita</button>
+                </div>
+                <div class="grade-row">
+                  <div class="grade-row-head"><label for="split-ratio">Tamanho da mídia</label><span class="grade-val" id="split-ratio-val"></span></div>
+                  <input type="range" id="split-ratio" min="30" max="70" step="1">
+                </div>
+                <div class="grade-row">
+                  <div class="grade-row-head"><label for="split-focus">Enquadramento de quem fala</label><span class="grade-val" id="split-focus-val"></span></div>
+                  <input type="range" id="split-focus" min="0" max="100" step="1">
+                  <div class="grade-hint">Na metade dele só cabe um pedaço da imagem: mova até o rosto ficar bem enquadrado.</div>
+                </div>
+
+                <label class="label-heading" style="margin-top:14px">Biblioteca de mídia</label>
+                <div class="split-actions">
+                  <button type="button" class="btn btn-secondary btn-sm" id="split-upload-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M6 10l6-6 6 6M4 20h16"></path></svg>Enviar imagem ou vídeo</button>
+                  <input type="file" id="split-file" multiple accept="image/png,image/jpeg,image/webp,video/mp4,video/quicktime,video/webm,video/x-matroska,.mp4,.mov,.m4v,.webm,.mkv" hidden>
+                  <button type="button" class="btn btn-ai-purple btn-sm" id="split-ai-toggle"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path></svg>Gerar com IA</button>
+                </div>
+
+                <div id="split-ai" class="split-ai hidden">
+                  <div class="seg-toggle" id="gen-kind">
+                    <button type="button" data-kind="image" class="active">Imagem</button>
+                    <button type="button" data-kind="video">Vídeo</button>
+                  </div>
+                  <textarea id="gen-prompt" class="text-input" rows="3" maxlength="2000" spellcheck="false"></textarea>
+                  <div class="split-actions">
+                    <button type="button" class="btn btn-ghost btn-xs" id="gen-suggest" title="A IA de texto lê o que é dito na cena e escreve a descrição">Sugerir pela fala da cena</button>
+                  </div>
+                  <div id="gen-video-opts" class="hidden">
+                    <label for="gen-seconds" class="field-hint" style="display:block;margin:0 0 4px">Duração do vídeo</label>
+                    <select id="gen-seconds" class="text-input"></select>
+                  </div>
+                  <details><summary class="field-hint" style="cursor:pointer">Modelo (opcional)</summary>
+                    <input type="text" id="gen-model" class="text-input" spellcheck="false" placeholder="vazio = padrão da OpenAI">
+                  </details>
+                  <button type="button" class="btn btn-ai-purple btn-block" id="gen-go">Gerar imagem</button>
+                  <p class="field-hint warn hidden" id="gen-key-warning">Para gerar com IA, salve a chave da OpenAI em <a href="/studiox/settings.html" class="link">Configurações</a>. Enviar seus próprios arquivos funciona sem chave.</p>
+                  <p class="field-hint" style="margin:0">Cada geração é cobrada na sua conta da OpenAI (vídeos custam bem mais e levam alguns minutos). O resultado vai para a biblioteca abaixo.</p>
+                  <div id="gen-jobs"></div>
+                </div>
+
+                <div id="split-media-grid" class="media-grid"></div>
+
+                <div id="split-full-box" class="cut-list hidden">
+                  <label class="label-heading">Vídeos na tela dividida</label>
+                  <div id="split-full-list"></div>
+                  <p class="field-hint">Nos vídeos, use “Escolher trechos” para cortar e deixar só o que você quer apresentar.</p>
+                </div>
+
+                <div id="split-scenes-box" class="hidden">
+                  <label class="label-heading" style="margin-top:14px">Cenas com tela dividida</label>
+                  <div id="split-scene-list"></div>
+                  <div class="split-actions">
+                    <button type="button" class="btn btn-secondary btn-xs" id="split-add-clip">+ No clipe selecionado</button>
+                    <button type="button" class="btn btn-secondary btn-xs" id="split-add-here">+ A partir do cursor</button>
+                  </div>
+                  <p class="field-hint">Os tempos são do vídeo já cortado (o mesmo relógio da timeline).</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Music Tab: layers of clips cut from the shared music library (js/music.js, backend/music_mix.py) -->
+            <div id="tab-music" class="tab-content">
+              <div class="option-group">
+                <label class="toggle-switch">
+                  <input type="checkbox" id="music-enabled" checked>
+                  <span class="switch-slider"></span>
+                  <span class="switch-label">Música de fundo</span>
+                </label>
+                <p class="field-hint">Ponha uma ou mais músicas em camadas, corte cada uma onde quiser e ouça o resultado no preview. Os tempos são do vídeo já cortado, e as camadas aparecem na timeline no modo <strong>Sequência Contínua</strong>.</p>
+              </div>
+
+              <label class="label-heading">Suas músicas</label>
+              <div class="split-actions">
+                <button type="button" class="btn btn-secondary btn-sm" id="music-upload-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M6 10l6-6 6 6M4 20h16"></path></svg>Enviar música</button>
+                <input type="file" id="music-file" multiple accept="audio/*,.mp3,.wav,.m4a,.aac,.ogg,.opus,.flac" hidden>
+                <button type="button" class="btn btn-ai-purple btn-sm" id="music-search-toggle"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>Buscar músicas grátis</button>
+              </div>
+              <div id="music-library" class="music-list"></div>
+
+              <div id="music-search" class="music-search hidden">
+                <div class="seg-toggle" id="ms-provider"></div>
+                <p class="field-hint" id="ms-note" style="margin:0"></p>
+                <div class="ms-row">
+                  <input type="text" id="ms-q" class="text-input" placeholder="Buscar (ex.: calma, épica, piano, lofi…)" spellcheck="false" maxlength="80">
+                  <button type="button" class="btn btn-accent btn-sm" id="ms-go">Buscar</button>
+                </div>
+                <div id="ms-mode" class="seg-toggle hidden">
+                  <button type="button" data-mode="credit" class="active">Com crédito (CC BY)</button>
+                  <button type="button" data-mode="free">Sem crédito (CC0)</button>
+                </div>
+                <div id="ms-chips" class="ms-chips"></div>
+                <select id="ms-genre" class="text-input hidden"></select>
+                <div id="ms-status" class="field-hint" style="margin:0"></div>
+                <div id="ms-results" class="music-list"></div>
+                <button type="button" class="btn btn-ghost btn-xs hidden" id="ms-more">Carregar mais</button>
+              </div>
+
+              <label class="label-heading" style="margin-top:6px">Camadas</label>
+              <div id="music-layers"></div>
+              <div class="split-actions">
+                <button type="button" class="btn btn-secondary btn-xs" id="music-add-layer">+ Nova camada</button>
+              </div>
+
+              <div id="music-clip-box" class="option-group hidden">
+                <div class="mclip-head"><strong id="mclip-name"></strong><span class="badge badge-dim" id="mclip-layer"></span></div>
+                <div class="mclip-grid">
+                  <div class="form-group"><label for="mclip-start">Começa em (s)</label><input type="number" id="mclip-start" class="text-input" min="0" step="0.1"></div>
+                  <div class="form-group"><label for="mclip-dur">Dura (s)</label><input type="number" id="mclip-dur" class="text-input" min="0.1" step="0.1"></div>
+                  <div class="form-group"><label for="mclip-in" title="Em que ponto da música o trecho começa: é o corte">Música a partir de (s)</label><input type="number" id="mclip-in" class="text-input" min="0" step="0.1"></div>
+                </div>
+                <div class="grade-row">
+                  <div class="grade-row-head"><label for="mclip-vol">Volume do trecho</label><span class="grade-val" id="mclip-vol-val"></span></div>
+                  <input type="range" id="mclip-vol" min="0" max="200" step="1">
+                </div>
+                <div class="grade-row">
+                  <div class="grade-row-head"><label for="mclip-fin">Entrada suave (fade in)</label><span class="grade-val" id="mclip-fin-val"></span></div>
+                  <input type="range" id="mclip-fin" min="0" max="100" step="1">
+                </div>
+                <div class="grade-row">
+                  <div class="grade-row-head"><label for="mclip-fout">Saída suave (fade out)</label><span class="grade-val" id="mclip-fout-val"></span></div>
+                  <input type="range" id="mclip-fout" min="0" max="100" step="1">
+                </div>
+                <div class="split-actions">
+                  <button type="button" class="btn btn-secondary btn-xs" id="mclip-split" title="Corta o trecho na agulha (S)">✂ Dividir na agulha</button>
+                  <button type="button" class="btn btn-secondary btn-xs" id="mclip-dup">⧉ Duplicar</button>
+                  <button type="button" class="btn btn-ghost btn-xs" id="mclip-del" title="Excluir trecho (Del)">✕ Excluir</button>
+                </div>
+                <p class="field-hint">Na timeline: arraste o trecho para mover (também entre camadas), as bordas para cortar e os quadradinhos de cima para os fades. <strong>S</strong> divide na agulha, <strong>Del</strong> exclui.</p>
+              </div>
+
+              <div class="option-group" id="music-duck-box">
+                <label class="toggle-switch">
+                  <input type="checkbox" id="music-duck" checked>
+                  <span class="switch-slider"></span>
+                  <span class="switch-label">Abaixar a música quando eu falo</span>
+                </label>
+                <div class="grade-row" style="margin-top:10px">
+                  <div class="grade-row-head"><label for="music-duck-db">Quanto abaixa</label><span class="grade-val" id="music-duck-val"></span></div>
+                  <input type="range" id="music-duck-db" min="3" max="24" step="1">
+                  <div class="grade-hint">A música fica mais baixa só enquanto há voz e volta sozinha nas pausas. O vídeo final faz isso com a voz real; o preview é uma aproximação.</div>
+                </div>
+              </div>
+
+              <div id="music-credits-box" class="option-group hidden">
+                <label class="label-heading">Créditos (obrigatórios)</label>
+                <p class="field-hint" style="margin:4px 0 8px">Algumas músicas usadas exigem que você dê o crédito ao autor. Cole este texto na legenda ou descrição do vídeo.</p>
+                <textarea id="music-credits" class="text-input" rows="5" readonly spellcheck="false"></textarea>
+                <button type="button" class="btn btn-secondary btn-xs" id="music-credits-copy" style="margin-top:6px">Copiar créditos</button>
+              </div>
+            </div>
+
+            <!-- Motion Graphics Tab: Remotion compositions rendered server-side (js/motion.js, backend/motion_graphics.py) -->
+            <div id="tab-motion" class="tab-content">
+              <div class="option-group">
+                <label class="toggle-switch">
+                  <input type="checkbox" id="motion-enabled" checked>
+                  <span class="switch-slider"></span>
+                  <span class="switch-label">Motion graphics</span>
+                </label>
+                <p class="field-hint">Animações feitas em React (Remotion): título cinético e outros modelos. Cada item vira um bloco na trilha própria da timeline, no modo <strong>Sequência Contínua</strong>, e pode valer para o vídeo inteiro ou só para um corte.</p>
+              </div>
+
+              <div class="option-group" id="motion-create-box">
+                <label class="label-heading" for="motion-create-text">Criar com IA</label>
+                <p class="field-hint" style="margin:0 0 6px">Descreva o que quer ver e onde. A IA escolhe o modelo, escreve o texto e, se você pedir, faz o gráfico seguir o seu rosto ou a sua mão.</p>
+                <textarea id="motion-create-text" class="text-input" rows="3" maxlength="600" spellcheck="false" placeholder="Ex.: um anel na minha mão escrito &quot;clique aqui&quot;&#10;Ex.: um emoji de fogo acima da minha cabeça"></textarea>
+                <div class="form-group" style="margin-top:8px">
+                  <label for="motion-ai-provider">IA que cria os motions</label>
+                  <div class="ms-row">
+                    <select id="motion-ai-provider" class="text-input"></select>
+                    <input type="text" id="motion-ai-model" class="text-input" list="motion-ai-models" placeholder="Modelo (vazio = o salvo)" spellcheck="false" autocomplete="off">
+                    <datalist id="motion-ai-models"></datalist>
+                  </div>
+                  <p class="field-hint" style="margin:4px 0 0" id="motion-ai-hint">Modelos maiores (ex.: Claude Opus/Sonnet, GPT-4.1 ou superior) capricham muito mais nos detalhes das animações do que os pequenos e rápidos.</p>
+                </div>
+                <div class="split-actions">
+                  <button type="button" class="btn btn-ai-purple btn-sm" id="motion-create-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"></path></svg>Criar com IA</button>
+                </div>
+                <p class="field-hint" style="margin:6px 0 0">Entra no ponto da timeline em que você está, ou no corte selecionado.</p>
+              </div>
+
+              <label class="label-heading">Itens</label>
+              <div id="motion-items"></div>
+              <div class="split-actions">
+                <select id="motion-add-template" class="text-input"></select>
+                <button type="button" class="btn btn-secondary btn-xs" id="motion-add-item">+ Adicionar</button>
+              </div>
+
+              <div id="motion-item-box" class="option-group hidden">
+                <div class="mclip-head"><strong id="motion-item-name"></strong><span id="motion-item-status"></span></div>
+
+                <div class="form-group">
+                  <label>Aparece em</label>
+                  <div class="seg-toggle" id="motion-scope-toggle">
+                    <button type="button" data-scope="project">Horário do projeto</button>
+                    <button type="button" data-scope="clip">Um corte</button>
+                  </div>
+                </div>
+                <div class="form-group hidden" id="motion-clip-pick-box">
+                  <label for="motion-clip-pick">Corte</label>
+                  <select id="motion-clip-pick" class="text-input"></select>
+                </div>
+
+                <div class="mclip-grid" style="grid-template-columns:repeat(2,1fr)">
+                  <div class="form-group"><label for="mo-start">Começa em (s)</label><input type="number" id="mo-start" class="text-input" min="0" step="0.1"></div>
+                  <div class="form-group"><label for="mo-dur">Dura (s)</label><input type="number" id="mo-dur" class="text-input" min="0.3" step="0.1"></div>
+                </div>
+
+                <div class="form-group">
+                  <label for="motion-ai-text">Descreva o que você quer (a IA preenche os campos abaixo)</label>
+                  <div class="ms-row">
+                    <input type="text" id="motion-ai-text" class="text-input" maxlength="600" placeholder="Ex.: título chamativo anunciando uma promoção, destacando o preço" spellcheck="false">
+                    <button type="button" class="btn btn-ai-purple btn-sm" id="motion-ai-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>Gerar com IA</button>
+                  </div>
+                </div>
+
+                <div id="motion-props"></div>
+
+                <div id="motion-follow-box" class="hidden">
+                  <label class="label-heading">Seguir algo no vídeo</label>
+                  <div class="seg-toggle" id="motion-follow-target">
+                    <button type="button" data-target="none">Parado</button>
+                    <button type="button" data-target="face">Rosto</button>
+                    <button type="button" data-target="hand">Mão</button>
+                    <button type="button" data-target="point">Ponto</button>
+                  </div>
+                  <div id="motion-follow-cfg" class="hidden">
+                    <div class="form-group" style="margin-top:8px"><label for="motion-follow-part">Em que parte fica</label><select id="motion-follow-part" class="text-input"></select></div>
+                    <div class="grade-row"><div class="grade-row-head"><label for="mo-follow-dx">Ajuste na horizontal</label><span class="grade-val" id="mo-follow-dx-val">0%</span></div><input type="range" id="mo-follow-dx" min="-30" max="30" step="1" value="0"></div>
+                    <div class="grade-row"><div class="grade-row-head"><label for="mo-follow-dy">Ajuste na vertical</label><span class="grade-val" id="mo-follow-dy-val">0%</span></div><input type="range" id="mo-follow-dy" min="-30" max="30" step="1" value="0"></div>
+                    <div class="grade-row"><div class="grade-row-head"><label for="mo-follow-smooth">Movimento</label><span class="grade-val" id="mo-follow-smooth-val">suave</span></div><input type="range" id="mo-follow-smooth" min="0" max="100" step="1" value="40"></div>
+                    <div class="split-actions">
+                      <button type="button" class="btn btn-secondary btn-xs" id="motion-follow-pick">Escolher no vídeo</button>
+                      <button type="button" class="btn btn-secondary btn-xs" id="motion-follow-analyze">Analisar</button>
+                    </div>
+                    <div class="track-status" id="motion-follow-status"></div>
+                    <div class="track-progress hidden" id="motion-follow-progress"><i></i></div>
+                    <p class="field-hint" id="motion-follow-hint"></p>
+                  </div>
+                </div>
+
+                <div class="split-actions">
+                  <button type="button" class="btn btn-accent btn-sm" id="motion-render-btn">Renderizar</button>
+                  <button type="button" class="btn btn-ghost btn-xs" id="motion-del-item">✕ Excluir</button>
+                </div>
+                <p class="field-hint" id="motion-render-hint"></p>
+              </div>
+            </div>
+
+            <!-- Format Tab: aspect ratio + scale/position/rotation of the video within it -->
+            <!-- Face tracking tab -->
+            <div id="tab-track" class="tab-content">
+              <div class="option-group">
+                <label class="toggle-switch">
+                  <input type="checkbox" id="track-enabled">
+                  <span class="switch-slider"></span>
+                  <span class="switch-label">Câmera que segue o rosto</span>
+                </label>
+                <p class="field-hint" style="margin:6px 0 0">O vídeo se aproxima e acompanha a pessoa, deixando o rosto sempre no centro, como se alguém filmasse seguindo ela.</p>
+                <div class="track-status" id="track-status"></div>
+                <div class="track-progress hidden" id="track-progress"><i></i></div>
+                <button type="button" class="btn btn-secondary btn-sm" id="track-analyze" style="margin-top:8px">🔍 Analisar rosto</button>
+              </div>
+
+              <div id="track-cfg" class="hidden">
+                <div class="option-group">
+                  <label class="label-heading">Onde aplicar</label>
+                  <div class="seg-toggle" id="track-mode">
+                    <button type="button" data-mode="all" class="active">Vídeo todo</button>
+                    <button type="button" data-mode="ranges">Só em alguns cortes</button>
+                  </div>
+                  <div id="track-ranges" class="hidden">
+                    <p class="field-hint" id="track-ranges-info" style="margin:8px 0"></p>
+                    <div class="track-btn-row">
+                      <button type="button" class="btn btn-secondary btn-xs" id="track-add">＋ Ligar neste corte</button>
+                      <button type="button" class="btn btn-ghost btn-xs" id="track-remove">− Desligar neste corte</button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="option-group">
+                  <label class="label-heading">Quem seguir</label>
+                  <p class="field-hint" id="track-who" style="margin:-4px 0 8px"></p>
+                  <div class="track-btn-row">
+                    <button type="button" class="btn btn-secondary btn-xs" id="track-pick">👤 Escolher a pessoa no vídeo</button>
+                    <button type="button" class="btn btn-ghost btn-xs" id="track-auto" hidden>Voltar ao automático</button>
+                  </div>
+                  <p class="field-hint" style="margin:8px 0 0">Com mais de uma pessoa no vídeo, pause no momento em que ela aparece, clique em “Escolher” e depois no quadrado em volta do rosto dela.</p>
+                </div>
+
+                <div class="option-group">
+                  <div class="grade-row">
+                    <div class="grade-row-head"><label for="track-zoom">Proximidade da câmera</label><span class="grade-val" id="track-zoom-val"></span></div>
+                    <input type="range" id="track-zoom" min="5" max="150" step="1">
+                    <div class="grade-hint">Quanto mais perto, mais a câmera pode se mover para seguir. Com o rosto perto da borda, ela para na borda da imagem.</div>
+                  </div>
+                  <div class="grade-row">
+                    <div class="grade-row-head"><label for="track-smooth">Suavidade do movimento</label><span class="grade-val" id="track-smooth-val"></span></div>
+                    <input type="range" id="track-smooth" min="0" max="100" step="1">
+                  </div>
+                  <div class="grade-row">
+                    <div class="grade-row-head"><label for="track-anchor">Altura do rosto no quadro</label><span class="grade-val" id="track-anchor-val"></span></div>
+                    <input type="range" id="track-anchor" min="25" max="65" step="1">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div id="tab-frame" class="tab-content">
+              <div class="option-group">
+                <label class="label-heading">Formato do vídeo</label>
+                <div class="seg-toggle" id="frame-ratio">
+                  <button type="button" data-ratio="original" class="active">Original</button>
+                  <button type="button" data-ratio="16:9">16:9</button>
+                  <button type="button" data-ratio="9:16">9:16</button>
+                  <button type="button" data-ratio="1:1">1:1</button>
+                  <button type="button" data-ratio="4:5">4:5</button>
+                </div>
+                <p class="field-hint">“Original” mantém o formato do arquivo enviado. Nos outros, o vídeo preenche o novo quadro e você ajusta zoom, posição e rotação abaixo.</p>
+              </div>
+
+              <div class="option-group">
+                <label class="label-heading">Zoom, posição e rotação</label>
+                <p class="field-hint" style="margin:-4px 0 8px">Arraste o vídeo na prévia para reposicionar (a roda do mouse dá zoom), ou use os controles abaixo.</p>
+                <div class="grade-row">
+                  <div class="grade-row-head"><label for="frame-scale">Zoom</label><span class="grade-val" id="frame-scale-val"></span></div>
+                  <input type="range" id="frame-scale" min="20" max="400" step="1">
+                </div>
+                <div class="grade-row">
+                  <div class="grade-row-head"><label for="frame-rotation">Rotação</label><span class="grade-val" id="frame-rotation-val"></span></div>
+                  <input type="range" id="frame-rotation" min="-180" max="180" step="1">
+                </div>
+                <div class="grade-row">
+                  <div class="grade-row-head"><label for="frame-x">Posição horizontal</label><span class="grade-val" id="frame-x-val"></span></div>
+                  <input type="range" id="frame-x" min="-100" max="100" step="1">
+                </div>
+                <div class="grade-row">
+                  <div class="grade-row-head"><label for="frame-y">Posição vertical</label><span class="grade-val" id="frame-y-val"></span></div>
+                  <input type="range" id="frame-y" min="-100" max="100" step="1">
+                </div>
+                <button type="button" class="btn btn-ghost btn-xs" id="btn-frame-reset">Restaurar posição</button>
+              </div>
+
+              <div class="option-group">
+                <label class="label-heading">Cor de fundo</label>
+                <p class="field-hint" style="margin:-4px 0 8px">Preenche o espaço vazio quando o vídeo (com zoom reduzido, ou rotacionado) não cobre o quadro todo.</p>
+                <input type="color" id="frame-background" value="#000000">
+              </div>
+            </div>
+          </div>
+          </div>
+        </aside>
+      </main>
+
+      <!-- Bottom: Multi-Track Timeline -->
+      <footer class="timeline-tray">
+        <div class="timeline-toolbar">
+          <div class="timeline-toolbar-left">
+            <span class="timeline-heading">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="4" y1="6" x2="20" y2="6"></line>
+                <line x1="4" y1="12" x2="20" y2="12"></line>
+                <line x1="4" y1="18" x2="20" y2="18"></line>
+              </svg>
+              Timeline de Edição
+            </span>
+            <span id="timeline-stats" class="badge badge-dim">0 cortes | 00:00 final</span>
+          </div>
+
+          <div class="timeline-toolbar-right">
+            <button id="btn-toggle-timeline-mode" class="btn btn-ghost btn-xs active" title="Alternar entre Sequência Contínua (sem gaps) e Mídia Bruta (com gaps)">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M3 9h18M3 15h18M8 4v16M16 4v16"></path></svg>
+              Sequência Contínua
+            </button>
+            <button id="btn-reset-edits" class="btn btn-ghost btn-xs" title="Restaurar clipe completo sem cortes">
+              Restaurar Original
+            </button>
+            <button id="btn-snap-toggle" class="btn btn-ghost btn-xs active" title="Ativar/Desativar Imã (Snapping)">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 15a6 6 0 0 0 12 0V3h-4v12a2 2 0 0 1-4 0V3H6z"></path><path d="M6 8h4M14 8h4"></path></svg>
+              Snapping
+            </button>
+          </div>
+        </div>
+
+        <!-- Scrollable Timeline Track Area (virtualized: only the visible window is drawn) -->
+        <div class="timeline-viewport" id="timeline-viewport">
+          <div class="timeline-content" id="timeline-content">
+            <!-- Playhead Needle -->
+            <div class="playhead" id="playhead">
+              <div class="playhead-handle"></div>
+              <div class="playhead-line"></div>
+            </div>
+
+            <!-- Time Ruler Track -->
+            <div class="ruler-row">
+              <div class="ruler-corner"></div>
+              <div class="timeline-ruler" id="timeline-ruler">
+                <canvas id="ruler-canvas"></canvas>
+              </div>
+            </div>
+
+            <!-- Multi-Track Container -->
+            <div class="tracks-stack" id="tracks-stack">
+              <!-- Track 1: Headline Overlay -->
+              <div class="track-lane track-headline" title="Trilha de Headline / Hook">
+                <div class="track-label">HEADLINE</div>
+                <div class="track-content" id="track-headline-content">
+                  <div class="headline-block" id="timeline-headline-block">
+                    <span class="block-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 17v5M9 3h6l-1 6 3 3v2H7v-2l3-3z"></path></svg></span>
+                    <span id="headline-block-text">Hook Inicial</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Track 2: Subtitles Track -->
+              <div class="track-lane track-subtitles" title="Trilha de Legendas">
+                <div class="track-label">LEGENDAS</div>
+                <div class="track-content" id="track-subtitles-content">
+                  <!-- Dynamic speech subtitle blocks -->
+                </div>
+              </div>
+
+              <!-- Track 3: Video Clips (Filmstrip + Handles) -->
+              <div class="track-lane track-video" title="Trilha de Vídeo">
+                <div class="track-label">VÍDEO</div>
+                <div class="track-content" id="track-video-content">
+                  <!-- Dynamic draggable video segments -->
+                </div>
+              </div>
+
+              <!-- Track 4: Audio Waveform -->
+              <div class="track-lane track-audio" title="Trilha de Áudio & Silêncios">
+                <div class="track-label">ÁUDIO</div>
+                <div class="track-content" id="track-audio-content">
+                  <canvas id="waveform-canvas"></canvas>
+                </div>
+              </div>
+
+              <!-- Split screen: the images/videos of the scenes (single lane, built by js/splitscreen.js) -->
+              <div id="split-lanes"></div>
+
+              <!-- Music layers (one lane per layer, built by js/music.js) -->
+              <div id="music-lanes"></div>
+
+              <!-- Motion graphics (single lane, built by js/motion.js) -->
+              <div id="motion-lanes"></div>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Modal: choose which parts of a split-screen video are shown (js/mediacut.js) -->
+  <div id="cut-modal" class="modal-backdrop hidden">
+    <div class="modal-card modal-card-lg cut-card">
+      <div class="modal-header">
+        <div class="modal-title"><span id="cut-title">Escolher o que aparece do vídeo</span></div>
+        <button id="cut-close" class="btn-close" title="Fechar sem salvar">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="cut-stage"><video id="cut-video" playsinline muted preload="auto"></video></div>
+        <p id="cut-warn" class="field-hint warn hidden"></p>
+        <div class="cut-transport">
+          <button type="button" class="btn btn-secondary btn-sm" id="cut-play">▶ Tocar</button>
+          <span id="cut-time" class="cut-time">0:00,0 / 0:00,0</span>
+          <label class="toggle-switch cut-skip"><input type="checkbox" id="cut-skip" checked><span class="switch-slider"></span><span class="switch-label">Pular as partes removidas</span></label>
+        </div>
+        <div id="cut-bar" class="cut-bar" title="Clique para posicionar a agulha">
+          <canvas id="cut-strip" class="cut-strip"></canvas>
+          <div id="cut-pieces"></div>
+          <div id="cut-head" class="cut-head"></div>
+        </div>
+        <div class="split-actions">
+          <button type="button" class="btn btn-secondary btn-sm" id="cut-split" title="Corta a parte na agulha (S)">✂ Dividir na agulha</button>
+          <button type="button" class="btn btn-secondary btn-sm" id="cut-toggle" title="Remove ou devolve a parte selecionada (Delete)">Remover esta parte</button>
+          <button type="button" class="btn btn-ghost btn-sm" id="cut-reset">Restaurar tudo</button>
+        </div>
+        <div class="cut-selected">
+          <span id="cut-piece-state" class="cut-state keep"></span>
+          <label>de <input type="number" id="cut-from" class="text-input" min="0" step="0.1"></label>
+          <label>até <input type="number" id="cut-to" class="text-input" min="0" step="0.1"></label><span>s</span>
+        </div>
+        <p id="cut-summary" class="field-hint"></p>
+        <p class="field-hint">Clique na barra para mover a agulha, <strong>Dividir</strong> para cortar ali e <strong>Remover</strong> para tirar a parte que você não quer apresentar. Arraste as pontas laranjas entre as partes para ajustar. Atalhos: S divide, Delete remove, espaço toca, setas andam.</p>
+        <div class="tpl-actions">
+          <button id="cut-cancel" class="btn btn-ghost btn-sm">Cancelar</button>
+          <button id="cut-apply" class="btn btn-accent btn-sm">Aplicar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Save the current look as an edit template for the automatic queue -->
+  <div id="template-modal" class="modal-backdrop hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title"><span>Salvar como template de edição</span></div>
+        <button id="btn-close-template-modal" class="btn-close" title="Fechar">&times;</button>
+      </div>
+      <div class="modal-body tpl-form">
+        <p class="field-hint">Guarda o estilo de legenda, o headline e o color grade que estão no editor agora. Na tela <strong>Fila de edição</strong> você escolhe o template e os vídeos novos são editados sozinhos com ele.</p>
+
+        <div class="form-group">
+          <label for="tpl-name">Nome do template</label>
+          <input type="text" id="tpl-name" class="text-input" maxlength="60" placeholder="Ex.: Meu canal, cortes rápidos">
+        </div>
+
+        <label class="toggle-switch"><input type="checkbox" id="tpl-keep-text"><span class="switch-slider"></span><span class="switch-label">Guardar também o texto atual do headline (igual em todos os vídeos)</span></label>
+
+        <div class="tpl-group-title">O que a fila faz com cada vídeo</div>
+        <label class="toggle-switch"><input type="checkbox" id="tpl-auto-cut" checked><span class="switch-slider"></span><span class="switch-label">Cortar os silêncios automaticamente</span></label>
+        <label class="toggle-switch"><input type="checkbox" id="tpl-transcribe" checked><span class="switch-slider"></span><span class="switch-label">Transcrever o áudio (necessário para as legendas)</span></label>
+        <div class="form-group">
+          <label for="tpl-ai-review">Revisão da transcrição por IA (acerta os cortes)</label>
+          <select id="tpl-ai-review" class="text-input">
+            <option value="auto">Automático: IA se houver chave, senão só cortes por silêncio</option>
+            <option value="llm">IA na nuvem (exige chave em Configurações)</option>
+            <option value="local">Regras locais (grátis, menos precisa)</option>
+            <option value="off">Desligada</option>
+          </select>
+        </div>
+        <div class="form-row form-row-even">
+          <div class="form-group"><label for="tpl-ai-provider">Provedor</label><select id="tpl-ai-provider" class="text-input"></select></div>
+          <div class="form-group"><label for="tpl-ai-model">Modelo (vazio = o salvo)</label><input type="text" id="tpl-ai-model" class="text-input" spellcheck="false" placeholder="ex.: claude-opus-5"></div>
+        </div>
+        <label class="toggle-switch"><input type="checkbox" id="tpl-ai-fix" checked><span class="switch-slider"></span><span class="switch-label">Corrigir palavras mal transcritas (legendas mais certas)</span></label>
+
+        <div class="form-row form-row-even">
+          <div class="form-group">
+            <label for="tpl-language">Idioma</label>
+            <select id="tpl-language" class="text-input"><option value="pt">Português</option><option value="en">Inglês</option><option value="es">Espanhol</option><option value="auto">Detectar</option></select>
+          </div>
+          <div class="form-group">
+            <label for="tpl-engine">Transcrição</label>
+            <select id="tpl-engine" class="text-input"><option value="auto">Automático</option><option value="elevenlabs">ElevenLabs Scribe</option><option value="groq">Groq Whisper (large-v3)</option><option value="groq_turbo">Groq Whisper (turbo, mais rápido)</option><option value="whisper">Whisper local</option></select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="tpl-render-mode">Render</label>
+          <select id="tpl-render-mode" class="text-input"><option value="final">Final (qualidade máxima)</option><option value="preview">Prévia (mais rápido)</option></select>
+        </div>
+
+        <label class="toggle-switch"><input type="checkbox" id="tpl-make-default"><span class="switch-slider"></span><span class="switch-label">Usar como template padrão da fila</span></label>
+
+        <div class="tpl-actions">
+          <button id="btn-cancel-template" class="btn btn-ghost btn-sm">Cancelar</button>
+          <button id="btn-confirm-template" class="btn btn-accent btn-sm">Salvar template</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: build a transition (js/transitions.js) -->
+  <div id="tx-builder" class="modal-backdrop hidden">
+    <div class="modal-card tx-builder-card">
+      <div class="modal-header">
+        <div class="modal-title"><span id="tx-b-title">Criar transição</span></div>
+        <button id="tx-b-close" class="btn-close" title="Fechar">&times;</button>
+      </div>
+      <div class="modal-body tpl-form">
+        <div class="tx-b-top">
+          <div class="tx-demo-stage"><canvas id="tx-b-demo" width="320" height="180"></canvas><div class="tx-demo-veil" id="tx-b-demo-veil"></div></div>
+          <div class="tx-b-meta">
+            <div class="form-group"><label for="tx-b-name">Nome</label><input type="text" id="tx-b-name" class="text-input" maxlength="60" placeholder="Ex.: Flash dourado"></div>
+            <div class="form-group"><label for="tx-b-icon">Ícone (emoji)</label><input type="text" id="tx-b-icon" class="text-input" maxlength="4" style="width:80px"></div>
+            <button type="button" class="btn btn-ghost btn-sm" id="tx-b-restart">↻ Rever</button>
+          </div>
+        </div>
+        <div class="tpl-group-title">Efeitos (acontecem juntos, ao redor do corte)</div>
+        <div id="tx-b-fx"></div>
+        <div class="tx-media-row" style="margin:8px 0 12px">
+          <select id="tx-b-add" class="text-input"></select>
+          <button type="button" class="btn btn-secondary btn-sm" id="tx-b-add-btn">＋ Adicionar</button>
+        </div>
+        <input type="file" id="tx-b-upload" class="hidden" accept=".webm,.mov,.mp4,.m4v,.png,.jpg,.jpeg,.webp">
+        <div class="tpl-group-title">Som (opcional)</div>
+        <div class="tx-media-row">
+          <select id="tx-b-sound" class="text-input"></select>
+          <button type="button" class="btn btn-secondary btn-sm" id="btn-tx-b-play">▶ Ouvir</button>
+        </div>
+        <div class="grade-row"><div class="grade-row-head"><label for="tx-b-sound-volume">Volume do som</label><span class="grade-val" id="tx-b-sound-volume-val"></span></div>
+          <input type="range" id="tx-b-sound-volume" min="0" max="150" step="5"></div>
+        <p class="field-hint tx-warn" id="tx-b-error"></p>
+        <div class="tpl-actions">
+          <button id="tx-b-cancel" class="btn btn-ghost btn-sm">Cancelar</button>
+          <button id="tx-b-save" class="btn btn-accent btn-sm">Salvar transição</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Upload & Processing Progress -->
+  <div id="upload-modal" class="modal-backdrop hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"></path>
+            <path d="M12 12v9"></path>
+            <path d="m16 16-4-4-4 4"></path>
+          </svg>
+          <span id="upload-modal-title">Importando & Analisando Vídeo</span>
+        </div>
+        <button id="btn-close-upload-modal" class="btn-close hidden" title="Fechar">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="progress-bar-container">
+          <div class="progress-bar-fill" id="upload-progress-bar" style="width: 0%;"></div>
+        </div>
+        <div class="progress-status-row">
+          <span id="upload-status-text">Enviando arquivo...</span>
+          <span id="upload-progress-pct">0%</span>
+        </div>
+
+        <!-- Terminal Console Box -->
+        <div class="console-box" id="upload-console-logs">
+          <div class="console-line">[Upload] Conectando ao servidor StudioX...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Render & Export Progress -->
+  <div id="render-modal" class="modal-backdrop hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+            <polyline points="2 17 12 22 22 17"></polyline>
+            <polyline points="2 12 12 17 22 12"></polyline>
+          </svg>
+          Renderizar Vídeo via StudioX
+        </div>
+        <button id="btn-close-modal" class="btn-close">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div id="render-config-view">
+          <div class="render-summary-box">
+            <div class="summary-row">
+              <span>Cortes a renderizar:</span>
+              <strong id="summary-cuts-count">0</strong>
+            </div>
+            <div class="summary-row">
+              <span>Duração final estimada:</span>
+              <strong id="summary-duration">00:00</strong>
+            </div>
+            <div class="summary-row">
+              <span>Template de Legenda:</span>
+              <strong id="summary-sub-template">TikTok / Reels Viral</strong>
+            </div>
+            <div class="summary-row">
+              <span>Headline:</span>
+              <strong id="summary-headline">Desligado</strong>
+            </div>
+            <div class="summary-row">
+              <span>Color Grade:</span>
+              <strong id="summary-grade">Warm Cinematic</strong>
+            </div>
+            <div class="summary-row">
+              <span>LUT:</span>
+              <strong id="summary-lut">Nenhum</strong>
+            </div>
+            <div class="summary-row">
+              <span>Transição:</span>
+              <strong id="summary-transition">Corte seco (padrão)</strong>
+            </div>
+            <div class="summary-row">
+              <span>Zoom nos cortes:</span>
+              <strong id="summary-zoom">Desligado</strong>
+            </div>
+            <div class="summary-row">
+              <span>Música de fundo:</span>
+              <strong id="summary-music">Desligada</strong>
+            </div>
+          </div>
+
+          <div class="render-mode-selector">
+            <label class="radio-card active">
+              <input type="radio" name="render-mode" value="final" checked>
+              <div class="radio-content">
+                <span class="radio-title">Render Final (1080p CRF 18)</span>
+                <span class="radio-desc">Qualidade máxima para publicação com normalização -14 LUFS.</span>
+              </div>
+            </label>
+
+            <label class="radio-card">
+              <input type="radio" name="render-mode" value="preview">
+              <div class="radio-content">
+                <span class="radio-title">Preview Rápido (720p Draft)</span>
+                <span class="radio-desc">Extração acelerada ultrafast para conferir o ritmo e os cortes.</span>
+              </div>
+            </label>
+          </div>
+
+          <button id="btn-start-render" class="btn btn-accent btn-block btn-lg">
+            Iniciar Renderização FFmpeg
+          </button>
+        </div>
+
+        <!-- Render in progress & done view -->
+        <div id="render-progress-view" class="hidden">
+          <div class="progress-bar-container">
+            <div class="progress-bar-fill" id="render-progress-bar" style="width: 0%;"></div>
+          </div>
+          <div class="progress-status-row">
+            <span id="render-status-text">Processando cortes...</span>
+            <span id="render-progress-pct">0%</span>
+          </div>
+
+          <!-- Console Terminal Box -->
+          <div class="console-box" id="console-logs">
+            <div class="console-line">[StudioX] Inicializando motor...</div>
+          </div>
+
+          <!-- Finished Actions -->
+          <div id="render-finished-actions" class="render-finished-actions hidden">
+            <video id="rendered-video-preview" controls class="rendered-preview-player"></video>
+            <div class="actions-row">
+              <a id="btn-download-video" class="btn btn-primary" href="#" download="final_video.mp4">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                Baixar Vídeo Final (MP4)
+              </a>
+              <a id="btn-download-edl" class="btn btn-secondary" href="#" download="edl.json">
+                Baixar EDL JSON
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: AI Assistant Analysis -->
+  <div id="ai-modal" class="modal-backdrop hidden">
+    <div class="modal-card modal-card-lg ai-modal-card">
+      <div class="modal-header">
+        <div class="modal-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path></svg>
+          Assistente de Edição com IA (Erros & Retakes)
+        </div>
+        <button id="btn-close-ai-modal" class="btn-close">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Configuration section -->
+        <div class="ai-config-section">
+          <div class="form-row form-row-even">
+            <div class="form-group">
+              <label>Motor de Inteligência Artificial</label>
+              <select id="ai-provider-select" class="text-input">
+                <option value="local">Regras locais (grátis, sem chave)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Modelo (vazio = o salvo)</label>
+              <input type="text" id="ai-model" class="text-input" spellcheck="false" placeholder="ex.: claude-opus-5">
+            </div>
+          </div>
+          <p class="field-hint" id="ai-provider-hint" style="margin:-4px 0 8px">As chaves das IAs são salvas na tela <a href="/studiox/settings.html" class="link">Configurações</a>.</p>
+
+          <div class="form-group">
+            <label for="ai-copy">Copy (roteiro) deste vídeo — recomendado</label>
+            <textarea id="ai-copy" class="text-input" rows="5" maxlength="20000" spellcheck="false"
+              placeholder="Cole aqui o texto que você leu. A análise segue o roteiro: mantém cada fala uma vez, na melhor gravação, preserva repetições que fazem parte do texto (ex.: “A gente faz. A gente integra.”) e corta tentativas refeitas, erros e o que não está nele."></textarea>
+            <label class="check-row" style="display:flex;align-items:center;gap:6px;margin-top:6px;font-size:12px;cursor:pointer">
+              <input type="checkbox" id="ai-strict" checked> Cortar falas que não estão na copy
+            </label>
+            <p class="field-hint" id="ai-copy-hint" style="margin:4px 0 0">Sem copy, a análise só enxerga a transcrição e pode confundir uma repetição do roteiro com um erro. A copy fica salva neste projeto e vale também para a fila.</p>
+          </div>
+
+          <div class="form-group">
+            <label for="ai-instructions">Instrução extra só desta análise (opcional)</label>
+            <input type="text" id="ai-instructions" class="text-input" value="" placeholder="Ex.: mantenha o tom informal; não corte hesitações curtas.">
+            <p class="field-hint" style="margin:4px 0 0">As instruções que valem para todos os vídeos (fila e editor) ficam em <a href="/studiox/settings.html" class="link">Configurações</a>.</p>
+          </div>
+
+          <button id="btn-run-ai-analysis" class="btn btn-ai-purple btn-block">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path></svg>
+            <span>Executar Análise Inteligente de Erros</span>
+          </button>
+        </div>
+
+        <!-- AI Results Section -->
+        <div id="ai-results-section" class="hidden">
+          <div id="ai-script-summary" class="ai-script-summary hidden"></div>
+          <!-- Stats Row -->
+          <div class="ai-stats-row">
+            <div class="ai-stat-card">
+              <span class="stat-num" id="ai-stat-errors">0</span>
+              <span class="stat-label">Erros Detectados</span>
+            </div>
+            <div class="ai-stat-card">
+              <span class="stat-num" id="ai-stat-retakes">0</span>
+              <span class="stat-label">Retakes Eliminados</span>
+            </div>
+            <div class="ai-stat-card">
+              <span class="stat-num" id="ai-stat-stutters">0</span>
+              <span class="stat-label">Gagueiras Cortadas</span>
+            </div>
+            <div class="ai-stat-card highlight">
+              <span class="stat-num" id="ai-stat-saved">0s</span>
+              <span class="stat-label">Tempo Economizado</span>
+            </div>
+          </div>
+
+          <!-- Interactive Transcript Diff -->
+          <div class="diff-container">
+            <div class="diff-header">
+              <span>Transcrição Analisada (Passe o mouse sobre os trechos cortados)</span>
+              <div class="diff-legend">
+                <span class="legend-item"><span class="legend-dot cut"></span> Cortado</span>
+                <span class="legend-item"><span class="legend-dot kept"></span> Mantido</span>
+              </div>
+            </div>
+            <div class="diff-word-flow" id="ai-diff-word-flow">
+              <!-- Dynamic Word Pills -->
+            </div>
+          </div>
+
+          <!-- AI Decisions Log -->
+          <div class="ai-decisions-log">
+            <div class="log-title">Decisões Editoriais da IA:</div>
+            <div class="log-list" id="ai-decisions-list">
+              <!-- Dynamic Decisions Items -->
+            </div>
+          </div>
+
+          <div class="actions-row">
+            <button id="btn-apply-ai-cuts" class="btn btn-accent btn-lg btn-block">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"></circle><path d="m8 12 3 3 5-6"></path></svg>
+              Aplicar Cortes da IA na Timeline
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Mount -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="js/icons.js?v=1"></script>
+  <script src="js/api.js?v=8"></script>
+  <script src="js/subtitles.js?v=9"></script>
+  <script src="js/headlines.js?v=4"></script>
+  <script src="js/grade.js?v=2"></script>
+  <script src="js/fx.js?v=5"></script>
+  <script src="js/templates.js?v=8"></script>
+  <script src="js/player.js?v=10"></script>
+  <script src="js/timeline.js?v=12"></script>
+  <script src="js/mediacut.js?v=3"></script>
+  <script src="js/splitscreen.js?v=8"></script>
+  <script src="js/music.js?v=4"></script>
+  <script src="js/motion.js?v=7"></script>
+  <script src="js/motiontrack.js?v=2"></script>
+  <script src="vendor/motion-player.js?v=4"></script>
+  <script src="js/motionplayer.js?v=6"></script>
+  <script src="js/looks.js?v=2"></script>
+  <script src="js/transitions.js?v=1"></script>
+  <script src="js/facetrack.js?v=1"></script>
+  <script src="js/canvasframe.js?v=2"></script>
+  <script src="js/projectstate.js?v=12"></script>
+  <script src="js/captionedit.js?v=1"></script>
+  <script src="js/app.js?v=20"></script>
+</body>
+</html>

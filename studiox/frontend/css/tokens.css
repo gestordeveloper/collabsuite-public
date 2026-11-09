@@ -1,0 +1,117 @@
+/* ==========================================================================
+   STUDIOX · TOKENS DO DESIGN SYSTEM EBENEZER
+   Fonte: design_system/Ebenezer Design System.dc.html (seções 02 a 04).
+   Interface escura por padrão. O rosa Ebenezer fica reservado para a ação
+   principal, o foco e o estado ativo; o resto é neutro.
+   Este arquivo só declara valores. Estilos de componentes ficam em studio.css.
+   ========================================================================== */
+
+:root {
+  color-scheme: dark;
+
+  /* ---- Marca ------------------------------------------------------------ */
+  --pink-50: #FFF0F7;
+  --pink-100: #FFD6EA;
+  --pink-200: #FFADD5;
+  --pink-300: #FF7DBE;
+  --pink-400: #F7479F;
+  --pink-500: #EC1889;   /* primary */
+  --pink-600: #C80E71;
+  --pink-700: #A00B5B;
+  --pink-800: #780946;
+  --pink-900: #4D062D;
+  --pink-text: #FF5CAE;  /* rosa legível sobre fundo escuro: links, texto ativo */
+  --pink-hover: #F23A9C; /* hover do botão primário */
+
+  /* ---- Neutros (superfícies e texto) ------------------------------------ */
+  --gray-0: #FFFFFF;
+  --gray-50: #F5F5F7;
+  --gray-100: #D4D4DA;
+  --gray-200: #A6A6B0;
+  --gray-300: #8A8A94;
+  --gray-400: #6E6E78;
+  --gray-500: #4A4A52;
+  --gray-600: #33333A;
+  --gray-700: #26262C;
+  --gray-800: #1B1B1F;
+  --gray-900: #141417;
+  --gray-950: #0B0B0D;
+
+  /* ---- Semânticas ------------------------------------------------------- */
+  --success: #2BD47D;   /* concluído, hábito feito */
+  --warning: #F7B32B;   /* em revisão, atenção */
+  --danger: #FF5A5F;    /* atrasado, urgente, excluir */
+  --info: #4C9BFF;      /* a fazer, links neutros */
+  --violet: #9B7BFF;
+  --teal: #2DD4BF;
+
+  /* Fundo "soft" = a cor com 14% de opacidade, texto na cor cheia */
+  --pink-soft: rgba(236, 24, 137, 0.14);
+  --success-soft: rgba(43, 212, 125, 0.14);
+  --warning-soft: rgba(247, 179, 43, 0.14);
+  --danger-soft: rgba(255, 90, 95, 0.14);
+  --info-soft: rgba(76, 155, 255, 0.14);
+  --violet-soft: rgba(155, 123, 255, 0.14);
+  --teal-soft: rgba(45, 212, 191, 0.14);
+  --gray-soft: rgba(138, 138, 148, 0.14);
+
+  /* ---- Superfícies (níveis de elevação) --------------------------------- */
+  --surface-app: #0B0B0D;      /* fundo da aplicação */
+  --surface-0: #0F0F12;        /* nível 0: barra lateral, painéis, campos */
+  --surface-1: #141417;        /* nível 1: card */
+  --surface-1b: #18181C;       /* card dentro de card */
+  --surface-overlay: #111114;  /* gaveta e janelas */
+  --surface-2: #1B1B1F;        /* nível 2: popover, hover */
+  --surface-3: #26262C;        /* item ativo, trilho de progresso */
+  --line-faint: #1F1F24;       /* divisórias de linha */
+  --line: #26262C;             /* borda de card */
+  --line-strong: #33333A;      /* borda de campo e botão */
+
+  /* ---- Tipografia ------------------------------------------------------- */
+  --font-heading: 'Sora', system-ui, -apple-system, 'Segoe UI', sans-serif;  /* títulos, números de destaque */
+  --font-body: 'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif;    /* interface, corpo */
+  --font-mono: 'Geist Mono', ui-monospace, 'Cascadia Mono', Consolas, monospace; /* horários, contadores, código */
+
+  --fs-display: 44px;   /* 44/48 */
+  --fs-h1: 28px;        /* 28/34 */
+  --fs-h2: 20px;        /* 20/28 */
+  --fs-h3: 15px;        /* 15/22 */
+  --fs-body: 14px;      /* 14/22 */
+  --fs-small: 12px;     /* 12/16 */
+  --fs-label: 11px;     /* 11 caps, +0.08em */
+
+  /* ---- Espaçamento: escala base de 4px ---------------------------------- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* ---- Raios ------------------------------------------------------------ */
+  --radius-xs: 4px;     /* tag */
+  --radius-pill: 6px;   /* pill */
+  --radius-sm: 8px;     /* botão, campo */
+  --radius-md: 12px;    /* card pequeno */
+  --radius-card: 14px;  /* card e seção */
+  --radius-lg: 16px;    /* janela */
+  --radius-full: 999px; /* avatar, toggle */
+
+  /* ---- Elevação --------------------------------------------------------- */
+  --shadow-popover: 0 12px 32px rgba(0, 0, 0, 0.5);
+  --shadow-drawer: -24px 0 48px rgba(0, 0, 0, 0.4);
+  --focus-ring: 0 0 0 3px rgba(236, 24, 137, 0.22);
+
+  /* ---- Movimento -------------------------------------------------------- */
+  --transition-fast: 0.15s ease;
+  --transition-smooth: 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* ---- Estrutura -------------------------------------------------------- */
+  --sidebar-w: 244px;
+  --sidebar-rail-w: 64px;
+  --header-h: 56px;
+}

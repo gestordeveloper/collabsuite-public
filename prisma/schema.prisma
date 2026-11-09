@@ -1,0 +1,2049 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// ─── ENUMS ───
+
+enum UserRole {
+  user
+  admin
+  super_admin
+}
+
+enum TaskPriority {
+  low
+  medium
+  high
+}
+
+enum TaskStatus {
+  notdone
+  inprogress
+  done
+  review
+}
+
+enum TaskType {
+  task
+  meeting
+  note
+}
+
+enum UserStatus {
+  registered
+  confirmed
+  active
+  inactive
+}
+
+enum RecurrenceFrequency {
+  daily
+  weekly
+  monthly
+}
+
+enum TranscriptStatus {
+  pending
+  processing
+  done
+  error
+}
+
+enum WhatsAppConnectionStatus {
+  disconnected
+  pairing
+  connected
+  error
+}
+
+enum WhatsAppCampaignStatus {
+  draft
+  scheduled
+  sending
+  paused
+  done
+  failed
+}
+
+enum WhatsAppRecipientStatus {
+  pending
+  sent
+  failed
+  skipped
+}
+
+enum RecordingStatus {
+  uploaded
+  transcribing
+  analyzing
+  done
+  error
+}
+
+enum FunnelVisibility {
+  everyone
+  restricted
+}
+
+// ─── MODELS ───
+
+model User {
+  id                    Int        @id @default(autoincrement())
+  company_id            Int?       @default(-1)
+  branch_id             Int?
+  telegram_id           String?    @db.VarChar(100)
+  photo                 String?    @db.VarChar(500)
+  first_name            String     @default("") @db.VarChar(100)
+  last_name             String?    @default("") @db.VarChar(100)
+  username              String?    @unique @db.VarChar(50)
+  biography             String?    @db.Text
+  document              String?    @db.VarChar(20)
+  datebirth             DateTime?
+  genre                 String?    @db.VarChar(10)
+  telephone             String?    @db.VarChar(20)
+  email                 String     @unique @default("") @db.VarChar(150)
+  password              String     @default("") @db.VarChar(255)
+  status                UserStatus @default(inactive)
+  url                   String?    @db.VarChar(500)
+  level                 Int        @default(1)
+  role                  UserRole   @default(user)
+  created_at            DateTime   @default(now())
+  updated_at            DateTime   @default(now()) @updatedAt
+  utm_source            String?    @db.VarChar(100)
+  utm_medium            String?    @db.VarChar(100)
+  utm_campaign          String?    @db.VarChar(100)
+  utm_term              String?    @db.VarChar(100)
+  schedule_settings     String?    @db.Text
+  notification_settings String?    @db.Text
+
+  projects               Project[]
+  driveOwnedProjects     Project[]              @relation("ProjectDriveOwner")
+  tasks                  Task[]                 @relation("TaskAssignee")
+  activities             TaskActivity[]
+  stageMoves             TaskStageHistory[]
+  projectUsers           ProjectUser[]
+  taskUsers              TaskUser[]
+  funnelUsers            FunnelUser[]
+  folders                Folder[]
+  proposalTemplates      ProposalTemplate[]
+  designs                Design[]
+  photoDocuments         PhotoDocument[]
+  customFonts            CustomFont[]
+  credentials            Credential[]
+  whatsappConnections    WhatsAppConnection[]
+  whatsappContactLists   WhatsAppContactList[]
+  whatsappCampaigns      WhatsAppCampaign[]
+  notifications          Notification[]
+  pushSubscriptions      PushSubscription[]
+  aiProviderCredentials  AiProviderCredential[]
+  agents                 Agent[]
+  agentPipelines         AgentPipeline[]
+  agentRuns              AgentRun[]
+  generatedImages        GeneratedImage[]
+  icps                   Icp[]
+  agentConversations     AgentConversation[]
+  habits                 Habit[]
+  healthDays             HealthDaily[]
+  healthWorkouts         HealthWorkout[]
+  healthProfile          HealthProfile?
+  githubAccount          GithubAccount?
+  teamHabitsCreated      TeamHabit[]            @relation("TeamHabitCreator")
+  dailyFocus             DailyFocus[]
+  recordings             Recording[]
+  carousel_projects      CarouselProject[]
+  carousel_people        CarouselPerson[]
+  comic_series           ComicSeries[]
+  ticketQueueMemberships TicketQueueUser[]
+  assignedTickets        Ticket[]               @relation("TicketAssignee")
+  sentTicketMessages     TicketMessage[]
+  AgentCalendarAccess    AgentCalendarAccess[]
+  instagramAccounts      InstagramAccount[]
+  instagramPosts         InstagramPost[]
+  socialAccounts         SocialAccount[]
+  socialPosts            SocialPost[]
+  instagramAutomations   InstagramAutomation[]
+
+  @@index([company_id])
+  @@index([email])
+  @@index([username])
+  @@map("user")
+}
+
+model Project {
+  id                  Int      @id @default(autoincrement())
+  company_id          Int?
+  user_id             Int?
+  is_default_project  Boolean? @default(false)
+  name                String?  @db.VarChar(200)
+  content             String?  @db.Text
+  color               String?  @default("#ec1889") @db.VarChar(7)
+  favorite            Boolean? @default(false)
+  created_at          DateTime @default(now())
+  updated_at          DateTime @default(now()) @updatedAt
+  drive_folder_id     String?  @db.VarChar(100)
+  drive_folder_link   String?  @db.Text
+  drive_owner_user_id Int?
+
+  user              User?             @relation(fields: [user_id], references: [id])
+  driveOwner        User?             @relation("ProjectDriveOwner", fields: [drive_owner_user_id], references: [id])
+  funnels           Funnel[]
+  projectUsers      ProjectUser[]
+  credentials       Credential[]
+  designs           Design[]
+  photoDocuments    PhotoDocument[]
+  recordings        Recording[]
+  carousel_projects CarouselProject[]
+  comic_series      ComicSeries[]
+  habits            Habit[]
+  teamHabits        TeamHabit[]
+  instagramAccount  InstagramAccount?
+  socialAccounts    SocialAccount[]
+  githubRepo        ProjectRepo?
+  sshConnections    SshConnection[]
+  sshCommands       SshCommand[]
+
+  @@index([company_id])
+  @@index([user_id])
+  @@index([drive_owner_user_id])
+  @@map("project")
+}
+
+model Funnel {
+  id         Int              @id @default(autoincrement())
+  project_id Int
+  company_id Int?
+  name       String?          @db.VarChar(200)
+  prefix     String?          @db.VarChar(10)
+  is_default Boolean?         @default(false)
+  visibility FunnelVisibility @default(everyone)
+  created_at DateTime         @default(now())
+  updated_at DateTime         @default(now()) @updatedAt
+
+  project     Project       @relation(fields: [project_id], references: [id], onDelete: Cascade)
+  stages      FunnelStage[]
+  tasks       Task[]
+  sharedUsers FunnelUser[]
+
+  @@index([project_id])
+  @@index([company_id])
+  @@map("funnel")
+}
+
+model FunnelUser {
+  id         Int      @id @default(autoincrement())
+  company_id Int?
+  funnel_id  Int?
+  user_id    Int?
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+
+  funnel Funnel? @relation(fields: [funnel_id], references: [id], onDelete: Cascade)
+  user   User?   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@unique([funnel_id, user_id])
+  @@index([funnel_id])
+  @@index([user_id])
+  @@map("funnel_user")
+}
+
+model FunnelStage {
+  id          Int      @id @default(autoincrement())
+  company_id  Int?
+  funnel_id   Int?
+  name        String?  @db.VarChar(100)
+  status      String?  @db.VarChar(20)
+  stage_order Int?
+  stage_done  Boolean? @default(false)
+  created_at  DateTime @default(now())
+  updated_at  DateTime @default(now()) @updatedAt
+
+  funnel Funnel? @relation(fields: [funnel_id], references: [id], onDelete: Cascade)
+  tasks  Task[]
+
+  @@index([funnel_id])
+  @@index([funnel_id, stage_order])
+  @@map("funnelstage")
+}
+
+model ProjectUser {
+  id               Int      @id @default(autoincrement())
+  company_id       Int?
+  project_id       Int?
+  user_id          Int?
+  external_user_id String?  @db.VarChar(100)
+  created_at       DateTime @default(now())
+  updated_at       DateTime @default(now()) @updatedAt
+
+  project Project? @relation(fields: [project_id], references: [id], onDelete: Cascade)
+  user    User?    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@unique([project_id, user_id])
+  @@unique([project_id, external_user_id])
+  @@index([project_id])
+  @@index([user_id])
+  @@map("projectuser")
+}
+
+model Task {
+  id                    Int           @id @default(autoincrement())
+  company_id            Int?
+  funnel_id             Int?          @default(0)
+  stage_id              Int?          @default(0)
+  sort_order            Int?          @default(0)
+  user_id               Int?
+  task_id               Int?          @default(0)
+  sprint_id             Int?
+  meet_id               String?       @db.VarChar(100)
+  platform_company_id   Int?
+  platform_company_name String?       @db.VarChar(200)
+  priority              TaskPriority?
+  due_at                DateTime?
+  end_at                DateTime?
+  hour_at               String?       @db.VarChar(5) // HH:MM format
+  estimated_time        String?       @db.VarChar(5) // HH:MM format
+  story_points          Int?
+  title                 String?       @db.VarChar(255)
+  slug                  String?       @db.VarChar(255)
+  description           String?       @db.Text
+  content               String?       @db.LongText
+  type                  TaskType?
+  meet_uri              String?       @db.VarChar(500)
+  first_name            String?       @db.VarChar(100)
+  last_name             String?       @db.VarChar(100)
+  email                 String?       @db.VarChar(150)
+  phone                 String?       @db.VarChar(20)
+  group_id              String?       @db.VarChar(100)
+  icon                  String?       @db.VarChar(100)
+  cover                 String?       @db.VarChar(500)
+  status                TaskStatus    @default(notdone)
+  is_sprint             Boolean?      @default(false)
+  is_called             Boolean?      @default(false)
+  is_whatsapp           Boolean?      @default(false)
+  call_reason           String?       @db.VarChar(255)
+  template              String?       @default("default") @db.VarChar(50)
+  form_schema           String?       @db.LongText
+  started_at            DateTime?
+  closed_at             DateTime?
+  deleted_at            DateTime?
+  created_at            DateTime      @default(now())
+  updated_at            DateTime      @default(now()) @updatedAt
+  folder_id             Int?
+  proposal_template_id  Int?
+  proposal_data         String?       @db.LongText // Per-task proposal overrides (JSON)
+  reminder_sent_at      DateTime?
+  ticket_id             Int?
+  approved_at           DateTime?
+  approved_by           String?       @db.VarChar(150) // nome de quem aprovou ("Cliente" no link público)
+
+  ticket           Ticket?            @relation(fields: [ticket_id], references: [id], onDelete: SetNull)
+  funnel           Funnel?            @relation(fields: [funnel_id], references: [id])
+  stage            FunnelStage?       @relation(fields: [stage_id], references: [id])
+  user             User?              @relation("TaskAssignee", fields: [user_id], references: [id])
+  folder           Folder?            @relation(fields: [folder_id], references: [id], onDelete: SetNull)
+  proposalTemplate ProposalTemplate?  @relation(fields: [proposal_template_id], references: [id], onDelete: SetNull)
+  activities       TaskActivity[]
+  checklists       TaskChecklist[]
+  attachments      TaskAttachment[]
+  recurrences      TaskRecurrence[]
+  stageHistory     TaskStageHistory[]
+  taskUsers        TaskUser[]
+  formResponses    FormResponse[]
+  transcripts      TaskTranscript[]
+  whatsappCampaign WhatsAppCampaign?
+  recordingActions RecordingAction[]
+
+  @@index([funnel_id])
+  @@index([stage_id])
+  @@index([user_id])
+  @@index([status])
+  @@index([due_at])
+  @@index([funnel_id, stage_id, sort_order])
+  @@index([deleted_at])
+  @@index([folder_id])
+  @@index([ticket_id])
+  @@map("task")
+}
+
+model TaskActivity {
+  id              Int      @id @default(autoincrement())
+  company_id      Int?
+  task_id         Int?
+  user_id         Int?
+  content         String?  @db.Text
+  attachment_url  String?  @db.VarChar(500)
+  attachment_name String?  @db.VarChar(255)
+  attachment_type String?  @db.VarChar(100)
+  attachment_size Int?
+  is_client       Boolean  @default(false) // comentário feito pelo cliente no link público (sem user_id)
+  created_at      DateTime @default(now())
+  updated_at      DateTime @default(now()) @updatedAt
+
+  task Task? @relation(fields: [task_id], references: [id], onDelete: Cascade)
+  user User? @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([task_id, created_at])
+  @@index([user_id])
+  @@map("taskactivity")
+}
+
+model TaskChecklist {
+  id         Int      @id @default(autoincrement())
+  task_id    Int
+  title      String   @db.VarChar(255)
+  is_done    Boolean  @default(false)
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+
+  task Task @relation(fields: [task_id], references: [id], onDelete: Cascade)
+
+  @@index([task_id])
+  @@map("taskchecklist")
+}
+
+model TaskRecurrence {
+  id             Int                 @id @default(autoincrement())
+  company_id     Int
+  task_id        Int
+  frequency      RecurrenceFrequency
+  interval_value Int?                @default(1)
+  week_days      String?             @db.VarChar(20) // '1,2,3'
+  month_day      Int?
+  start_date     DateTime
+  end_date       DateTime?
+  next_run       DateTime
+  is_active      Boolean             @default(true)
+  created_at     DateTime            @default(now())
+  updated_at     DateTime            @default(now()) @updatedAt
+
+  task Task @relation(fields: [task_id], references: [id], onDelete: Cascade)
+
+  @@index([task_id])
+  @@index([next_run])
+  @@map("taskrecurrence")
+}
+
+model TaskStageHistory {
+  id         Int      @id @default(autoincrement())
+  task_id    Int
+  funnel_id  Int
+  stage_id   Int
+  user_id    Int? // quem moveu a tarefa (base dos relatórios de produtividade)
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+
+  task Task  @relation(fields: [task_id], references: [id], onDelete: Cascade)
+  user User? @relation(fields: [user_id], references: [id], onDelete: SetNull)
+
+  @@index([user_id, created_at])
+  @@index([task_id, created_at])
+  @@index([funnel_id, stage_id])
+  @@map("taskstagehistory")
+}
+
+model TaskUser {
+  id         Int      @id @default(autoincrement())
+  company_id Int?
+  task_id    Int?
+  user_id    Int?
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+
+  task Task? @relation(fields: [task_id], references: [id], onDelete: Cascade)
+  user User? @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@unique([task_id, user_id])
+  @@index([task_id])
+  @@index([user_id])
+  @@map("taskuser")
+}
+
+model TaskAttachment {
+  id         Int      @id @default(autoincrement())
+  task_id    Int
+  file_name  String   @db.VarChar(255)
+  file_url   String   @db.VarChar(500)
+  file_size  Int      @default(0)
+  file_type  String   @db.VarChar(100)
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+
+  task        Task             @relation(fields: [task_id], references: [id], onDelete: Cascade)
+  transcripts TaskTranscript[]
+
+  @@index([task_id])
+  @@map("taskattachment")
+}
+
+model FormResponse {
+  id         Int      @id @default(autoincrement())
+  task_id    Int
+  answers    String   @db.LongText
+  created_at DateTime @default(now())
+
+  task Task @relation(fields: [task_id], references: [id], onDelete: Cascade)
+
+  @@index([task_id])
+  @@map("form_response")
+}
+
+model ProposalTemplate {
+  id            Int      @id @default(autoincrement())
+  company_id    Int?
+  user_id       Int?
+  name          String   @db.VarChar(200)
+  is_default    Boolean  @default(false)
+  // JSON fields for each proposal page
+  cover         String?  @db.LongText // { enabled, title, subtitle, backgroundImage, logoUrl, companyName, contactInfo, primaryColor }
+  about_company String?  @db.LongText // { enabled, title, content }
+  about_work    String?  @db.LongText // { enabled, title, content }
+  values        String?  @db.LongText // { enabled, title, description, items[], paymentInfo }
+  thank_you     String?  @db.LongText // { enabled, title, message }
+  styles        String?  @db.LongText // { fontFamily, primaryColor, secondaryColor }
+  // Design-based proposals (visual decks) — only used when design != 'classic'
+  design        String   @default("classic") @db.VarChar(20) // 'classic' | 'model1' | 'model2'
+  theme         String?  @db.LongText // ThemeTokens: { primaryColor, accentColor, midColor, lightColor, textMutedColor, logoUrl, companyName }
+  slides        String?  @db.LongText // SlideEnvelope[] — see src/lib/proposal-designs/types.ts
+  created_at    DateTime @default(now())
+  updated_at    DateTime @default(now()) @updatedAt
+
+  user  User?  @relation(fields: [user_id], references: [id])
+  tasks Task[]
+
+  @@index([user_id])
+  @@index([company_id])
+  @@map("proposal_template")
+}
+
+model Design {
+  id            Int      @id @default(autoincrement())
+  company_id    Int?
+  user_id       Int
+  project_id    Int?
+  name          String   @db.VarChar(200)
+  thumbnail_url String?  @db.VarChar(500)
+  width         Int      @default(1920)
+  height        Int      @default(1080)
+  pages         String   @db.LongText // DesignPage[] — see src/lib/design-studio/types.ts
+  created_at    DateTime @default(now())
+  updated_at    DateTime @default(now()) @updatedAt
+
+  user    User     @relation(fields: [user_id], references: [id])
+  project Project? @relation(fields: [project_id], references: [id], onDelete: SetNull)
+
+  @@index([user_id])
+  @@index([company_id])
+  @@index([project_id])
+  @@map("design")
+}
+
+model PhotoDocument {
+  id              Int       @id @default(autoincrement())
+  company_id      Int?
+  user_id         Int
+  project_id      Int?
+  name            String    @db.VarChar(200)
+  thumbnail_url   String?   @db.VarChar(500)
+  width           Int       @default(1920)
+  height          Int       @default(1080)
+  doc             String    @db.LongText // PhotoDoc JSON (layer tree, pixels live in S3 as PNG) — see src/lib/photosuite/types.ts
+  /// "private" (só o dono) ou "project" (dono + membros do projeto vinculado podem abrir e editar)
+  visibility      String    @default("private") @db.VarChar(10)
+  /// link público somente leitura: token + imagem final publicada
+  share_token     String?   @unique @db.VarChar(64)
+  share_image_url String?   @db.VarChar(500)
+  shared_at       DateTime?
+  created_at      DateTime  @default(now())
+  updated_at      DateTime  @default(now()) @updatedAt
+
+  user    User     @relation(fields: [user_id], references: [id])
+  project Project? @relation(fields: [project_id], references: [id], onDelete: SetNull)
+
+  @@index([user_id])
+  @@index([company_id])
+  @@index([project_id])
+  @@map("photo_document")
+}
+
+model CustomFont {
+  id         Int      @id @default(autoincrement())
+  company_id Int?
+  user_id    Int
+  family     String   @db.VarChar(200) // display name chosen by the user; several rows can share it (one per weight/style)
+  url        String   @db.VarChar(500) // uploaded font file (ttf/otf/woff/woff2)
+  weight     Int      @default(400)
+  style      String   @default("normal") @db.VarChar(10) // "normal" | "italic"
+  created_at DateTime @default(now())
+
+  user User @relation(fields: [user_id], references: [id])
+
+  @@index([user_id])
+  @@index([company_id])
+  @@map("custom_font")
+}
+
+model Folder {
+  id         Int      @id @default(autoincrement())
+  name       String   @db.VarChar(100)
+  user_id    Int
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+
+  user  User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  tasks Task[]
+
+  @@index([user_id])
+  @@map("folder")
+}
+
+model Credential {
+  id         Int      @id @default(autoincrement())
+  company_id Int?
+  project_id Int?
+  user_id    Int?
+  title      String   @db.VarChar(200)
+  category   String?  @default("other") @db.VarChar(30)
+  username   String?  @db.VarChar(255)
+  password   String?  @db.Text // criptografado (AES-256-GCM), nunca armazenado em texto puro
+  url        String?  @db.VarChar(500)
+  notes      String?  @db.Text
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+
+  project Project? @relation(fields: [project_id], references: [id], onDelete: Cascade)
+  user    User?    @relation(fields: [user_id], references: [id])
+
+  @@index([project_id])
+  @@index([user_id])
+  @@index([company_id])
+  @@map("credential")
+}
+
+model TaskTranscript {
+  id            Int              @id @default(autoincrement())
+  task_id       Int
+  attachment_id Int?
+  status        TranscriptStatus @default(pending)
+  text          String?          @db.LongText
+  language      String?          @db.VarChar(10)
+  error         String?          @db.VarChar(500)
+  created_at    DateTime         @default(now())
+  updated_at    DateTime         @default(now()) @updatedAt
+
+  task       Task                @relation(fields: [task_id], references: [id], onDelete: Cascade)
+  attachment TaskAttachment?     @relation(fields: [attachment_id], references: [id], onDelete: SetNull)
+  messages   TranscriptMessage[]
+
+  @@index([task_id])
+  @@index([attachment_id])
+  @@map("tasktranscript")
+}
+
+model TranscriptMessage {
+  id            Int      @id @default(autoincrement())
+  transcript_id Int
+  role          String   @db.VarChar(20) // "user" | "assistant"
+  content       String   @db.Text
+  created_at    DateTime @default(now())
+
+  transcript TaskTranscript @relation(fields: [transcript_id], references: [id], onDelete: Cascade)
+
+  @@index([transcript_id])
+  @@map("transcriptmessage")
+}
+
+model WhatsAppConnection {
+  id                Int                      @id @default(autoincrement())
+  user_id           Int
+  label             String                   @db.VarChar(100)
+  phone_number      String?                  @db.VarChar(30)
+  status            WhatsAppConnectionStatus @default(disconnected)
+  auth_state        String?                  @db.LongText // criptografado (AES-256-GCM) — credenciais/chaves do Baileys
+  qr                String?                  @db.Text
+  last_connected_at DateTime?
+  receive_tickets   Boolean                  @default(false) // quando true, mensagens recebidas viram tickets de atendimento
+  greeting_message  String?                  @db.Text // boas-vindas da conexão quando não há fila/bot
+  farewell_message  String?                  @db.Text // enviada ao fechar um ticket
+  created_at        DateTime                 @default(now())
+  updated_at        DateTime                 @default(now()) @updatedAt
+
+  user         User                  @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  contactLists WhatsAppContactList[]
+  campaigns    WhatsAppCampaign[]
+  tickets      Ticket[]
+  botFlows     BotFlowConnection[]
+  agents       Agent[]
+
+  @@index([user_id])
+  @@map("whatsappconnection")
+}
+
+model WhatsAppContactList {
+  id            Int      @id @default(autoincrement())
+  user_id       Int
+  connection_id Int?
+  name          String   @db.VarChar(150)
+  created_at    DateTime @default(now())
+  updated_at    DateTime @default(now()) @updatedAt
+
+  user       User                @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  connection WhatsAppConnection? @relation(fields: [connection_id], references: [id], onDelete: SetNull)
+  contacts   WhatsAppContact[]
+  campaigns  WhatsAppCampaign[]
+
+  @@index([user_id])
+  @@index([connection_id])
+  @@map("whatsappcontactlist")
+}
+
+model WhatsAppContact {
+  id         Int      @id @default(autoincrement())
+  list_id    Int
+  name       String?  @db.VarChar(150)
+  phone      String   @db.VarChar(30)
+  tags       String?  @db.VarChar(255)
+  opted_out  Boolean  @default(false)
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+
+  list WhatsAppContactList @relation(fields: [list_id], references: [id], onDelete: Cascade)
+
+  @@index([list_id])
+  @@map("whatsappcontact")
+}
+
+model WhatsAppCampaign {
+  id                Int                    @id @default(autoincrement())
+  user_id           Int
+  connection_id     Int
+  list_id           Int?
+  task_id           Int?                   @unique // set when this campaign IS a "whatsapp" task (see Task.template)
+  group_jid         String?                @db.VarChar(100) // WhatsApp group target (…@g.us), mutually exclusive with list_id/recipients
+  media_url         String?                @db.VarChar(500)
+  media_type        String?                @db.VarChar(20) // image | video | audio | document
+  media_filename    String?                @db.VarChar(255) // original filename, used for document sends
+  name              String                 @db.VarChar(150)
+  message           String                 @db.Text
+  status            WhatsAppCampaignStatus @default(draft)
+  scheduled_at      DateTime?
+  min_delay_seconds Int                    @default(3)
+  max_delay_seconds Int                    @default(8)
+  daily_limit       Int?                   @default(200)
+  created_at        DateTime               @default(now())
+  updated_at        DateTime               @default(now()) @updatedAt
+
+  user       User                        @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  connection WhatsAppConnection          @relation(fields: [connection_id], references: [id], onDelete: Cascade)
+  list       WhatsAppContactList?        @relation(fields: [list_id], references: [id], onDelete: SetNull)
+  task       Task?                       @relation(fields: [task_id], references: [id], onDelete: Cascade)
+  recipients WhatsAppCampaignRecipient[]
+
+  @@index([user_id])
+  @@index([connection_id])
+  @@index([list_id])
+  @@index([status, scheduled_at])
+  @@map("whatsappcampaign")
+}
+
+model WhatsAppCampaignRecipient {
+  id          Int                     @id @default(autoincrement())
+  campaign_id Int
+  contact_id  Int?
+  phone       String                  @db.VarChar(30)
+  name        String?                 @db.VarChar(150)
+  status      WhatsAppRecipientStatus @default(pending)
+  sent_at     DateTime?
+  error       String?                 @db.VarChar(500)
+  created_at  DateTime                @default(now())
+
+  campaign WhatsAppCampaign @relation(fields: [campaign_id], references: [id], onDelete: Cascade)
+
+  @@index([campaign_id])
+  @@index([campaign_id, status])
+  @@map("whatsappcampaignrecipient")
+}
+
+model Notification {
+  id         Int       @id @default(autoincrement())
+  user_id    Int
+  company_id Int?
+  type       String    @db.VarChar(40) // "ticket_created" | "meeting_reminder" | "campaign_started"
+  title      String    @db.VarChar(255)
+  body       String?   @db.Text
+  link       String?   @db.VarChar(500)
+  metadata   String?   @db.Text // JSON (task_id, campaign_id, etc.)
+  read_at    DateTime?
+  created_at DateTime  @default(now())
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id, created_at])
+  @@index([user_id, read_at])
+  @@map("notification")
+}
+
+model PushSubscription {
+  id         Int      @id @default(autoincrement())
+  user_id    Int
+  endpoint   String   @db.VarChar(500)
+  p256dh     String   @db.VarChar(255)
+  auth       String   @db.VarChar(255)
+  user_agent String?  @db.VarChar(255)
+  created_at DateTime @default(now())
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@unique([endpoint])
+  @@index([user_id])
+  @@map("pushsubscription")
+}
+
+// ─── AI AGENTS HUB ───
+
+enum AgentRunStatus {
+  pending
+  running
+  done
+  error
+  cancelled
+}
+
+model AiProviderCredential {
+  id         Int      @id @default(autoincrement())
+  company_id Int?
+  user_id    Int? // NULL = credencial da empresa (compartilhada); preenchido = override pessoal
+  provider   String   @db.VarChar(20) // "groq" | "openai" | "anthropic" | "openrouter"
+  api_key    String   @db.Text // criptografado (AES-256-GCM), nunca armazenado em texto puro
+  label      String?  @db.VarChar(100)
+  is_active  Boolean  @default(true)
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+
+  user User? @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([company_id, provider])
+  @@index([user_id, provider])
+  @@map("ai_provider_credential")
+}
+
+/// CLI de IA instalado na máquina que roda o servidor (claude, codex, gemini...). Só admin cadastra.
+model LocalCli {
+  id           Int      @id @default(autoincrement())
+  company_id   Int?
+  name         String   @db.VarChar(80)
+  preset       String   @db.VarChar(20) // claude | codex | gemini | qwen | custom
+  command      String   @db.VarChar(255) // executável (nome no PATH ou caminho completo)
+  args         String   @db.Text // argumentos; aceita {model} e {outfile}
+  prompt_mode  String   @default("stdin") @db.VarChar(10) // stdin | arg (ultimo argumento)
+  models       String?  @db.Text // modelos sugeridos, separados por virgula
+  timeout_sec  Int      @default(300)
+  is_active    Boolean  @default(true)
+  created_at   DateTime @default(now())
+  updated_at   DateTime @default(now()) @updatedAt
+
+  @@index([company_id])
+  @@map("local_cli")
+}
+
+model Agent {
+  id            Int     @id @default(autoincrement())
+  company_id    Int?
+  user_id       Int
+  name          String  @db.VarChar(150)
+  description   String? @db.Text
+  avatar_emoji  String? @db.VarChar(10)
+  avatar_color  String? @default("#6366f1") @db.VarChar(7)
+  provider      String  @db.VarChar(20)
+  model         String  @db.VarChar(100)
+  system_prompt String  @db.LongText
+  temperature   Float?  @default(0.7)
+  max_tokens    Int?    @default(2048)
+  allowed_tools String? @db.Text // JSON array de nomes de tools, ex.: ["create_task"]
+  is_active     Boolean @default(true)
+
+  // Canal WhatsApp (atendimento automático) e base de conhecimento
+  channel_connection_id Int?
+  channel_enabled       Boolean  @default(false)
+  rag_enabled           Boolean  @default(false)
+  session_ttl_seconds   Int      @default(3600) // 0 = memória sem expiração
+  buffer_delay_seconds  Int      @default(5)
+  humanize_replies      Boolean  @default(true)
+  handoff_enabled       Boolean  @default(true)
+  recordings_enabled    Boolean  @default(false) // ferramentas de busca/relatório nas gravações (web e Telegram; nunca no WhatsApp de clientes)
+  created_at            DateTime @default(now())
+  updated_at            DateTime @default(now()) @updatedAt
+
+  owner             User                  @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  runs              AgentRun[]
+  runSteps          AgentRunStep[]
+  generatedImages   GeneratedImage[]
+  conversations     AgentConversation[]
+  channelConnection WhatsAppConnection?   @relation(fields: [channel_connection_id], references: [id], onDelete: SetNull)
+  knowledgeFiles    AgentKnowledgeFile[]
+  mcpServers        AgentMcpServer[]
+  channelSessions   AgentChannelSession[]
+  calendarAccess    AgentCalendarAccess[]
+  turnLogs          AgentTurnLog[]
+  appointments      AgentAppointment[]
+  telegram          AgentTelegram?
+  telegramLinks     AgentTelegramLink[]
+  telegramPairings  AgentTelegramPairing[]
+  assistantReminders AssistantReminder[]
+
+  @@index([user_id])
+  @@index([company_id])
+  @@index([channel_connection_id])
+  @@map("agent")
+}
+
+model AgentPipeline {
+  id          Int      @id @default(autoincrement())
+  company_id  Int?
+  user_id     Int
+  name        String   @db.VarChar(200)
+  description String?  @db.Text
+  nodes       String   @db.LongText // JSON (nós React Flow: {id, position, data:{agentId,label}})
+  edges       String   @db.LongText // JSON (edges React Flow)
+  is_active   Boolean  @default(true)
+  created_at  DateTime @default(now())
+  updated_at  DateTime @default(now()) @updatedAt
+
+  owner User       @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  runs  AgentRun[]
+
+  @@index([user_id])
+  @@index([company_id])
+  @@map("agent_pipeline")
+}
+
+model AgentRun {
+  id          Int            @id @default(autoincrement())
+  company_id  Int?
+  user_id     Int
+  pipeline_id Int? // NULL = execução avulsa de 1 agente (playground de chat)
+  agent_id    Int?
+  status      AgentRunStatus @default(pending)
+  input       String?        @db.LongText
+  output      String?        @db.LongText
+  error       String?        @db.VarChar(500)
+  started_at  DateTime?
+  finished_at DateTime?
+  created_at  DateTime       @default(now())
+
+  user     User             @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  pipeline AgentPipeline?   @relation(fields: [pipeline_id], references: [id], onDelete: SetNull)
+  agent    Agent?           @relation(fields: [agent_id], references: [id], onDelete: SetNull)
+  steps    AgentRunStep[]
+  images   GeneratedImage[]
+
+  @@index([user_id, created_at])
+  @@index([pipeline_id])
+  @@index([agent_id])
+  @@index([status])
+  @@map("agent_run")
+}
+
+model AgentRunStep {
+  id          Int            @id @default(autoincrement())
+  run_id      Int
+  node_id     String?        @db.VarChar(100)
+  agent_id    Int?
+  step_order  Int            @default(0)
+  status      AgentRunStatus @default(pending)
+  input       String?        @db.LongText
+  output      String?        @db.LongText
+  tool_calls  String?        @db.LongText // JSON [{tool, arguments, result}]
+  error       String?        @db.VarChar(500)
+  started_at  DateTime?
+  finished_at DateTime?
+  created_at  DateTime       @default(now())
+
+  run   AgentRun @relation(fields: [run_id], references: [id], onDelete: Cascade)
+  agent Agent?   @relation(fields: [agent_id], references: [id], onDelete: SetNull)
+
+  @@index([run_id, step_order])
+  @@index([agent_id])
+  @@map("agent_run_step")
+}
+
+model GeneratedImage {
+  id         Int      @id @default(autoincrement())
+  company_id Int?
+  user_id    Int
+  agent_id   Int?
+  run_id     Int?
+  prompt     String   @db.Text
+  model      String   @db.VarChar(100)
+  url        String   @db.VarChar(500)
+  created_at DateTime @default(now())
+
+  user  User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  agent Agent?    @relation(fields: [agent_id], references: [id], onDelete: SetNull)
+  run   AgentRun? @relation(fields: [run_id], references: [id], onDelete: SetNull)
+
+  @@index([user_id, created_at])
+  @@index([agent_id])
+  @@index([run_id])
+  @@map("generated_image")
+}
+
+model Icp {
+  id          Int      @id @default(autoincrement())
+  company_id  Int?
+  user_id     Int
+  name        String   @db.VarChar(150)
+  niche       String?  @db.VarChar(150)
+  description String   @db.LongText
+  created_at  DateTime @default(now())
+  updated_at  DateTime @default(now()) @updatedAt
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id])
+  @@index([company_id])
+  @@map("icp")
+}
+
+model AgentConversation {
+  id         Int      @id @default(autoincrement())
+  company_id Int?
+  user_id    Int
+  agent_id   Int
+  title      String?  @db.VarChar(150)
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+
+  user     User                       @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  agent    Agent                      @relation(fields: [agent_id], references: [id], onDelete: Cascade)
+  messages AgentConversationMessage[]
+
+  @@index([user_id])
+  @@index([agent_id, updated_at])
+  @@index([company_id])
+  @@map("agent_conversation")
+}
+
+model AgentConversationMessage {
+  id              Int      @id @default(autoincrement())
+  conversation_id Int
+  role            String   @db.VarChar(20) // "user" | "assistant"
+  content         String   @db.LongText
+  tool_calls      String?  @db.LongText // JSON [{tool, arguments, result}], só em role="assistant"
+  attachments     String?  @db.LongText // JSON [{url, filename, mimeType, size}], só em role="user"
+  created_at      DateTime @default(now())
+
+  conversation AgentConversation @relation(fields: [conversation_id], references: [id], onDelete: Cascade)
+
+  @@index([conversation_id, created_at])
+  @@map("agent_conversation_message")
+}
+
+// ─── HÁBITOS DIÁRIOS ───
+
+model Habit {
+  id               Int       @id @default(autoincrement())
+  company_id       Int?
+  user_id          Int
+  name             String    @db.VarChar(150)
+  description      String?   @db.VarChar(255)
+  color            String    @default("#EC1889") @db.VarChar(20)
+  target_per_week  Int       @default(7) // 7 = diário; 1–6 = "N vezes por semana"
+  sort_order       Int       @default(0)
+  kind             String    @default("habit") @db.VarChar(10) // "habit" | "routine" (rotina de trabalho, com checklist)
+  project_id       Int?
+  reminder_time    String?   @db.VarChar(5) // HH:MM, horário de Brasília
+  reminder_days    String?   @db.VarChar(20) // dias da semana do lembrete, "0,1,2" (0 = domingo); null = todos
+  last_reminded_on DateTime? @db.Date
+  checklist        String?   @db.Text // JSON string[] — passos da rotina
+  team_habit_id    Int? // preenchido quando o hábito foi atribuído por um gestor (definição somente leitura)
+  health_metric    String?   @db.VarChar(20) // "steps"|"water"|"sleep"|"workout": cumpre sozinho quando a meta de Saúde do dia é batida
+  archived_at      DateTime?
+  created_at       DateTime  @default(now())
+  updated_at       DateTime  @default(now()) @updatedAt
+
+  user      User       @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  project   Project?   @relation(fields: [project_id], references: [id], onDelete: SetNull)
+  teamHabit TeamHabit? @relation(fields: [team_habit_id], references: [id], onDelete: SetNull)
+  logs      HabitLog[]
+
+  @@index([user_id, archived_at])
+  @@index([company_id])
+  @@index([project_id])
+  @@index([team_habit_id])
+  @@index([reminder_time])
+  @@map("habit")
+}
+
+// Hábito/rotina que um gestor define e atribui a pessoas da equipe. Cada pessoa recebe a sua própria
+// linha em `habit` (team_habit_id) — assim os check-ins e as sequências continuam por usuário.
+model TeamHabit {
+  id              Int      @id @default(autoincrement())
+  company_id      Int?
+  creator_id      Int
+  name            String   @db.VarChar(150)
+  description     String?  @db.VarChar(255)
+  color           String   @default("#EC1889") @db.VarChar(20)
+  target_per_week Int      @default(7)
+  kind            String   @default("habit") @db.VarChar(10)
+  project_id      Int?
+  reminder_time   String?  @db.VarChar(5)
+  reminder_days   String?  @db.VarChar(20)
+  checklist       String?  @db.Text
+  created_at      DateTime @default(now())
+  updated_at      DateTime @default(now()) @updatedAt
+
+  creator User     @relation("TeamHabitCreator", fields: [creator_id], references: [id], onDelete: Cascade)
+  project Project? @relation(fields: [project_id], references: [id], onDelete: SetNull)
+  habits  Habit[]
+
+  @@index([creator_id])
+  @@index([project_id])
+  @@map("team_habit")
+}
+
+// "Foco do dia": até 3 prioridades escolhidas de manhã e a revisão da noite.
+model DailyFocus {
+  id         Int      @id @default(autoincrement())
+  user_id    Int
+  focus_date DateTime @db.Date
+  items      String   @db.Text // JSON [{ id, text, done, task_id? }]
+  review     String?  @db.Text
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, focus_date])
+  @@map("daily_focus")
+}
+
+model HabitLog {
+  id         Int      @id @default(autoincrement())
+  habit_id   Int
+  log_date   DateTime @db.Date // dia (calendário do usuário) em que o hábito foi cumprido
+  created_at DateTime @default(now())
+
+  habit Habit @relation(fields: [habit_id], references: [id], onDelete: Cascade)
+
+  @@unique([habit_id, log_date])
+  @@map("habit_log")
+}
+
+// Gravações de áudio/reunião (portado do GravadorX): o arquivo fica no S3, e a transcrição e a
+// análise de IA ficam aqui. `actions` são as ações que a IA extraiu; cada uma pode virar uma Task.
+model Recording {
+  id               Int             @id @default(autoincrement())
+  company_id       Int?
+  user_id          Int
+  project_id       Int?
+  title            String          @db.VarChar(255)
+  category         String?         @db.VarChar(100)
+  tipo             String          @default("Reunião") @db.VarChar(50)
+  tags             String?         @db.Text // JSON string[]
+  status           RecordingStatus @default(uploaded)
+  progress_label   String?         @db.VarChar(120)
+  error            String?         @db.VarChar(500)
+  storage          String          @default("s3") @db.VarChar(10) // "s3" | "local"
+  storage_key      String          @db.VarChar(500)
+  original_name    String?         @db.VarChar(255)
+  mime_type        String?         @db.VarChar(100)
+  size_bytes       BigInt?
+  duration_seconds Int?
+  recorded_at      DateTime        @default(now())
+  transcript       String?         @db.LongText
+  summary          String?         @db.Text
+  participants     String?         @db.Text // JSON string[]
+  topics           String?         @db.Text // JSON string[]
+  decisions        String?         @db.Text // JSON { checked, text }[]
+  risks            String?         @db.Text // JSON string[]
+  next_steps       String?         @db.Text // JSON string[]
+  analysis_md      String?         @db.LongText
+  ai_provider      String?         @db.VarChar(20)
+  ai_model         String?         @db.VarChar(100)
+  share_token      String?         @unique @db.VarChar(64) // link público somente leitura; null = não compartilhada
+  indexed_at       DateTime? // última indexação no Qdrant (busca semântica dos agentes)
+  index_error      String?         @db.VarChar(300)
+  created_at       DateTime        @default(now())
+  updated_at       DateTime        @default(now()) @updatedAt
+
+  user    User              @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  project Project?          @relation(fields: [project_id], references: [id], onDelete: SetNull)
+  actions RecordingAction[]
+
+  @@index([user_id, recorded_at])
+  @@index([project_id, recorded_at])
+  @@index([company_id])
+  @@map("recording")
+}
+
+model RecordingAction {
+  id           Int      @id @default(autoincrement())
+  recording_id Int
+  text         String   @db.Text
+  priority     String   @default("P2") @db.VarChar(4) // P1 | P2 | P3
+  owner_name   String?  @db.VarChar(150)
+  due_text     String?  @db.VarChar(100)
+  status       String   @default("pending") @db.VarChar(12) // pending | converted | dismissed
+  task_id      Int?
+  sort_order   Int      @default(0)
+  created_at   DateTime @default(now())
+
+  recording Recording @relation(fields: [recording_id], references: [id], onDelete: Cascade)
+  task      Task?     @relation(fields: [task_id], references: [id], onDelete: SetNull)
+
+  @@index([recording_id])
+  @@index([task_id])
+  @@map("recording_action")
+}
+
+// ───────────── Atendimento (tickets de WhatsApp) ─────────────
+
+enum TicketStatus {
+  pending
+  open
+  closed
+}
+
+model TicketQueue {
+  id                       Int      @id @default(autoincrement())
+  name                     String   @unique @db.VarChar(100)
+  color                    String   @db.VarChar(20)
+  greeting_message         String?  @db.Text
+  auto_distribution        Boolean  @default(false)
+  last_distributed_user_id Int? // ponteiro do rodízio; sem FK de propósito (membro removido sai do rodízio)
+  created_at               DateTime @default(now())
+  updated_at               DateTime @default(now()) @updatedAt
+
+  users    TicketQueueUser[]
+  tickets  Ticket[]
+  botFlows BotFlow[]
+
+  @@map("ticketqueue")
+}
+
+model TicketQueueUser {
+  queue_id Int
+  user_id  Int
+
+  queue TicketQueue @relation(fields: [queue_id], references: [id], onDelete: Cascade)
+  user  User        @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@id([queue_id, user_id])
+  @@index([user_id])
+  @@map("ticketqueueuser")
+}
+
+model ChatContact {
+  id              Int      @id @default(autoincrement())
+  name            String   @db.VarChar(200)
+  number          String?  @unique @db.VarChar(40)
+  lid             String?  @unique @db.VarChar(60)
+  profile_pic_url String?  @db.Text
+  is_group        Boolean  @default(false)
+  created_at      DateTime @default(now())
+  updated_at      DateTime @default(now()) @updatedAt
+
+  tickets  Ticket[]
+  messages TicketMessage[]
+
+  @@map("chatcontact")
+}
+
+model TicketTag {
+  id         Int      @id @default(autoincrement())
+  name       String   @unique @db.VarChar(60)
+  color      String   @db.VarChar(20)
+  created_at DateTime @default(now())
+
+  tickets Ticket[]
+
+  @@map("tickettag")
+}
+
+model Ticket {
+  id                   Int          @id @default(autoincrement())
+  status               TicketStatus @default(pending)
+  contact_id           Int
+  connection_id        Int?
+  queue_id             Int?
+  user_id              Int? // atendente que assumiu
+  unread_messages      Int          @default(0)
+  last_message         String?      @db.Text
+  last_message_at      DateTime?
+  is_group             Boolean      @default(false)
+  is_parallel          Boolean      @default(false)
+  close_reason         String?      @db.VarChar(50)
+  customer_sentiment   String?      @db.VarChar(30)
+  closing_observations String?      @db.Text
+  started_at           DateTime? // primeira vez que virou "open" (nunca é zerado)
+  closed_at            DateTime? // não-nulo exatamente enquanto estiver fechado
+  created_at           DateTime     @default(now())
+  updated_at           DateTime     @default(now()) @updatedAt
+
+  contact     ChatContact         @relation(fields: [contact_id], references: [id], onDelete: Cascade)
+  connection  WhatsAppConnection? @relation(fields: [connection_id], references: [id], onDelete: SetNull)
+  queue       TicketQueue?        @relation(fields: [queue_id], references: [id], onDelete: SetNull)
+  user        User?               @relation("TicketAssignee", fields: [user_id], references: [id], onDelete: SetNull)
+  messages    TicketMessage[]
+  tags        TicketTag[]
+  tasks       Task[]
+  botSessions BotFlowSession[]
+
+  @@index([status, updated_at])
+  @@index([contact_id])
+  @@index([connection_id])
+  @@index([queue_id])
+  @@index([user_id])
+  @@map("ticket")
+}
+
+model TicketMessage {
+  id             Int      @id @default(autoincrement())
+  wa_id          String   @db.VarChar(120)
+  connection_id  Int?
+  ticket_id      Int
+  contact_id     Int?
+  sender_user_id Int? // quem respondeu pela plataforma (null = veio do celular/contato/bot)
+  from_me        Boolean  @default(false)
+  body           String?  @db.Text
+  media_url      String?  @db.VarChar(500)
+  media_type     String?  @db.VarChar(30) // chat | image | video | audio | document | sticker | location | vcard
+  media_name     String?  @db.VarChar(255)
+  ack            Int      @default(0)
+  is_read        Boolean  @default(false)
+  is_deleted     Boolean  @default(false)
+  is_internal    Boolean  @default(false) // nota interna: nunca vai para o WhatsApp
+  reactions      String?  @db.Text // JSON
+  quoted_wa_id   String?  @db.VarChar(120)
+  created_at     DateTime @default(now()) @db.DateTime(6)
+
+  ticket  Ticket       @relation(fields: [ticket_id], references: [id], onDelete: Cascade)
+  contact ChatContact? @relation(fields: [contact_id], references: [id], onDelete: SetNull)
+  sender  User?        @relation(fields: [sender_user_id], references: [id], onDelete: SetNull)
+
+  @@unique([connection_id, wa_id])
+  @@index([ticket_id, created_at])
+  @@map("ticketmessage")
+}
+
+// ───────────── Bot de atendimento (fluxos) ─────────────
+
+model BotFlow {
+  id                Int       @id @default(autoincrement())
+  name              String    @db.VarChar(150)
+  type              String    @db.VarChar(20) // entry | queue | automation
+  queue_id          Int?
+  is_active         Boolean   @default(true)
+  restart_on_reopen Boolean   @default(false)
+  draft_graph       String?   @db.LongText
+  published_graph   String?   @db.LongText
+  published_at      DateTime?
+  status_filter     String?   @db.Text // JSON: ["open","pending"]; null = qualquer status
+  created_at        DateTime  @default(now())
+  updated_at        DateTime  @default(now()) @updatedAt
+
+  queue       TicketQueue?        @relation(fields: [queue_id], references: [id], onDelete: SetNull)
+  connections BotFlowConnection[]
+  sessions    BotFlowSession[]
+
+  @@index([type, is_active])
+  @@map("botflow")
+}
+
+model BotFlowConnection {
+  flow_id       Int
+  connection_id Int
+
+  flow       BotFlow            @relation(fields: [flow_id], references: [id], onDelete: Cascade)
+  connection WhatsAppConnection @relation(fields: [connection_id], references: [id], onDelete: Cascade)
+
+  @@id([flow_id, connection_id])
+  @@map("botflowconnection")
+}
+
+model BotFlowSession {
+  id              Int       @id @default(autoincrement())
+  ticket_id       Int
+  flow_id         Int
+  current_node_id String?   @db.VarChar(100)
+  variables       String    @db.Text // JSON; sem default porque MySQL < 8.0.13 não aceita DEFAULT em TEXT
+  status          String    @default("running") @db.VarChar(20) // running | waiting_input | waiting_timer | completed | transferred
+  waiting_since   DateTime?
+  resume_at       DateTime?
+  created_at      DateTime  @default(now())
+  updated_at      DateTime  @default(now()) @updatedAt
+
+  ticket Ticket  @relation(fields: [ticket_id], references: [id], onDelete: Cascade)
+  flow   BotFlow @relation(fields: [flow_id], references: [id], onDelete: Cascade)
+
+  @@unique([ticket_id, flow_id])
+  @@index([status, resume_at])
+  @@map("botflowsession")
+}
+
+// ─── Estúdio de Carrosséis & Mini-novelas HQ (portado do CarrosselX) ───────────────────────────
+// O conteúdo de cada documento fica em `data` (JSON) porque o formato é definido pelo motor de
+// templates / pela IA e evolui junto com ele; só o que precisa ser filtrado vira coluna.
+
+model CarouselBrandbook {
+  id         String   @id @db.VarChar(80) // slug da marca
+  user_id    Int?
+  name       String   @db.VarChar(150)
+  is_default Boolean  @default(false)
+  data       String   @db.LongText // Brandbook (cores, tipografia, modelos de slide, assets em data URI)
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+
+  @@map("carousel_brandbook")
+}
+
+model CarouselProject {
+  id         String   @id @db.VarChar(40)
+  user_id    Int
+  project_id Int?
+  title      String   @db.VarChar(255)
+  data       String   @db.LongText // CarouselProject (slides, tema, briefing)
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+
+  user    User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  project Project? @relation(fields: [project_id], references: [id], onDelete: SetNull)
+
+  @@index([user_id, updated_at])
+  @@index([project_id])
+  @@map("carousel_project")
+}
+
+model CarouselPerson {
+  id         String   @id @db.VarChar(40)
+  user_id    Int
+  name       String   @db.VarChar(150)
+  data       String   @db.LongText // perfil + fotos de referência (URLs)
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id])
+  @@map("carousel_person")
+}
+
+model CarouselSetting {
+  id         Int      @id @default(autoincrement())
+  user_id    Int? // null = vale para todos
+  key        String   @db.VarChar(80) // prompts | image_text_style
+  value      String   @db.LongText
+  updated_at DateTime @default(now()) @updatedAt
+
+  @@unique([user_id, key])
+  @@map("carousel_setting")
+}
+
+model ComicSeries {
+  id         String   @id @db.VarChar(40)
+  user_id    Int
+  project_id Int?
+  title      String   @db.VarChar(255)
+  data       String   @db.LongText // série: estilo, personagens, folhas de referência
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+
+  user     User           @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  project  Project?       @relation(fields: [project_id], references: [id], onDelete: SetNull)
+  episodes ComicEpisode[]
+
+  @@index([user_id, updated_at])
+  @@map("comic_series")
+}
+
+model ComicEpisode {
+  id         String   @id @db.VarChar(40)
+  series_id  String   @db.VarChar(40)
+  user_id    Int
+  title      String   @db.VarChar(255)
+  data       String   @db.LongText // roteiro, painéis, arte, áudio, vídeo
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+  share_token String?  @unique @db.VarChar(64) // link público de aprovação do cliente
+  approved_at DateTime?
+  approved_by String?  @db.VarChar(150)
+
+  series ComicSeries @relation(fields: [series_id], references: [id], onDelete: Cascade)
+
+  @@index([series_id])
+  @@map("comic_episode")
+}
+
+model AgentKnowledgeFile {
+  id           Int      @id @default(autoincrement())
+  agent_id     Int
+  file_id      String   @db.VarChar(20) // id usado como metadata.file_id nos chunks do Qdrant
+  filename     String   @db.VarChar(255)
+  chunks_count Int      @default(0)
+  status       String   @default("processing") @db.VarChar(20) // processing | ready | error
+  error        String?  @db.Text
+  created_at   DateTime @default(now())
+
+  agent Agent @relation(fields: [agent_id], references: [id], onDelete: Cascade)
+
+  @@index([agent_id])
+  @@map("agent_knowledge_file")
+}
+
+model AgentMcpServer {
+  id         Int      @id @default(autoincrement())
+  agent_id   Int
+  name       String   @db.VarChar(100)
+  type       String   @default("url") @db.VarChar(10) // url | stdio
+  url        String?  @db.Text
+  auth_token String?  @db.Text // criptografado
+  command    String?  @db.VarChar(255)
+  args       String?  @db.Text // JSON array
+  env        String?  @db.Text // JSON object, criptografado
+  enabled    Boolean  @default(true)
+  created_at DateTime @default(now())
+
+  agent Agent @relation(fields: [agent_id], references: [id], onDelete: Cascade)
+
+  @@unique([agent_id, name])
+  @@map("agent_mcp_server")
+}
+
+model AgentChannelSession {
+  id           Int       @id @default(autoincrement())
+  agent_id     Int
+  contact_jid  String    @db.VarChar(100)
+  contact_name String?   @db.VarChar(200)
+  history      String    @db.LongText // JSON [{role, content}]
+  handed_off   Boolean   @default(false)
+  expires_at   DateTime?
+  created_at   DateTime  @default(now())
+  updated_at   DateTime  @default(now()) @updatedAt
+
+  agent Agent @relation(fields: [agent_id], references: [id], onDelete: Cascade)
+
+  @@unique([agent_id, contact_jid])
+  @@map("agent_channel_session")
+}
+
+/// Agendas de usuários que o agente pode consultar/alterar (tools de agenda).
+model AgentCalendarAccess {
+  id                   Int      @id @default(autoincrement())
+  agent_id             Int
+  user_id              Int
+  can_write            Boolean  @default(true)
+  enforce_availability Boolean  @default(true) // só agenda dentro dos horários do perfil do usuário
+  created_at           DateTime @default(now())
+
+  agent Agent @relation(fields: [agent_id], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@unique([agent_id, user_id])
+  @@map("agent_calendar_access")
+}
+
+/// Um turno do agente (uma resposta) — base do dashboard de atendimento.
+model AgentTurnLog {
+  id             Int      @id @default(autoincrement())
+  agent_id       Int
+  channel        String   @default("whatsapp") @db.VarChar(20)
+  contact_jid    String?  @db.VarChar(100)
+  status         String   @default("ok") @db.VarChar(10) // ok | error
+  error          String?  @db.Text
+  agent_ms       Int      @default(0) // tempo do LLM + ferramentas
+  wait_ms        Int? // da primeira mensagem do cliente até a primeira resposta enviada
+  input_tokens   Int      @default(0)
+  output_tokens  Int      @default(0)
+  tool_calls     Int      @default(0)
+  tools          String?  @db.Text // JSON: nomes das ferramentas chamadas
+  used_rag       Boolean  @default(false)
+  media          String?  @db.VarChar(60) // ex.: "audio,image"
+  messages_in    Int      @default(1)
+  handoff        Boolean  @default(false)
+  handoff_reason String?  @db.Text
+  ticket_id      Int?
+  created_at     DateTime @default(now())
+
+  agent Agent @relation(fields: [agent_id], references: [id], onDelete: Cascade)
+
+  @@index([agent_id, created_at])
+  @@map("agent_turn_log")
+}
+
+/// Compromissos criados/remarcados/cancelados por um agente na agenda de um usuário.
+model AgentAppointment {
+  id           Int       @id @default(autoincrement())
+  agent_id     Int
+  user_id      Int
+  task_id      Int?
+  action       String    @db.VarChar(12) // created | rescheduled | canceled
+  channel      String    @default("whatsapp") @db.VarChar(20)
+  contact_name String?   @db.VarChar(200)
+  contact_jid  String?   @db.VarChar(100)
+  starts_at    DateTime?
+  created_at   DateTime  @default(now())
+
+  agent Agent @relation(fields: [agent_id], references: [id], onDelete: Cascade)
+
+  @@index([agent_id, created_at])
+  @@map("agent_appointment")
+}
+
+/// Conta do Instagram (Business) conectada via Facebook Login — uma por projeto (cada projeto = um cliente).
+/// `user_id` é quem conectou. Desconectar só limpa os tokens (`connected = false`) para não perder posts/automações.
+model InstagramAccount {
+  id           Int       @id @default(autoincrement())
+  project_id   Int       @unique
+  user_id      Int
+  connected    Boolean   @default(true)
+  ig_user_id   String    @unique @db.VarChar(40)
+  username     String?   @db.VarChar(100)
+  avatar       String?   @db.VarChar(500)
+  page_name    String?   @db.VarChar(200)
+  page_token   String    @db.Text // criptografado (AES-256-GCM)
+  user_token   String?   @db.Text // criptografado; usado para renovar o token da página
+  webhook_ok   Boolean   @default(false)
+  token_error  String?   @db.VarChar(300)
+  refreshed_at DateTime?
+  created_at   DateTime  @default(now())
+  updated_at   DateTime  @default(now()) @updatedAt
+
+  project     Project               @relation(fields: [project_id], references: [id], onDelete: Cascade)
+  user        User                  @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  posts       InstagramPost[]
+  automations InstagramAutomation[]
+
+  @@index([user_id])
+  @@map("instagram_account")
+}
+
+/// Postagem do Instagram (feed/carrossel/reels). A agenda do app mostra a Task ligada (`task_id`).
+model InstagramPost {
+  id            Int       @id @default(autoincrement())
+  account_id    Int
+  user_id       Int
+  task_id       Int?      @unique
+  title         String?   @db.VarChar(255)
+  caption       String?   @db.Text
+  media         String    @db.Text // JSON ["url1","url2"]
+  status        String    @default("scheduled") @db.VarChar(15) // scheduled | publishing | published | failed
+  scheduled_at  DateTime?
+  published_at  DateTime?
+  ig_media_id   String?   @db.VarChar(60)
+  permalink     String?   @db.VarChar(500)
+  attempts      Int       @default(0)
+  error         String?   @db.Text
+  automation_id Int?
+  created_at    DateTime  @default(now())
+  updated_at    DateTime  @default(now()) @updatedAt
+
+  account    InstagramAccount     @relation(fields: [account_id], references: [id], onDelete: Cascade)
+  user       User                 @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  automation InstagramAutomation? @relation(fields: [automation_id], references: [id], onDelete: SetNull)
+
+  @@index([account_id, status])
+  @@index([user_id, status])
+  @@index([status, scheduled_at])
+  @@map("instagram_post")
+}
+
+/// "Engajar": quem comentar a palavra-chave no post recebe resposta pública (IA ou fixa) + DM.
+model InstagramAutomation {
+  id           Int      @id @default(autoincrement())
+  account_id   Int
+  user_id      Int
+  title        String   @db.VarChar(200)
+  status       String   @default("paused") @db.VarChar(10) // active | paused
+  ig_media_id  String?  @db.VarChar(60) // null enquanto o post agendado não foi publicado
+  post_image   String?  @db.VarChar(1000)
+  post_caption String?  @db.Text
+  keywords     String?  @db.Text // JSON ["palavra"]
+  reply_text   String?  @db.Text // resposta pública fixa (usada se ai_reply = false ou sem IA)
+  ai_reply     Boolean  @default(true)
+  dm_text      String?  @db.Text
+  cta_text     String?  @db.VarChar(40)
+  cta_link     String?  @db.Text
+  created_at   DateTime @default(now())
+  updated_at   DateTime @default(now()) @updatedAt
+
+  account     InstagramAccount      @relation(fields: [account_id], references: [id], onDelete: Cascade)
+  user        User                  @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  posts       InstagramPost[]
+  engagements InstagramEngagement[]
+
+  @@index([account_id, status])
+  @@index([user_id, status])
+  @@index([ig_media_id])
+  @@map("instagram_automation")
+}
+
+model InstagramEngagement {
+  id            Int      @id @default(autoincrement())
+  automation_id Int
+  type          String   @db.VarChar(10) // COMMENT | REPLY | DM
+  comment_id    String?  @db.VarChar(60)
+  username      String?  @db.VarChar(100)
+  text          String?  @db.Text
+  error         String?  @db.VarChar(500)
+  created_at    DateTime @default(now())
+
+  automation InstagramAutomation @relation(fields: [automation_id], references: [id], onDelete: Cascade)
+
+  @@unique([automation_id, comment_id, type])
+  @@index([automation_id, created_at])
+  @@map("instagram_engagement")
+}
+
+/// Credenciais do app do Meta (um só para a plataforma inteira; as contas dos clientes entram via OAuth).
+/// Linha única (id = 1). Tem prioridade sobre as variáveis FACEBOOK_* do .env.
+model InstagramAppConfig {
+  id           Int      @id @default(1)
+  app_id       String   @db.VarChar(40)
+  app_secret   String   @db.Text // criptografado (AES-256-GCM)
+  verify_token String   @db.VarChar(80)
+  public_url   String?  @db.VarChar(300)
+  updated_by   Int?
+  updated_at   DateTime @default(now()) @updatedAt
+
+  @@map("instagram_app_config")
+}
+
+// ─── Redes sociais (YouTube / TikTok) ───────────────────────────────────────────
+
+/// Credenciais do app de cada rede (Google Cloud para o YouTube, TikTok for Developers). Uma linha por plataforma; as contas dos clientes entram por OAuth.
+model SocialAppConfig {
+  platform      String   @id @db.VarChar(10) // youtube | tiktok
+  client_id     String   @db.VarChar(200)
+  client_secret String   @db.Text // criptografado (AES-256-GCM)
+  public_url    String?  @db.VarChar(300)
+  updated_by    Int?
+  updated_at    DateTime @default(now()) @updatedAt
+
+  @@map("social_app_config")
+}
+
+/// Canal do YouTube / conta do TikTok conectado a um projeto (cliente). Desconectar limpa os tokens e mantém a linha (posts dependem dela).
+model SocialAccount {
+  id            Int       @id @default(autoincrement())
+  project_id    Int
+  user_id       Int
+  platform      String    @db.VarChar(10)
+  connected     Boolean   @default(true)
+  external_id   String    @db.VarChar(100) // id do canal / open_id do TikTok
+  username      String?   @db.VarChar(150)
+  avatar        String?   @db.VarChar(1000)
+  access_token  String    @db.Text // criptografado
+  refresh_token String?   @db.Text // criptografado
+  expires_at    DateTime?
+  token_error   String?   @db.VarChar(300)
+  created_at    DateTime  @default(now())
+  updated_at    DateTime  @default(now()) @updatedAt
+
+  project Project      @relation(fields: [project_id], references: [id], onDelete: Cascade)
+  user    User         @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  posts   SocialPost[]
+
+  @@unique([project_id, platform])
+  @@unique([platform, external_id])
+  @@index([user_id])
+  @@map("social_account")
+}
+
+/// Uma postagem em UMA rede (kind: youtube_short | youtube_video | tiktok). Postar em várias redes cria uma linha por rede (mesmo group_id).
+model SocialPost {
+  id           Int       @id @default(autoincrement())
+  account_id   Int
+  user_id      Int
+  task_id      Int?      @unique
+  group_id     String?   @db.VarChar(40)
+  kind         String    @db.VarChar(15)
+  title        String?   @db.VarChar(255)
+  caption      String?   @db.Text
+  media        String    @db.Text // JSON ["url"] (um vídeo)
+  options      String?   @db.Text // JSON com privacidade, tags etc. de cada rede
+  status       String    @default("scheduled") @db.VarChar(15) // scheduled | publishing | published | failed
+  scheduled_at DateTime?
+  published_at DateTime?
+  external_id  String?   @db.VarChar(100)
+  permalink    String?   @db.VarChar(500)
+  note         String?   @db.VarChar(300)
+  attempts     Int       @default(0)
+  error        String?   @db.Text
+  created_at   DateTime  @default(now())
+  updated_at   DateTime  @default(now()) @updatedAt
+
+  account SocialAccount @relation(fields: [account_id], references: [id], onDelete: Cascade)
+  user    User          @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([account_id, status])
+  @@index([user_id, status])
+  @@index([status, scheduled_at])
+  @@map("social_post")
+}
+
+// ─── Saúde ──────────────────────────────────────────────────────────────────────
+
+/// Um registro por usuário e dia. `sources` (JSON) diz de onde veio cada campo ("manual" | "api"): importações não sobrescrevem o que foi digitado.
+model HealthDaily {
+  id            Int      @id @default(autoincrement())
+  user_id       Int
+  log_date      DateTime @db.Date
+  steps         Int?
+  water_ml      Int?
+  sleep_min     Int?
+  sleep_quality Int?     @db.TinyInt
+  weight_kg     Float?
+  body_fat      Float?
+  waist_cm      Float?
+  neck_cm       Float?
+  chest_cm      Float?
+  arm_cm        Float?
+  hip_cm        Float?
+  thigh_cm      Float?
+  calf_cm       Float?
+  mood          Int?     @db.TinyInt // 1–5
+  energy        Int?     @db.TinyInt // 1–5
+  stress        Int?     @db.TinyInt // 1–5
+  notes         String?  @db.VarChar(500)
+  sources       String?  @db.Text
+  created_at    DateTime @default(now())
+  updated_at    DateTime @default(now()) @updatedAt
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, log_date])
+  @@map("health_daily")
+}
+
+model HealthWorkout {
+  id           Int      @id @default(autoincrement())
+  user_id      Int
+  log_date     DateTime @db.Date
+  type         String   @db.VarChar(40)
+  duration_min Int
+  calories     Int?
+  distance_km  Float?
+  notes        String?  @db.VarChar(300)
+  source       String   @default("manual") @db.VarChar(20)
+  external_id  String?  @db.VarChar(100)
+  created_at   DateTime @default(now())
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, source, external_id])
+  @@index([user_id, log_date])
+  @@map("health_workout")
+}
+
+model HealthProfile {
+  id              Int       @id @default(autoincrement())
+  user_id         Int       @unique
+  goals           String?   @db.Text // JSON: { steps, water_ml, sleep_min, workouts_per_week, weight_kg }
+  sync_token_hash String?   @unique @db.VarChar(64) // sha256 do token da API de importação (o token em si nunca é guardado)
+  sync_token_hint String?   @db.VarChar(12)
+  last_synced_at  DateTime?
+  created_at      DateTime  @default(now())
+  updated_at      DateTime  @default(now()) @updatedAt
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("health_profile")
+}
+
+// ─── GitHub ─────────────────────────────────────────────────────────────────────
+
+/// Credenciais do OAuth App do GitHub (um só para a plataforma). Linha única (id = 1); tem prioridade sobre GITHUB_CLIENT_ID/SECRET do .env.
+model GithubAppConfig {
+  id            Int      @id @default(1)
+  client_id     String   @db.VarChar(80)
+  client_secret String   @db.Text // criptografado (AES-256-GCM)
+  public_url    String?  @db.VarChar(300)
+  updated_by    Int?
+  updated_at    DateTime @default(now()) @updatedAt
+
+  @@map("github_app_config")
+}
+
+/// Conta do GitHub conectada por cada pessoa (OAuth). As ações no GitHub acontecem em nome de quem conectou.
+model GithubAccount {
+  id                 Int       @id @default(autoincrement())
+  user_id            Int       @unique
+  github_id          String    @db.VarChar(20)
+  login              String    @db.VarChar(100)
+  avatar             String?   @db.VarChar(300)
+  access_token       String    @db.Text // criptografado
+  scope              String?   @db.VarChar(200)
+  // Apps do GitHub com "expirar tokens de usuário" (e OAuth Apps com expiração): o token dura ~8 h e é renovado com o refresh_token.
+  refresh_token      String?   @db.Text // criptografado
+  expires_at         DateTime? // quando o access_token vence (null = não expira)
+  refresh_expires_at DateTime? // quando o refresh_token vence (~6 meses; cada renovação o troca por um novo)
+  token_error        String?   @db.VarChar(300)
+  created_at         DateTime  @default(now())
+  updated_at         DateTime  @default(now()) @updatedAt
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("github_account")
+}
+
+/// Repositório vinculado a um projeto. `linked_by` é quem vinculou: o token dele serve de leitura para membros sem conta conectada.
+model ProjectRepo {
+  id             Int      @id @default(autoincrement())
+  project_id     Int      @unique
+  owner          String   @db.VarChar(100)
+  repo           String   @db.VarChar(100)
+  default_branch String   @default("main") @db.VarChar(100)
+  html_url       String   @db.VarChar(300)
+  is_private     Boolean  @default(false)
+  linked_by      Int?
+  created_at     DateTime @default(now())
+
+  project Project @relation(fields: [project_id], references: [id], onDelete: Cascade)
+
+  @@map("project_repo")
+}
+
+// ─── Terminal SSH ───────────────────────────────────────────────────────────────
+
+/// Acesso SSH de um projeto. `secret`/`passphrase` ficam criptografados (AES-256-GCM) e nunca voltam ao navegador.
+/// `host_fingerprint` é a impressão digital do servidor confirmada por uma pessoa (anti man-in-the-middle).
+model SshConnection {
+  id               Int       @id @default(autoincrement())
+  project_id       Int
+  name             String    @db.VarChar(120)
+  host             String    @db.VarChar(255)
+  port             Int       @default(22)
+  username         String    @db.VarChar(100)
+  auth_type        String    @db.VarChar(10) // "key" | "password"
+  secret           String    @db.Text // chave privada ou senha (criptografado)
+  passphrase       String?   @db.Text // senha da chave privada (criptografado)
+  host_fingerprint String?   @db.VarChar(100) // "SHA256:…"
+  record_sessions  Boolean   @default(true)
+  created_by       Int?
+  created_at       DateTime  @default(now())
+  updated_at       DateTime  @default(now()) @updatedAt
+  last_used_at     DateTime?
+
+  project  Project      @relation(fields: [project_id], references: [id], onDelete: Cascade)
+  sessions SshSession[]
+
+  @@index([project_id])
+  @@map("ssh_connection")
+}
+
+/// Registro de auditoria: quem abriu o terminal, onde, quando e de onde. Os campos do servidor são uma cópia, para o histórico
+/// sobreviver à edição/remoção do acesso. Sem FK para o projeto de propósito: a auditoria não some junto.
+model SshSession {
+  id                  Int       @id @default(autoincrement())
+  connection_id       Int?
+  project_id          Int
+  user_id             Int?
+  connection_name     String    @db.VarChar(120)
+  host                String    @db.VarChar(255)
+  username            String    @db.VarChar(100)
+  started_at          DateTime  @default(now())
+  ended_at            DateTime?
+  end_reason          String?   @db.VarChar(40) // closed | disconnected | idle | max_duration | error | server_closed
+  ip                  String?   @db.VarChar(64)
+  user_agent          String?   @db.VarChar(300)
+  bytes_out           Int       @default(0)
+  recording_file      String?   @db.VarChar(120)
+  recording_truncated Boolean   @default(false)
+
+  connection SshConnection? @relation(fields: [connection_id], references: [id], onDelete: SetNull)
+
+  @@index([project_id, started_at])
+  @@index([user_id])
+  @@map("ssh_session")
+}
+
+/// Comando salvo do projeto (ex.: deploy, reiniciar serviço), para rodar com um clique no terminal.
+model SshCommand {
+  id          Int      @id @default(autoincrement())
+  project_id  Int
+  name        String   @db.VarChar(120)
+  command     String   @db.Text
+  description String?  @db.VarChar(255)
+  confirm     Boolean  @default(true)
+  created_by  Int?
+  created_at  DateTime @default(now())
+  updated_at  DateTime @default(now()) @updatedAt
+
+  project Project @relation(fields: [project_id], references: [id], onDelete: Cascade)
+
+  @@index([project_id])
+  @@map("ssh_command")
+}
+
+
+/// Bot do Telegram do agente (assistente pessoal do dono). Recebe por long polling, sem URL pública.
+model AgentTelegram {
+  id               Int       @id @default(autoincrement())
+  agent_id         Int       @unique
+  bot_token        String    @db.Text // criptografado (lib/encryption)
+  bot_username     String?   @db.VarChar(100)
+  bot_name         String?   @db.VarChar(150)
+  enabled          Boolean   @default(false)
+  briefing_enabled Boolean   @default(true)
+  briefing_time    String    @default("08:00") @db.VarChar(5) // HH:MM, horário de Brasília
+  last_briefing_on DateTime? @db.Date
+  last_update_id   BigInt?
+  created_at       DateTime  @default(now())
+  updated_at       DateTime  @default(now()) @updatedAt
+
+  agent Agent @relation(fields: [agent_id], references: [id], onDelete: Cascade)
+
+  @@map("agent_telegram")
+}
+
+/// Chats do Telegram autorizados a falar com o agente; cada um age como o usuário vinculado.
+model AgentTelegramLink {
+  id           Int      @id @default(autoincrement())
+  agent_id     Int
+  user_id      Int
+  chat_id      String   @db.VarChar(32)
+  display_name String?  @db.VarChar(200)
+  created_at   DateTime @default(now())
+
+  agent Agent @relation(fields: [agent_id], references: [id], onDelete: Cascade)
+
+  @@unique([agent_id, chat_id])
+  @@index([user_id])
+  @@map("agent_telegram_link")
+}
+
+/// Código de pareamento de uso único (/start CÓDIGO no bot).
+model AgentTelegramPairing {
+  id         Int      @id @default(autoincrement())
+  agent_id   Int
+  user_id    Int
+  code       String   @unique @db.VarChar(16)
+  expires_at DateTime
+  created_at DateTime @default(now())
+
+  agent Agent @relation(fields: [agent_id], references: [id], onDelete: Cascade)
+
+  @@map("agent_telegram_pairing")
+}
+
+/// Lembretes pedidos ao assistente ("me lembra de ligar pro João às 15h").
+model AssistantReminder {
+  id         Int       @id @default(autoincrement())
+  agent_id   Int
+  user_id    Int
+  chat_id    String?   @db.VarChar(32)
+  text       String    @db.VarChar(500)
+  remind_at  DateTime
+  sent_at    DateTime?
+  created_at DateTime  @default(now())
+
+  agent Agent @relation(fields: [agent_id], references: [id], onDelete: Cascade)
+
+  @@index([remind_at, sent_at])
+  @@index([user_id])
+  @@map("assistant_reminder")
+}

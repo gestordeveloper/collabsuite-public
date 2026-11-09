@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <strong>StudioX</strong>
+      <span id="conn" class="dot off" title="Conexão com o StudioX"></span>
+    </header>
+
+    <section>
+      <label>Vídeo</label>
+      <div id="file" class="file">Nenhum vídeo escolhido</div>
+      <div class="row">
+        <sp-button id="btn-selected" variant="secondary" size="s">Clipe selecionado</sp-button>
+        <sp-button id="btn-pick" variant="secondary" size="s">Escolher arquivo…</sp-button>
+      </div>
+    </section>
+
+    <section>
+      <label for="language">Idioma</label>
+      <select id="language">
+        <option value="pt">Português</option>
+        <option value="en">English</option>
+        <option value="es">Español</option>
+      </select>
+
+      <label for="review">Revisão (retakes, erros, vícios)</label>
+      <select id="review">
+        <option value="auto">Automática (IA se configurada)</option>
+        <option value="local">Regras locais</option>
+        <option value="llm">IA</option>
+        <option value="off">Desligada</option>
+      </select>
+
+      <label class="check"><input type="checkbox" id="autocut" checked> Cortar silêncios</label>
+      <label class="check"><input type="checkbox" id="captions" checked> Criar legendas</label>
+
+      <label for="copy">Copy / roteiro (opcional)</label>
+      <textarea id="copy" rows="3" placeholder="Cole o roteiro para a revisão proteger as falas dele"></textarea>
+    </section>
+
+    <sp-button id="btn-run" variant="cta" disabled>Editar automaticamente</sp-button>
+
+    <div id="progress" class="hidden">
+      <div class="bar"><div id="bar-fill"></div></div>
+      <div id="status"></div>
+    </div>
+
+    <pre id="log"></pre>
+
+    <details>
+      <summary>Conexão</summary>
+      <label for="server">Endereço do StudioX</label>
+      <input id="server" type="text" value="http://127.0.0.1:8000">
+      <sp-button id="btn-test" variant="secondary" size="s">Testar conexão</sp-button>
+    </details>
+  </div>
+  <script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+{
+  "name": "collabsuite-flow-agent",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Agente local que gera as imagens das mini-novelas da CollabSuite no Google Flow (mesmo método do CarrosselX).",
+  "scripts": { "start": "node index.mjs" },
+  "dependencies": { "playwright-core": "^1.50.0" }
+}

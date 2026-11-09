@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tarefas do dia</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <!-- Login -->
+    <main id="login-view" hidden>
+      <h1>CollabSuite</h1>
+      <p class="muted">Entre para ver e criar as tarefas de hoje.</p>
+      <form id="login-form">
+        <label>Endereço do sistema
+          <input id="login-url" type="text" placeholder="https://app.suaempresa.com" required />
+        </label>
+        <label>E-mail ou usuário
+          <input id="login-user" type="text" autocomplete="username" required />
+        </label>
+        <label>Senha
+          <input id="login-pass" type="password" autocomplete="current-password" required />
+        </label>
+        <p id="login-error" class="error" hidden></p>
+        <button type="submit" class="primary" id="login-submit">Entrar</button>
+      </form>
+    </main>
+
+    <!-- Tarefas -->
+    <main id="tasks-view" hidden>
+      <header>
+        <div>
+          <h1>Hoje</h1>
+          <p id="today-label" class="muted"></p>
+        </div>
+        <div class="header-actions">
+          <button id="open-app" class="icon" title="Abrir o sistema" aria-label="Abrir o sistema">↗</button>
+          <button id="refresh" class="icon" title="Atualizar" aria-label="Atualizar">⟳</button>
+          <button id="logout" class="icon" title="Sair" aria-label="Sair">⎋</button>
+        </div>
+      </header>
+
+      <form id="add-form">
+        <input id="add-title" type="text" placeholder="Nova tarefa para hoje…" maxlength="255" required />
+        <div class="add-project">
+          <select id="add-project" aria-label="Projeto">
+            <option value="">Sem projeto (tarefa pessoal)</option>
+          </select>
+          <select id="add-funnel" aria-label="Funil" hidden></select>
+          <select id="add-stage" aria-label="Etapa" hidden></select>
+        </div>
+        <div class="add-assignee">
+          <label for="add-assignee">Responsável</label>
+          <select id="add-assignee"></select>
+        </div>
+        <div class="add-options">
+          <input id="add-time" type="time" aria-label="Horário (opcional)" />
+          <select id="add-priority" aria-label="Prioridade">
+            <option value="none">Sem prioridade</option>
+            <option value="low">Baixa</option>
+            <option value="medium">Média</option>
+            <option value="high">Alta</option>
+          </select>
+          <select id="add-type" aria-label="Tipo">
+            <option value="task">Tarefa</option>
+            <option value="meeting">Reunião</option>
+          </select>
+          <button type="submit" class="primary" id="add-submit">Adicionar</button>
+        </div>
+        <p id="add-error" class="error" hidden></p>
+      </form>
+
+      <p id="summary" class="muted"></p>
+      <ul id="task-list"></ul>
+      <p id="empty" class="muted center" hidden>Nenhuma tarefa para hoje.</p>
+      <p id="list-error" class="error" hidden></p>
+    </main>
+
+    <script src="api.js"></script>
+    <script src="popup.js"></script>
+  </body>
+</html>

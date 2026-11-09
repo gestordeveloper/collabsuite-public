@@ -1,0 +1,39 @@
+/* ==========================================================================
+   Modo embutido: o StudioX roda dentro do CollabSuite (iframe em /editor-de-video).
+   A navegação (Projetos, Cortes, Fila, Editor, Configurações) e o logo ficam no
+   CollabSuite; o tema claro/escuro e a cor primária são herdados dele (js/embed.js).
+   ========================================================================== */
+html.embedded .sidebar,
+html.embedded .crumbs { display: none; }
+
+/* Mesmos tokens do CollabSuite no tema claro (src/index.css, :root). */
+html.embedded.cs-light {
+  color-scheme: light;
+  --surface-app: hsl(240 12.5% 96.9%);
+  --surface-0: #fff;
+  --surface-1: #fff;
+  --surface-1b: hsl(240 11.1% 97.6%);
+  --surface-overlay: #fff;
+  --surface-2: hsl(240 11.1% 94.7%);
+  --surface-3: hsl(240 10% 89%);
+  --line-faint: hsl(240 10% 93.5%);
+  --line: hsl(240 10.2% 90.4%);
+  --line-strong: hsl(240 7.5% 84.3%);
+
+  --gray-50: hsl(240 8.3% 4.7%);
+  --gray-100: hsl(240 6% 18%);
+  --gray-200: hsl(240 4.3% 32%);
+  --gray-300: hsl(240 4.3% 40%);
+  --gray-400: hsl(240 4.3% 45.1%);
+  --gray-500: hsl(240 7% 72%);
+  --gray-600: hsl(240 7.5% 84.3%);
+  --gray-700: hsl(240 7% 80%);
+  --gray-950: #fff;
+  --pink-text: #C80E71;
+
+  --shadow-popover: 0 12px 32px rgb(0 0 0 / 0.18);
+  --shadow-drawer: -24px 0 48px rgb(0 0 0 / 0.14);
+}
+
+/* Sem o breadcrumb, o separador do indicador de projeto sobra solto. */
+html.embedded .project-indicator { border-left: 0; padding-left: 0; }

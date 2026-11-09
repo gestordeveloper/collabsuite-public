@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teste do Widget de Chamados</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: #f1f5f9;
+      color: #334155;
+      padding: 40px 20px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+      border: 1px solid #e2e8f0;
+    }
+
+    h1 {
+      font-size: 24px;
+      color: #0f172a;
+      margin-top: 0;
+      margin-bottom: 8px;
+    }
+
+    p {
+      font-size: 14px;
+      color: #64748b;
+      line-height: 1.5;
+    }
+
+    .highlight {
+      background: #e2e8f0;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 13px;
+    }
+
+    .btn-action {
+      background: #4f46e5;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+    <h1>Ambiente de Teste do Widget</h1>
+    <p>Esta página simula um sistema externo que incorpora o widget de suporte. O widget foi inicializado com as
+      seguintes credenciais de teste:</p>
+    <ul>
+      <li><strong>Projeto ID (funnel_id):</strong> <span class="highlight">1</span></li>
+      <li><strong>User ID:</strong> <span class="highlight">test_ext_99</span></li>
+      <li><strong>Nome:</strong> <span class="highlight">Carlos</span></li>
+      <li><strong>Sobrenome:</strong> <span class="highlight">Widget</span></li>
+      <li><strong>E-mail:</strong> <span class="highlight">carlos.widget@teste.com</span></li>
+      <li><strong>Telefone:</strong> <span class="highlight">(11) 98888-7777</span></li>
+    </ul>
+    <p>Clique no botão flutuante de chat no canto inferior direito para interagir com o suporte, criar novos chamados ou
+      enviar mensagens.</p>
+    <button class="btn-action" onclick="alert('Sistema Hospedeiro Ativo!')">Interagir com Sistema Hospedeiro</button>
+  </div>
+
+  <!-- LOAD SUPPORT WIDGET -->
+  <script src="http://localhost:3000/api/public/widget/script.js"></script>
+  <script>
+    window.addEventListener('load', () => {
+      if (window.CollabSupportWidget) {
+        window.CollabSupportWidget.init({
+          funnel_id: 2,
+          user_id: "1",
+          first_name: "Samuel",
+          last_name: "Fogaça",
+          email: "sammuel.fogaca@gmail.com",
+          telephone: "43988241958"
+        });
+      } else {
+        console.error("CollabSupportWidget não carregado!");
+      }
+    });
+  </script>
+</body>
+
+</html>

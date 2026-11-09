@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>StudioX</title>
+<style>
+  :root { --bg:#0B0B0D; --pink:#EC1889; --pink-text:#FF5CAE; --muted:#8A8A94; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  html, body { height:100%; overflow:hidden; background:var(--bg); user-select:none; cursor:default; }
+  body { font-family:"Segoe UI", system-ui, sans-serif; color:#fff; border:1px solid #26262C;
+         display:flex; flex-direction:column; align-items:center; justify-content:center; gap:26px;
+         background:radial-gradient(120% 90% at 50% 0%, #2a0a1d 0%, var(--bg) 60%); }
+  .logo { width:300px; opacity:0; animation:in .7s .1s ease-out forwards; }
+  .bar { width:300px; height:3px; background:#26262C; border-radius:3px; overflow:hidden; opacity:0; animation:in .5s .4s ease-out forwards; }
+  .bar i { display:block; height:100%; width:38%; border-radius:3px; background:linear-gradient(90deg, transparent, var(--pink), var(--pink-text));
+           animation:run 1.3s ease-in-out infinite; }
+  .status { font-size:12px; color:var(--muted); min-height:16px; letter-spacing:.02em; }
+  .ver { position:absolute; right:14px; bottom:10px; font-size:11px; color:#4A4A52; }
+  @keyframes in { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:none; } }
+  @keyframes run { 0% { transform:translateX(-110%); } 100% { transform:translateX(270%); } }
+</style>
+</head>
+<body>
+  <img class="logo" alt="StudioX" src="{{LOGO}}">
+  <div class="bar"><i></i></div>
+  <div class="status" id="status">Iniciando…</div>
+  <div class="ver">v{{VERSION}}</div>
+<script>
+  function setStatus(t) { document.getElementById('status').textContent = t; }
+</script>
+</body>
+</html>

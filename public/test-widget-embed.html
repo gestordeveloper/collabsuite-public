@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teste - Script Gerado (Widget de Chamados)</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: #f1f5f9;
+      color: #334155;
+      padding: 40px 20px;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+      border: 1px solid #e2e8f0;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      font-size: 22px;
+      color: #0f172a;
+      margin-top: 0;
+      margin-bottom: 8px;
+    }
+
+    p {
+      font-size: 14px;
+      color: #64748b;
+      line-height: 1.6;
+    }
+
+    .highlight {
+      background: #e2e8f0;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 13px;
+    }
+
+    .warn {
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      color: #92400e;
+      border-radius: 10px;
+      padding: 14px 16px;
+      font-size: 13px;
+    }
+
+    .warn strong { color: #78350f; }
+
+    code.block {
+      display: block;
+      background: #0f172a;
+      color: #e2e8f0;
+      padding: 16px;
+      border-radius: 8px;
+      font-size: 12px;
+      overflow-x: auto;
+      white-space: pre;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+    <h1>Teste do script gerado pela aba "Widget de Chamados"</h1>
+    <p>Esta página simula uma plataforma externa que colou o script embeddable. Ela usa os dados reais do projeto:</p>
+    <ul>
+      <li><strong>Projeto:</strong> <span class="highlight">Website - Ramos Medicina Diagnostica</span> (id 3)</li>
+      <li><strong>Funil:</strong> <span class="highlight">Funil Principal</span> (funnel_id 3, padrão)</li>
+      <li><strong>Usuário de teste (fictício):</strong> <span class="highlight">teste.widget@exemplo.com</span></li>
+    </ul>
+    <p>Clique no botão flutuante no canto inferior direito para abrir um chamado. Ele vai cair na coluna
+      <strong>BACKLOG</strong> do Kanban desse projeto — pode excluir o card de teste depois.</p>
+  </div>
+
+  <div class="warn">
+    <strong>Atenção:</strong> abrir um chamado aqui cria de verdade um usuário e uma tarefa no seu banco de dados
+    (email <span class="highlight">teste.widget@exemplo.com</span>), dentro do projeto real acima. Não é um ambiente
+    isolado — é o mesmo backend do CollabSuite rodando em <span class="highlight">localhost:3000</span>.
+  </div>
+
+  <div class="card">
+    <p style="margin-bottom:8px;"><strong>Script embedado nesta página</strong> (o mesmo que a aba "Widget de Chamados" do projeto gera):</p>
+    <code class="block">&lt;script src="http://localhost:3000/api/public/widget/script.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+  window.CollabSupportWidget.init({
+    funnel_id: 3,
+    user_id: "test_ext_1",
+    first_name: "Usuário",
+    last_name: "Teste",
+    email: "teste.widget@exemplo.com",
+    telephone: "11999990000"
+  });
+&lt;/script&gt;</code>
+  </div>
+
+  <!-- LOAD SUPPORT WIDGET -->
+  <script src="http://localhost:3000/api/public/widget/script.js"></script>
+  <script>
+    window.addEventListener('load', () => {
+      if (window.CollabSupportWidget) {
+        window.CollabSupportWidget.init({
+          funnel_id: 3,
+          user_id: "test_ext_1",
+          first_name: "Usuário",
+          last_name: "Teste",
+          email: "teste.widget@exemplo.com",
+          telephone: "11999990000"
+        });
+      } else {
+        console.error("CollabSupportWidget não carregado!");
+      }
+    });
+  </script>
+</body>
+
+</html>

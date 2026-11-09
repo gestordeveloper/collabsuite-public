@@ -1,0 +1,21 @@
+/* Face tracking tab + the picker over the preview (js/facetrack.js) */
+.track-status { margin-top: 10px; font-size: 12px; color: var(--text-secondary, #A6A6B0); }
+.track-status.ok { color: var(--success, #2BD47D); }
+.track-status.error { color: var(--danger, #FF5A5F); }
+.track-progress { height: 4px; margin-top: 8px; border-radius: 4px; background: var(--surface-3, #26262C); overflow: hidden; }
+.track-progress > i { display: block; height: 100%; width: 0; background: var(--pink-500, #EC1889); transition: width .3s ease; }
+.track-btn-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.track-btn-row .btn.active { background: var(--pink-500, #EC1889); color: #fff; }
+
+/* Boxes over the faces while choosing who to follow: laid exactly over the picture of the player */
+.track-pick-layer { position: absolute; z-index: 8; pointer-events: none; }
+.track-pick-box {
+  position: absolute; pointer-events: auto; cursor: pointer; padding: 0;
+  border: 2px solid var(--pink-500, #EC1889); border-radius: 6px; background: rgba(236, 24, 137, .12);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, .5); transition: background .15s ease, transform .15s ease;
+}
+.track-pick-box:hover, .track-pick-box:focus-visible { background: rgba(236, 24, 137, .35); transform: scale(1.04); outline: none; }
+.track-pick-empty {
+  position: absolute; left: 50%; top: 12px; transform: translateX(-50%); max-width: 86%; text-align: center;
+  padding: 8px 12px; border-radius: 8px; font-size: 12px; color: #fff; background: rgba(0, 0, 0, .72);
+}

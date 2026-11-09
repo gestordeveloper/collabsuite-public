@@ -1,0 +1,22 @@
+{
+  "manifestVersion": 5,
+  "id": "com.studiox.premiere",
+  "name": "StudioX",
+  "version": "0.1.0",
+  "main": "index.html",
+  "host": { "app": "premierepro", "minVersion": "25.6.0" },
+  "entrypoints": [
+    {
+      "type": "panel",
+      "id": "studiox.panel",
+      "label": { "default": "StudioX" },
+      "minimumSize": { "width": 280, "height": 360 },
+      "preferredDockedSize": { "width": 340, "height": 640 }
+    }
+  ],
+  "requiredPermissions": {
+    "network": { "domains": ["http://127.0.0.1", "http://localhost"] },
+    "localFileSystem": "fullAccess",
+    "launchProcess": { "schemes": ["http", "https"], "extensions": [] }
+  }
+}

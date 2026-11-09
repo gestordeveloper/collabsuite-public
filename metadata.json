@@ -1,0 +1,6 @@
+{
+  "name": "Gerenciador de Projetos e Agenda",
+  "description": "Sistema completo para gerenciar projetos, tarefas (Kanban), reuniões e agenda integrada, com colaboração em tempo real, link público de agendamento e API móvel.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

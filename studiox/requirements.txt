@@ -1,0 +1,13 @@
+# Dependências do StudioX (editor de vídeo). Instale com:
+#   python -m venv studiox/.venv && studiox/.venv/Scripts/pip install -r studiox/requirements.txt   (Linux: .venv/bin/pip)
+# Também precisa de FFmpeg/ffprobe e Node.js no PATH. A transcrição local (openai-whisper) é opcional e pesada:
+# sem ela o app transcreve pela ElevenLabs/Groq, com a chave cadastrada na tela Configurações do editor.
+fastapi
+uvicorn
+python-multipart
+pydantic
+requests
+numpy
+opencv-python-headless
+pillow
+anthropic

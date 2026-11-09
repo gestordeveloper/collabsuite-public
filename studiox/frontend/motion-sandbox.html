@@ -1,0 +1,36 @@
+<!doctype html>
+<!-- Runs the AI-written "Personalizado" motion graphics for the editor's live preview (js/motionplayer.js).
+     Loaded in an <iframe sandbox="allow-scripts"> WITHOUT allow-same-origin: this page has an opaque origin, so the code
+     inside cannot read the editor's DOM, storage, cookies or credentials, and the CSP below forbids every network
+     connection. The only way in or out is postMessage. -->
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'unsafe-inline'; img-src data: blob:; font-src data:; media-src data:; connect-src 'none'; form-action 'none'">
+<style>html, body, #root { margin: 0; width: 100%; height: 100%; background: transparent; overflow: hidden; }</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="vendor/motion-player.js?v=4"></script>
+<script>
+  (function () {
+    var root = document.getElementById('root');
+    var bundle = window.StudioXMotionPlayerBundle;
+    var want = 0;
+    window.addEventListener('message', function (e) {
+      var m = e.data;
+      if (!m || !bundle) return;
+      if (m.type === 'mount') {
+        bundle.mount(root, m.spec);
+        // the Player is not ready the instant it is mounted, and a seek sent before that is dropped: apply the wanted frame again
+        [60, 250, 700].forEach(function (ms) { setTimeout(function () { bundle.seek(root, want); }, ms); });
+      } else if (m.type === 'seek') {
+        want = m.frame;
+        bundle.seek(root, m.frame);
+      }
+    });
+    parent.postMessage({ type: 'ready' }, '*');
+  })();
+</script>
+</body>
+</html>

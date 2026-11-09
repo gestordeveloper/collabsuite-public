@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Configurações | StudioX</title>
+  <link rel="icon" type="image/svg+xml" href="images/icon.svg">
+  <meta name="description" content="Salve em um só lugar as chaves que o StudioX usa: ElevenLabs (transcrição) e as IAs (Groq, OpenAI, OpenRouter, Anthropic) que revisam a transcrição e acertam os cortes.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/tokens.css?v=1">
+  <link rel="stylesheet" href="css/studio.css?v=8">
+  <link rel="stylesheet" href="css/pages.css?v=15">
+  <link rel="stylesheet" href="css/embed.css?v=1">
+  <script src="js/embed.js?v=1"></script>
+</head>
+<body class="dark-theme page-body">
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Navegação principal">
+      <a href="/studiox/" class="sidebar-brand brand-link" title="StudioX" aria-label="StudioX">
+        <img src="images/logo-white.svg" alt="StudioX" class="brand-logo">
+        <img src="images/icon.svg" alt="" class="brand-icon">
+      </a>
+      <nav class="sidebar-nav" aria-label="Telas">
+        <span class="nav-label">Workspace</span>
+        <a href="/studiox/" class="nav-item" title="Projetos">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="9" rx="1.5"></rect><rect x="14" y="3" width="7" height="5" rx="1.5"></rect><rect x="14" y="12" width="7" height="9" rx="1.5"></rect><rect x="3" y="16" width="7" height="5" rx="1.5"></rect></svg>
+          <span class="nav-text">Projetos</span>
+        </a>
+        <a href="/studiox/clips.html" class="nav-item" title="Cortes com IA">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path></svg>
+          <span class="nav-text">Cortes com IA</span>
+        </a>
+        <a href="/studiox/queue.html" class="nav-item" title="Fila de edição">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h11M4 12h11M4 18h7"></path><path d="m18 14 4 3-4 3z"></path></svg>
+          <span class="nav-text">Fila de edição</span><span class="nav-count" id="nav-queue-count"></span>
+        </a>
+        <a href="/studiox/editor.html" class="nav-item" title="Editor">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6" cy="6" r="3"></circle><circle cx="6" cy="18" r="3"></circle><path d="M20 4 8.12 15.88M14.47 14.48 20 20M8.12 8.12 12 12"></path></svg>
+          <span class="nav-text">Editor</span>
+        </a>
+        <a href="/studiox/settings.html" class="nav-item active" title="Configurações" aria-current="page">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"></path><circle cx="15" cy="6" r="2"></circle><circle cx="9" cy="12" r="2"></circle><circle cx="17" cy="18" r="2"></circle></svg>
+          <span class="nav-text">Configurações</span>
+        </a>
+      </nav>
+    </aside>
+
+    <div class="app-main">
+      <header class="app-header">
+        <div class="header-left">
+          <nav class="crumbs" aria-label="Você está em"><span class="crumb-root">StudioX</span><span class="crumb-sep">/</span><span class="crumb-current">Configurações</span></nav>
+        </div>
+      </header>
+
+      <div class="page-scroll">
+        <main class="page-main">
+          <div class="page-head">
+            <div>
+              <h1 class="page-title">Configurações</h1>
+              <p class="page-sub">Todas as chaves do StudioX em um só lugar: o ElevenLabs, que transcreve o áudio, e as IAs que revisam a transcrição, acham erros de gravação, retakes e gagueiras e deixam o corte certo.</p>
+            </div>
+          </div>
+
+          <div id="notice" class="info-alert sub-notice warn" hidden style="margin-bottom:16px"></div>
+
+          <section class="pcard" style="margin-bottom:18px">
+            <div class="pcard-title"><span>Chaves de API</span><span class="badge badge-dim" id="enc-badge"></span></div>
+            <p class="field-hint" style="margin:-4px 0 0">
+              Cole a chave de cada serviço que você usa. Elas ficam guardadas <strong>só neste computador</strong> (criptografadas com a sua conta do Windows), nunca voltam para o navegador e só podem ser alteradas por aqui.
+              O provedor de IA <strong>padrão</strong> é o que a fila e o editor usam quando o template não escolhe um.
+            </p>
+          </section>
+
+          <div id="providers" class="provider-grid"></div>
+
+          <section class="pcard" style="margin-top:18px" id="review-card">
+            <div class="pcard-title"><span>Como a revisão decide os cortes</span><span class="badge badge-dim" id="review-badge"></span></div>
+            <p class="field-hint" style="margin:-4px 0 10px">
+              A revisão é a mesma na <strong>fila</strong> e no <strong>editor</strong>. O que faz ela acertar é a <strong>copy</strong> (o roteiro que você leu):
+              cole-a ao adicionar o vídeo na fila ou no botão de IA do editor, e a análise mantém cada fala uma vez, na melhor gravação, sem confundir uma repetição do próprio roteiro com um erro.
+              Aqui você escreve o que vale para <strong>todos</strong> os vídeos.
+            </p>
+            <label class="field-label" for="review-instructions" style="display:block;font-size:12px;margin-bottom:4px">Instruções gerais (opcional)</label>
+            <textarea id="review-instructions" class="text-input" rows="4" maxlength="1500" spellcheck="false"
+              placeholder="Ex.: mantenha hesitações curtas; corte sempre o “né” no fim das frases; sou informal, não trate “pra” como erro."></textarea>
+            <div style="display:flex;align-items:center;gap:10px;margin-top:8px">
+              <button class="btn btn-accent btn-sm" id="btn-save-review">Salvar instruções</button>
+              <span class="field-hint" id="review-count" style="margin:0"></span>
+            </div>
+            <details style="margin-top:12px">
+              <summary style="cursor:pointer;font-size:12px;color:var(--text-secondary)">Ver o prompt base que a IA recebe (somente leitura)</summary>
+              <p class="field-hint" style="margin:8px 0 4px">Suas instruções e a copy do vídeo são acrescentadas ao final deste texto. As palavras que o alinhamento com a copy já escolheu chegam marcadas com ✓ e as já cortadas com ✗.</p>
+              <pre id="review-prompt" class="prompt-preview"></pre>
+            </details>
+          </section>
+
+          <section class="pcard" style="margin-top:18px">
+            <div class="pcard-title"><span>Transcrição (áudio para texto)</span></div>
+            <div id="transcription" class="tpl-summary" style="margin-top:0"></div>
+            <p class="field-hint">A transcrição pode usar o ElevenLabs Scribe (a chave fica no cartão acima), o Groq Whisper (a mesma chave do Groq das IAs) ou o Whisper instalado neste computador. No modo automático o StudioX usa o primeiro que tiver chave, nessa ordem, e o Whisper local por último. Você escolhe o motor na fila (no template) e no editor. As IAs leem essa transcrição para decidir os cortes.</p>
+          </section>
+        </main>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="js/common.js?v=2"></script>
+  <script src="js/settings.js?v=6"></script>
+</body>
+</html>

@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;background:#0B0B0D;color:#F5F5F7;font-family:'Geist',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+a{color:#FF5CAE;text-decoration:none}a:hover{color:#EC1889}
+::-webkit-scrollbar{width:10px;height:10px}::-webkit-scrollbar-thumb{background:#26262C;border-radius:10px;border:2px solid #0B0B0D}::-webkit-scrollbar-track{background:transparent}
+</style>
+</helmet>
+<div style="display:flex;height:100vh;width:100%;overflow:hidden;background:#0B0B0D">
+
+<aside style="width:244px;flex-shrink:0;background:#0F0F12;border-right:1px solid #1F1F24;display:flex;flex-direction:column;padding:16px 12px;gap:20px;overflow-y:auto">
+  <div style="display:flex;align-items:center;gap:10px;padding:4px 8px">
+    <img src="assets/icon.png" alt="Ebenezer" style="width:32px;height:32px;object-fit:contain;margin:-4px"></img>
+    <div style="display:flex;flex-direction:column;gap:1px">
+      <span style="font-family:'Sora';font-weight:600;font-size:14px;letter-spacing:-0.01em">Ebenezer</span>
+      <span style="font-size:11px;color:#6E6E78">Workspace · Time Dev</span>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px;height:34px;padding:0 10px;border-radius:8px;background:#141417;border:1px solid #26262C;color:#6E6E78;font-size:13px">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+    <span style="flex:1">Buscar</span>
+    <span style="font-family:'Geist Mono';font-size:11px;padding:1px 5px;border:1px solid #33333A;border-radius:4px">⌘K</span>
+  </div>
+  <nav style="display:flex;flex-direction:column;gap:2px">
+    <span style="font-size:11px;font-weight:500;color:#6E6E78;padding:0 10px 6px;text-transform:uppercase;letter-spacing:0.08em">Workspace</span>
+    <div onClick="{{ nav.dashboard.go }}" style="display:flex;align-items:center;gap:10px;height:34px;padding:0 10px;border-radius:8px;cursor:pointer;font-size:14px;font-weight:500;background:{{ nav.dashboard.bg }};color:{{ nav.dashboard.fg }}" style-hover="background:#1B1B1F">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="{{ nav.dashboard.ic }}" stroke-width="1.8"><rect x="3" y="3" width="7" height="9" rx="1.5"></rect><rect x="14" y="3" width="7" height="5" rx="1.5"></rect><rect x="14" y="12" width="7" height="9" rx="1.5"></rect><rect x="3" y="16" width="7" height="5" rx="1.5"></rect></svg>Dashboard</div>
+    <div onClick="{{ nav.tasks.go }}" style="display:flex;align-items:center;gap:10px;height:34px;padding:0 10px;border-radius:8px;cursor:pointer;font-size:14px;font-weight:500;background:{{ nav.tasks.bg }};color:{{ nav.tasks.fg }}" style-hover="background:#1B1B1F">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="{{ nav.tasks.ic }}" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="3"></rect><path d="m8 12 3 3 5-6"></path></svg><span style="flex:1">Tarefas</span><span style="font-size:11px;font-family:'Geist Mono';color:#6E6E78">{{ openCount }}</span></div>
+    <div onClick="{{ nav.kanban.go }}" style="display:flex;align-items:center;gap:10px;height:34px;padding:0 10px;border-radius:8px;cursor:pointer;font-size:14px;font-weight:500;background:{{ nav.kanban.bg }};color:{{ nav.kanban.fg }}" style-hover="background:#1B1B1F">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="{{ nav.kanban.ic }}" stroke-width="1.8"><rect x="3" y="3" width="5" height="18" rx="1.5"></rect><rect x="10" y="3" width="5" height="12" rx="1.5"></rect><rect x="17" y="3" width="4" height="8" rx="1.5"></rect></svg>Kanban</div>
+    <div onClick="{{ nav.calendar.go }}" style="display:flex;align-items:center;gap:10px;height:34px;padding:0 10px;border-radius:8px;cursor:pointer;font-size:14px;font-weight:500;background:{{ nav.calendar.bg }};color:{{ nav.calendar.fg }}" style-hover="background:#1B1B1F">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="{{ nav.calendar.ic }}" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg>Calendário</div>
+    <div onClick="{{ nav.notes.go }}" style="display:flex;align-items:center;gap:10px;height:34px;padding:0 10px;border-radius:8px;cursor:pointer;font-size:14px;font-weight:500;background:{{ nav.notes.bg }};color:{{ nav.notes.fg }}" style-hover="background:#1B1B1F">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="{{ nav.notes.ic }}" stroke-width="1.8"><path d="M6 3h9l4 4v14H6z"></path><path d="M9 12h7M9 16h5"></path></svg>Anotações</div>
+    <div onClick="{{ nav.habits.go }}" style="display:flex;align-items:center;gap:10px;height:34px;padding:0 10px;border-radius:8px;cursor:pointer;font-size:14px;font-weight:500;background:{{ nav.habits.bg }};color:{{ nav.habits.fg }}" style-hover="background:#1B1B1F">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="{{ nav.habits.ic }}" stroke-width="1.8"><path d="M12 3c1 4 5 5 5 10a5 5 0 0 1-10 0c0-3 2-4 2-6 2 1 3 3 3 3s0-4 0-7z"></path></svg>Hábitos</div>
+  </nav>
+  <div style="display:flex;flex-direction:column;gap:2px">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:0 10px 6px">
+      <span style="font-size:11px;font-weight:500;color:#6E6E78;text-transform:uppercase;letter-spacing:0.08em">Projetos</span>
+      <span style="color:#6E6E78;font-size:16px;line-height:1;cursor:pointer">+</span>
+    </div>
+    <sc-for list="{{ projects }}" as="p" hint-placeholder-count="5">
+      <div style="display:flex;align-items:center;gap:10px;height:32px;padding:0 10px;border-radius:8px;font-size:13px;color:#A6A6B0;cursor:pointer" style-hover="background:#1B1B1F;color:#F5F5F7">
+        <span style="width:8px;height:8px;border-radius:2px;background:{{ p.color }}"></span><span style="flex:1">{{ p.name }}</span><span style="font-family:'Geist Mono';font-size:11px;color:#6E6E78">{{ p.pct }}%</span>
+      </div>
+    </sc-for>
+  </div>
+  <div style="flex:1"></div>
+  <div onClick="{{ nav.system.go }}" style="display:flex;align-items:center;gap:10px;height:38px;padding:0 10px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:500;border:1px dashed #33333A;background:{{ nav.system.bg }};color:{{ nav.system.fg }}" style-hover="background:#1B1B1F">
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="{{ nav.system.ic }}" stroke-width="1.8"><path d="m12 3 9 5-9 5-9-5z"></path><path d="m3 13 9 5 9-5"></path></svg>Design System</div>
+  <div style="display:flex;align-items:center;gap:10px;padding:8px;border-top:1px solid #1F1F24;padding-top:14px">
+    <div style="width:30px;height:30px;border-radius:50%;background:#EC1889;color:#fff;display:grid;place-items:center;font-size:12px;font-weight:600">RM</div>
+    <div style="display:flex;flex-direction:column;flex:1;min-width:0"><span style="font-size:13px;font-weight:500">Rafael Moreira</span><span style="font-size:11px;color:#6E6E78">Tech Lead</span></div>
+  </div>
+</aside>
+
+<main style="flex:1;min-width:0;display:flex;flex-direction:column;overflow:hidden">
+  <header style="height:56px;flex-shrink:0;display:flex;align-items:center;gap:12px;padding:0 24px;border-bottom:1px solid #1F1F24">
+    <span style="font-size:13px;color:#6E6E78">Ebenezer</span><span style="color:#33333A">/</span>
+    <span style="font-size:13px;font-weight:500">{{ pageTitle }}</span>
+    <div style="flex:1"></div>
+    <div style="display:flex;align-items:center;gap:-6px">
+      <sc-for list="{{ team }}" as="m" hint-placeholder-count="4">
+        <div style="width:26px;height:26px;border-radius:50%;background:{{ m.color }};border:2px solid #0B0B0D;margin-left:-6px;display:grid;place-items:center;font-size:10px;font-weight:600;color:#0B0B0D">{{ m.ini }}</div>
+      </sc-for>
+    </div>
+    <div style="width:34px;height:34px;border-radius:8px;display:grid;place-items:center;color:#A6A6B0;position:relative;cursor:pointer" style-hover="background:#1B1B1F">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 8 3 8H3s3-1 3-8"></path><path d="M10 20a2 2 0 0 0 4 0"></path></svg>
+      <span style="position:absolute;top:7px;right:8px;width:7px;height:7px;border-radius:50%;background:#EC1889;border:1.5px solid #0B0B0D"></span>
+    </div>
+    <button style="height:34px;padding:0 14px;border-radius:8px;border:none;background:#EC1889;color:#fff;font-family:'Geist';font-weight:600;font-size:13px;display:flex;align-items:center;gap:6px;cursor:pointer" style-hover="background:#F23A9C">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"></path></svg>Nova tarefa</button>
+  </header>
+
+  <div style="flex:1;overflow:auto;position:relative">
+
+<!-- ===================== DASHBOARD ===================== -->
+<sc-if value="{{ pg.dashboard }}" hint-placeholder-val="{{ true }}">
+<div data-screen-label="Dashboard" style="padding:32px;display:flex;flex-direction:column;gap:24px;max-width:1440px;margin:0 auto">
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap">
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <span style="font-size:13px;color:#6E6E78">Quarta-feira, 23 de setembro</span>
+      <h1 style="margin:0;font-family:'Sora';font-size:30px;font-weight:600;letter-spacing:-0.02em">Boa tarde, Rafael</h1>
+    </div>
+    <div style="display:flex;gap:4px;padding:3px;background:#141417;border:1px solid #26262C;border-radius:9px">
+      <span style="padding:6px 12px;border-radius:6px;background:#26262C;font-size:13px;font-weight:500">Semana</span>
+      <span style="padding:6px 12px;border-radius:6px;font-size:13px;color:#A6A6B0">Mês</span>
+      <span style="padding:6px 12px;border-radius:6px;font-size:13px;color:#A6A6B0">Trimestre</span>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px">
+    <sc-for list="{{ stats }}" as="s" hint-placeholder-count="4">
+      <div style="background:#141417;border:1px solid #26262C;border-radius:14px;padding:18px 20px;display:flex;flex-direction:column;gap:12px">
+        <span style="font-size:13px;color:#A6A6B0">{{ s.label }}</span>
+        <div style="display:flex;align-items:baseline;gap:10px">
+          <span style="font-family:'Sora';font-size:30px;font-weight:600;letter-spacing:-0.02em">{{ s.value }}</span>
+          <span style="font-size:12px;font-weight:500;color:{{ s.deltaColor }}">{{ s.delta }}</span>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:16px">
+    <div style="display:flex;flex-direction:column;gap:16px;min-width:0">
+      <section style="background:#141417;border:1px solid #26262C;border-radius:14px;overflow:hidden">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid #1F1F24">
+          <h3 style="margin:0;font-family:'Sora';font-size:15px;font-weight:600">Para hoje</h3>
+          <span onClick="{{ nav.tasks.go }}" style="font-size:13px;color:#FF5CAE;cursor:pointer">Ver todas</span>
+        </div>
+        <sc-for list="{{ todayTasks }}" as="t" hint-placeholder-count="4">
+          <div onClick="{{ t.open }}" style="display:flex;align-items:center;gap:14px;padding:12px 20px;border-bottom:1px solid #1B1B1F;cursor:pointer" style-hover="background:#18181C">
+            <div onClick="{{ t.toggle }}" style="width:18px;height:18px;border-radius:5px;flex-shrink:0;display:grid;place-items:center;border:1.5px solid {{ t.checkBorder }};background:{{ t.checkBg }}">
+              <sc-if value="{{ t.done }}" hint-placeholder-val="{{ false }}"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5"><path d="m5 12 5 5 9-10"></path></svg></sc-if>
+            </div>
+            <span style="flex:1;min-width:0;font-size:14px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:{{ t.titleColor }};text-decoration:{{ t.strike }}">{{ t.title }}</span>
+            <span style="display:flex;align-items:center;gap:6px;font-size:12px;color:#A6A6B0"><span style="width:7px;height:7px;border-radius:2px;background:{{ t.projColor }}"></span>{{ t.projName }}</span>
+            <span style="font-size:11px;font-weight:600;padding:3px 8px;border-radius:6px;color:{{ t.prColor }};background:{{ t.prSoft }}">{{ t.pr }}</span>
+          </div>
+        </sc-for>
+      </section>
+
+      <section style="background:#141417;border:1px solid #26262C;border-radius:14px;padding:18px 20px;display:flex;flex-direction:column;gap:18px">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <h3 style="margin:0;font-family:'Sora';font-size:15px;font-weight:600">Tarefas concluídas na semana</h3>
+          <span style="font-size:12px;color:#6E6E78">20 – 26 set</span>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:14px;align-items:end;height:160px">
+          <sc-for list="{{ weekBars }}" as="b" hint-placeholder-count="7">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:8px;height:100%;justify-content:flex-end">
+              <span style="font-family:'Geist Mono';font-size:11px;color:#A6A6B0">{{ b.v }}</span>
+              <div style="width:100%;max-width:44px;border-radius:6px;height:{{ b.h }};background:{{ b.bg }}"></div>
+              <span style="font-size:12px;color:{{ b.labelColor }}">{{ b.d }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:16px;min-width:0">
+      <section style="background:#141417;border:1px solid #26262C;border-radius:14px;padding:18px 20px;display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <h3 style="margin:0;font-family:'Sora';font-size:15px;font-weight:600">Agenda de hoje</h3>
+          <span onClick="{{ nav.calendar.go }}" style="font-size:13px;color:#FF5CAE;cursor:pointer">Calendário</span>
+        </div>
+        <sc-for list="{{ todayEvents }}" as="e" hint-placeholder-count="4">
+          <div style="display:flex;gap:12px;align-items:center">
+            <span style="font-family:'Geist Mono';font-size:12px;color:#6E6E78;width:44px">{{ e.time }}</span>
+            <div style="flex:1;display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:9px;background:{{ e.bg }}">
+              <span style="width:6px;height:6px;border-radius:50%;background:{{ e.c }}"></span>
+              <span style="font-size:13px;font-weight:500;flex:1">{{ e.t }}</span>
+              <span style="font-size:11px;color:#A6A6B0">{{ e.dur }}</span>
+            </div>
+          </div>
+        </sc-for>
+      </section>
+      <section style="background:#141417;border:1px solid #26262C;border-radius:14px;padding:18px 20px;display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <h3 style="margin:0;font-family:'Sora';font-size:15px;font-weight:600">Hábitos de hoje</h3>
+          <span style="font-size:12px;color:#A6A6B0">{{ habitsTodayDone }}</span>
+        </div>
+        <sc-for list="{{ habitsToday }}" as="h" hint-placeholder-count="4">
+          <div onClick="{{ h.toggle }}" style="display:flex;align-items:center;gap:12px;padding:8px 0;cursor:pointer">
+            <div style="width:22px;height:22px;border-radius:50%;display:grid;place-items:center;border:1.5px solid {{ h.border }};background:{{ h.bg }}">
+              <sc-if value="{{ h.on }}" hint-placeholder-val="{{ false }}"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5"><path d="m5 12 5 5 9-10"></path></svg></sc-if>
+            </div>
+            <span style="flex:1;font-size:14px">{{ h.name }}</span>
+            <span style="font-size:12px;color:#F7B32B;font-family:'Geist Mono'">{{ h.streak }}d</span>
+          </div>
+        </sc-for>
+      </section>
+      <section style="background:#141417;border:1px solid #26262C;border-radius:14px;padding:18px 20px;display:flex;flex-direction:column;gap:14px">
+        <h3 style="margin:0;font-family:'Sora';font-size:15px;font-weight:600">Projetos</h3>
+        <sc-for list="{{ projects }}" as="p" hint-placeholder-count="5">
+          <div style="display:flex;flex-direction:column;gap:7px">
+            <div style="display:flex;justify-content:space-between;font-size:13px"><span>{{ p.name }}</span><span style="font-family:'Geist Mono';color:#A6A6B0;font-size:12px">{{ p.pct }}%</span></div>
+            <div style="height:6px;border-radius:6px;background:#222227;overflow:hidden"><div style="height:100%;border-radius:6px;width:{{ p.w }};background:{{ p.color }}"></div></div>
+          </div>
+        </sc-for>
+      </section>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<!-- ===================== TAREFAS (DATABASE) ===================== -->
+<sc-if value="{{ pg.tasks }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Tarefas" style="padding:32px;display:flex;flex-direction:column;gap:20px">
+  <div style="display:flex;flex-direction:column;gap:8px">
+    <h1 style="margin:0;font-family:'Sora';font-size:28px;font-weight:600;letter-spacing:-0.02em">Tarefas</h1>
+    <span style="font-size:14px;color:#A6A6B0">Todas as tarefas dos projetos ativos, agrupadas por status.</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px;border-bottom:1px solid #1F1F24;flex-wrap:wrap">
+    <span onClick="{{ tv.goTable }}" style="padding:8px 4px;margin-right:12px;font-size:13px;font-weight:500;margin-bottom:-1px;cursor:pointer;color:{{ tv.tableFg }};border-bottom:2px solid {{ tv.tableBd }}">Tabela</span>
+    <span onClick="{{ nav.kanban.go }}" style="padding:8px 4px;margin-right:12px;font-size:13px;font-weight:500;color:#A6A6B0;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px">Quadro</span>
+    <span onClick="{{ nav.calendar.go }}" style="padding:8px 4px;margin-right:12px;font-size:13px;font-weight:500;color:#A6A6B0;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px">Calendário</span>
+    <span onClick="{{ tv.goTimeline }}" style="padding:8px 4px;font-size:13px;font-weight:500;margin-bottom:-1px;cursor:pointer;color:{{ tv.tlFg }};border-bottom:2px solid {{ tv.tlBd }}">Linha do tempo</span>
+    <div style="flex:1"></div>
+    <div style="display:flex;gap:6px;padding-bottom:8px">
+      <sc-for list="{{ filters }}" as="f" hint-placeholder-count="4">
+        <span onClick="{{ f.onClick }}" style="height:28px;padding:0 10px;border-radius:7px;font-size:12px;font-weight:500;display:flex;align-items:center;cursor:pointer;background:{{ f.bg }};color:{{ f.fg }};border:1px solid {{ f.border }}">{{ f.label }}</span>
+      </sc-for>
+    </div>
+  </div>
+  <sc-if value="{{ tv.timeline }}" hint-placeholder-val="{{ false }}">
+  <div style="border:1px solid #26262C;border-radius:14px;background:#0F0F12;overflow:auto;max-height:calc(100vh - 260px)">
+    <div style="display:grid;grid-template-columns:280px {{ tl.width }};min-width:max-content">
+      <div style="position:sticky;left:0;top:0;z-index:4;background:#0F0F12;border-right:1px solid #26262C;border-bottom:1px solid #26262C;padding:0 16px;display:flex;align-items:flex-end;padding-bottom:10px;font-size:12px;font-weight:500;color:#6E6E78;height:64px">Tarefa</div>
+      <div style="position:sticky;top:0;z-index:3;background:#0F0F12;border-bottom:1px solid #26262C;height:64px;display:flex;flex-direction:column">
+        <div style="display:flex;height:28px">
+          <sc-for list="{{ tl.months }}" as="mo" hint-placeholder-count="2">
+            <div style="font-size:12px;font-weight:600;padding:8px 10px 0;border-left:1px solid #1F1F24;width:{{ mo.w }}">{{ mo.label }}</div>
+          </sc-for>
+        </div>
+        <div style="display:flex;flex:1">
+          <sc-for list="{{ tl.days }}" as="dy" hint-placeholder-count="29">
+            <div style="width:40px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;border-left:1px solid #1B1B1F;font-size:10px;color:{{ dy.fg }}">
+              <span>{{ dy.dow }}</span>
+              <span style="font-family:'Geist Mono';font-size:11px;width:22px;height:18px;border-radius:5px;display:grid;place-items:center;background:{{ dy.bg }};color:{{ dy.numFg }}">{{ dy.num }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <sc-for list="{{ tl.rows }}" as="tr" hint-placeholder-count="8">
+        <div style="display:contents">
+          <sc-if value="{{ tr.isGroup }}" hint-placeholder-val="{{ false }}">
+            <div style="position:sticky;left:0;z-index:2;background:#131316;border-right:1px solid #26262C;border-bottom:1px solid #1F1F24;height:36px;display:flex;align-items:center;gap:8px;padding:0 16px;font-size:12px;font-weight:600">
+              <span style="width:8px;height:8px;border-radius:2px;background:{{ tr.color }}"></span>{{ tr.name }}<span style="font-family:'Geist Mono';font-weight:400;color:#6E6E78">{{ tr.count }}</span>
+            </div>
+            <div style="height:36px;background:#131316;border-bottom:1px solid #1F1F24"></div>
+          </sc-if>
+          <sc-if value="{{ tr.isTask }}" hint-placeholder-val="{{ true }}">
+            <div onClick="{{ tr.open }}" style="position:sticky;left:0;z-index:2;background:#0F0F12;border-right:1px solid #26262C;border-bottom:1px solid #1B1B1F;height:44px;display:flex;align-items:center;gap:10px;padding:0 16px 0 32px;cursor:pointer" style-hover="background:#141417">
+              <span style="width:7px;height:7px;border-radius:50%;flex-shrink:0;background:{{ tr.statusColor }}"></span>
+              <span style="flex:1;min-width:0;font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:{{ tr.titleColor }}">{{ tr.title }}</span>
+              <div style="display:flex">
+                <sc-for list="{{ tr.people }}" as="pp" hint-placeholder-count="1">
+                  <div style="width:20px;height:20px;border-radius:50%;margin-left:-5px;border:2px solid #0F0F12;display:grid;place-items:center;font-size:8px;font-weight:700;color:#0B0B0D;background:{{ pp.color }}">{{ pp.ini }}</div>
+                </sc-for>
+              </div>
+            </div>
+            <div style="position:relative;height:44px;border-bottom:1px solid #1B1B1F;background-image:linear-gradient(90deg,#1B1B1F 1px,transparent 1px);background-size:40px 100%">
+              <sc-for list="{{ tl.weekends }}" as="we" hint-placeholder-count="8"><span style="position:absolute;top:0;bottom:0;width:40px;background:rgba(255,255,255,0.018);left:{{ we }}"></span></sc-for>
+              <div onClick="{{ tr.open }}" style="position:absolute;top:8px;height:28px;border-radius:7px;overflow:hidden;display:flex;align-items:center;padding:0 10px;cursor:pointer;left:{{ tr.left }};width:{{ tr.w }};background:{{ tr.barBg }};border:1px solid {{ tr.barBd }};opacity:{{ tr.barOpacity }}" style-hover="border-color:#F5F5F7">
+                <span style="position:absolute;left:0;top:0;bottom:0;width:{{ tr.checkW }};background:{{ tr.fill }}"></span>
+                <span style="position:relative;font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ tr.label }}</span>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+      </sc-for>
+      <div style="position:sticky;left:0;z-index:2;background:#0F0F12;border-right:1px solid #26262C;height:1px"></div>
+      <div style="position:relative;height:1px">
+        <div style="position:absolute;bottom:0;width:2px;background:#EC1889;z-index:1;pointer-events:none;left:{{ tl.todayLeft }};height:{{ tl.bodyH }}"></div>
+      </div>
+    </div>
+  </div>
+  <div style="display:flex;gap:18px;flex-wrap:wrap;font-size:12px;color:#A6A6B0">
+    <span style="display:flex;align-items:center;gap:6px"><span style="width:14px;height:2px;background:#EC1889"></span>Hoje · 23 set</span>
+    <span style="display:flex;align-items:center;gap:6px"><span style="width:18px;height:10px;border-radius:3px;background:rgba(236,24,137,0.25);position:relative;overflow:hidden"><span style="position:absolute;inset:0 50% 0 0;background:rgba(236,24,137,0.6)"></span></span>Preenchimento = subtarefas concluídas</span>
+  </div>
+  </sc-if>
+  <sc-if value="{{ tv.table }}" hint-placeholder-val="{{ true }}">
+  <div style="overflow-x:auto">
+  <div style="min-width:1040px;display:flex;flex-direction:column;gap:22px">
+    <div style="display:grid;grid-template-columns:40px minmax(0,2.6fr) 150px 130px 110px 110px 160px 170px;font-size:12px;color:#6E6E78;font-weight:500;padding:0 8px">
+      <span></span><span>Nome</span><span>Status</span><span>Responsáveis</span><span>Prazo</span><span>Prioridade</span><span>Projeto</span><span>Tags</span>
+    </div>
+    <sc-for list="{{ groups }}" as="g" hint-placeholder-count="3">
+      <div style="display:flex;flex-direction:column">
+        <div style="display:flex;align-items:center;gap:10px;padding:0 8px 8px">
+          <span style="font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px;display:flex;align-items:center;gap:6px;color:{{ g.color }};background:{{ g.soft }}"><span style="width:6px;height:6px;border-radius:50%;background:{{ g.color }}"></span>{{ g.label }}</span>
+          <span style="font-family:'Geist Mono';font-size:12px;color:#6E6E78">{{ g.count }}</span>
+        </div>
+        <sc-for list="{{ g.rows }}" as="r" hint-placeholder-count="3">
+          <div onClick="{{ r.open }}" style="display:grid;grid-template-columns:40px minmax(0,2.6fr) 150px 130px 110px 110px 160px 170px;align-items:center;height:44px;padding:0 8px;border-top:1px solid #1B1B1F;font-size:13px;cursor:pointer" style-hover="background:#141417">
+            <div onClick="{{ r.toggle }}" style="width:17px;height:17px;border-radius:5px;display:grid;place-items:center;border:1.5px solid {{ r.checkBorder }};background:{{ r.checkBg }}">
+              <sc-if value="{{ r.done }}" hint-placeholder-val="{{ false }}"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5"><path d="m5 12 5 5 9-10"></path></svg></sc-if>
+            </div>
+            <span style="font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:16px;color:{{ r.titleColor }}">{{ r.title }}</span>
+            <span><span style="font-size:12px;font-weight:500;padding:3px 8px;border-radius:6px;color:{{ r.statusColor }};background:{{ r.statusSoft }}">{{ r.statusLabel }}</span></span>
+            <div style="display:flex;padding-left:6px">
+              <sc-for list="{{ r.people }}" as="pp" hint-placeholder-count="1">
+                <div style="width:24px;height:24px;border-radius:50%;margin-left:-6px;border:2px solid #0B0B0D;display:grid;place-items:center;font-size:9px;font-weight:700;color:#0B0B0D;background:{{ pp.color }}">{{ pp.ini }}</div>
+              </sc-for>
+            </div>
+            <span style="color:{{ r.dueColor }};font-family:'Geist Mono';font-size:12px">{{ r.due }}</span>
+            <span style="display:flex;align-items:center;gap:6px;font-size:12px;color:#A6A6B0"><span style="width:8px;height:8px;border-radius:50%;background:{{ r.prColor }}"></span>{{ r.pr }}</span>
+            <span style="display:flex;align-items:center;gap:7px;font-size:12px;color:#A6A6B0;white-space:nowrap;overflow:hidden"><span style="width:7px;height:7px;border-radius:2px;flex-shrink:0;background:{{ r.projColor }}"></span>{{ r.projName }}</span>
+            <div style="display:flex;gap:4px;overflow:hidden">
+              <sc-for list="{{ r.tagList }}" as="tg" hint-placeholder-count="1">
+                <span style="font-size:11px;font-weight:500;padding:2px 7px;border-radius:5px;white-space:nowrap;color:{{ tg.color }};background:{{ tg.soft }}">{{ tg.name }}</span>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+        <div style="display:flex;align-items:center;gap:8px;height:38px;padding:0 16px;border-top:1px solid #1B1B1F;font-size:13px;color:#6E6E78;cursor:pointer" style-hover="color:#A6A6B0">+ Nova tarefa</div>
+      </div>
+    </sc-for>
+  </div>
+  </div>
+  </sc-if>
+</div>
+</sc-if>
+
+<!-- ===================== KANBAN ===================== -->
+<sc-if value="{{ pg.kanban }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Kanban" style="padding:28px 32px;display:flex;flex-direction:column;gap:20px;height:100%">
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap">
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <span style="font-size:13px;color:#6E6E78">Sprint 14 · 21 set – 04 out</span>
+      <h1 style="margin:0;font-family:'Sora';font-size:28px;font-weight:600;letter-spacing:-0.02em">Quadro da sprint</h1>
+    </div>
+    <span style="font-size:12px;color:#6E6E78">Arraste os cartões entre as colunas</span>
+  </div>
+  <div style="flex:1;display:flex;gap:14px;overflow-x:auto;align-items:flex-start;padding-bottom:12px">
+    <sc-for list="{{ columns }}" as="col" hint-placeholder-count="5">
+      <div onDragOver="{{ col.onDragOver }}" onDrop="{{ col.onDrop }}" onDragLeave="{{ col.onDragLeave }}" style="width:292px;flex-shrink:0;display:flex;flex-direction:column;gap:10px;padding:10px;border-radius:14px;background:{{ col.bg }};border:1px solid {{ col.border }};max-height:100%">
+        <div style="display:flex;align-items:center;gap:8px;padding:4px 4px 2px">
+          <span style="width:8px;height:8px;border-radius:50%;background:{{ col.color }}"></span>
+          <span style="font-size:13px;font-weight:600;flex:1">{{ col.label }}</span>
+          <span style="font-family:'Geist Mono';font-size:12px;color:#6E6E78">{{ col.count }}</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;overflow-y:auto">
+        <sc-for list="{{ col.cards }}" as="c" hint-placeholder-count="2">
+          <div draggable="true" onDragStart="{{ c.onDragStart }}" onDragEnd="{{ c.onDragEnd }}" onClick="{{ c.open }}" style="background:#18181C;border:1px solid #2A2A30;border-radius:11px;padding:12px;display:flex;flex-direction:column;gap:10px;cursor:grab;opacity:{{ c.opacity }}" style-hover="border-color:#3A3A42">
+            <div style="display:flex;gap:4px;flex-wrap:wrap">
+              <sc-for list="{{ c.tagList }}" as="tg" hint-placeholder-count="1">
+                <span style="font-size:11px;font-weight:500;padding:2px 7px;border-radius:5px;color:{{ tg.color }};background:{{ tg.soft }}">{{ tg.name }}</span>
+              </sc-for>
+            </div>
+            <span style="font-size:14px;font-weight:500;line-height:1.35;text-wrap:pretty">{{ c.title }}</span>
+            <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#A6A6B0"><span style="width:7px;height:7px;border-radius:2px;background:{{ c.projColor }}"></span>{{ c.projName }}</div>
+            <sc-if value="{{ c.hasCheck }}" hint-placeholder-val="{{ true }}">
+              <div style="height:4px;border-radius:4px;background:#26262C;overflow:hidden"><div style="height:100%;background:{{ c.checkColor }};width:{{ c.checkW }}"></div></div>
+            </sc-if>
+            <div style="display:flex;align-items:center;gap:12px;font-size:12px;color:#8A8A94">
+              <span style="display:flex;align-items:center;gap:4px;color:{{ c.dueColor }}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18"></path></svg>{{ c.due }}</span>
+              <sc-if value="{{ c.hasCheck }}" hint-placeholder-val="{{ true }}"><span style="display:flex;align-items:center;gap:4px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12 5 5 9-10"></path></svg>{{ c.checkText }}</span></sc-if>
+              <span style="display:flex;align-items:center;gap:4px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a8 8 0 0 1-12 7l-5 1 1-4a8 8 0 1 1 16-4z"></path></svg>{{ c.com }}</span>
+              <div style="flex:1"></div>
+              <div style="display:flex">
+                <sc-for list="{{ c.people }}" as="pp" hint-placeholder-count="1">
+                  <div style="width:22px;height:22px;border-radius:50%;margin-left:-6px;border:2px solid #18181C;display:grid;place-items:center;font-size:9px;font-weight:700;color:#0B0B0D;background:{{ pp.color }}">{{ pp.ini }}</div>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+        </sc-for>
+        </div>
+        <div style="height:34px;display:flex;align-items:center;padding:0 8px;border-radius:8px;font-size:13px;color:#6E6E78;cursor:pointer" style-hover="background:#1B1B1F;color:#A6A6B0">+ Adicionar cartão</div>
+      </div>
+    </sc-for>
+  </div>
+</div>
+</sc-if>
+
+<!-- ===================== CALENDÁRIO ===================== -->
+<sc-if value="{{ pg.calendar }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Calendário" style="padding:28px 32px;display:flex;flex-direction:column;gap:18px">
+  <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+    <h1 style="margin:0;font-family:'Sora';font-size:26px;font-weight:600;letter-spacing:-0.02em">{{ calTitle }}</h1>
+    <div style="display:flex;gap:4px">
+      <span style="width:30px;height:30px;border-radius:7px;border:1px solid #26262C;display:grid;place-items:center;color:#A6A6B0;cursor:pointer">‹</span>
+      <span style="width:30px;height:30px;border-radius:7px;border:1px solid #26262C;display:grid;place-items:center;color:#A6A6B0;cursor:pointer">›</span>
+    </div>
+    <span style="height:30px;padding:0 12px;border-radius:7px;border:1px solid #26262C;font-size:13px;display:flex;align-items:center">Hoje</span>
+    <div style="flex:1"></div>
+    <div style="display:flex;gap:4px;padding:3px;background:#141417;border:1px solid #26262C;border-radius:9px">
+      <sc-for list="{{ calTabs }}" as="ct" hint-placeholder-count="3">
+        <span onClick="{{ ct.onClick }}" style="padding:6px 14px;border-radius:6px;font-size:13px;font-weight:500;cursor:pointer;background:{{ ct.bg }};color:{{ ct.fg }}">{{ ct.label }}</span>
+      </sc-for>
+    </div>
+  </div>
+
+  <sc-if value="{{ cal.month }}" hint-placeholder-val="{{ false }}">
+    <div style="border:1px solid #26262C;border-radius:14px;overflow:hidden;background:#26262C;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:1px">
+      <sc-for list="{{ dowLabels }}" as="dl" hint-placeholder-count="7">
+        <div style="background:#0F0F12;padding:10px 12px;font-size:12px;font-weight:500;color:#6E6E78">{{ dl }}</div>
+      </sc-for>
+      <sc-for list="{{ monthCells }}" as="mc" hint-placeholder-count="35">
+        <div style="min-height:124px;padding:8px;display:flex;flex-direction:column;gap:4px;background:{{ mc.cellBg }}">
+          <span style="width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:500;background:{{ mc.numBg }};color:{{ mc.fg }}">{{ mc.num }}</span>
+          <sc-for list="{{ mc.events }}" as="me" hint-placeholder-count="1">
+            <div style="display:flex;align-items:center;gap:6px;padding:3px 6px;border-radius:5px;font-size:12px;background:{{ me.bg }};white-space:nowrap;overflow:hidden">
+              <span style="width:5px;height:5px;border-radius:50%;flex-shrink:0;background:{{ me.c }}"></span>
+              <span style="font-family:'Geist Mono';font-size:10px;color:#A6A6B0">{{ me.h }}</span>
+              <span style="overflow:hidden;text-overflow:ellipsis">{{ me.t }}</span>
+            </div>
+          </sc-for>
+          <sc-if value="{{ mc.hasMore }}" hint-placeholder-val="{{ false }}"><span style="font-size:11px;color:#A6A6B0;padding-left:6px">{{ mc.more }}</span></sc-if>
+        </div>
+      </sc-for>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ cal.week }}" hint-placeholder-val="{{ false }}">
+    <div style="border:1px solid #26262C;border-radius:14px;overflow:hidden;background:#0F0F12">
+      <div style="display:grid;grid-template-columns:60px repeat(7,minmax(0,1fr));border-bottom:1px solid #26262C">
+        <span></span>
+        <sc-for list="{{ weekDays }}" as="wd" hint-placeholder-count="7">
+          <div style="padding:10px 12px;display:flex;align-items:center;gap:8px;border-left:1px solid #1F1F24">
+            <span style="font-size:12px;color:#6E6E78">{{ wd.dow }}</span>
+            <span style="width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-family:'Sora';font-size:15px;font-weight:600;background:{{ wd.bg }};color:{{ wd.fg }}">{{ wd.num }}</span>
+          </div>
+        </sc-for>
+      </div>
+      <div style="display:grid;grid-template-columns:60px repeat(7,minmax(0,1fr));height:560px;overflow-y:auto;position:relative">
+        <div style="display:flex;flex-direction:column">
+          <sc-for list="{{ hours }}" as="hr" hint-placeholder-count="14">
+            <div style="height:56px;flex-shrink:0;font-family:'Geist Mono';font-size:10px;color:#6E6E78;text-align:right;padding-right:8px;transform:translateY(-6px)">{{ hr }}</div>
+          </sc-for>
+        </div>
+        <sc-for list="{{ weekCols }}" as="wc" hint-placeholder-count="7">
+          <div style="position:relative;border-left:1px solid #1F1F24;height:784px;background-image:linear-gradient(#1B1B1F 1px,transparent 1px);background-size:100% 56px;background-color:{{ wc.bg }}">
+            <sc-for list="{{ wc.events }}" as="ev" hint-placeholder-count="2">
+              <div style="position:absolute;left:4px;right:4px;border-radius:7px;padding:6px 8px;overflow:hidden;display:flex;flex-direction:column;gap:2px;top:{{ ev.top }};height:{{ ev.height }};background:{{ ev.bg }};border:1px solid {{ ev.border }}">
+                <span style="font-size:12px;font-weight:600;line-height:1.25">{{ ev.t }}</span>
+                <span style="font-family:'Geist Mono';font-size:10px;color:#A6A6B0">{{ ev.range }}</span>
+              </div>
+            </sc-for>
+            <sc-if value="{{ wc.now }}" hint-placeholder-val="{{ false }}">
+              <div style="position:absolute;left:-1px;right:0;top:{{ nowTop }};height:2px;background:#EC1889;z-index:2"><span style="position:absolute;left:-5px;top:-4px;width:10px;height:10px;border-radius:50%;background:#EC1889"></span></div>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ cal.day }}" hint-placeholder-val="{{ false }}">
+    <div style="display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px">
+      <div style="border:1px solid #26262C;border-radius:14px;overflow:hidden;background:#0F0F12">
+        <div style="padding:14px 18px;border-bottom:1px solid #26262C;display:flex;align-items:center;gap:10px">
+          <span style="width:34px;height:34px;border-radius:50%;background:#EC1889;display:grid;place-items:center;font-family:'Sora';font-weight:600">23</span>
+          <div style="display:flex;flex-direction:column"><span style="font-size:14px;font-weight:600">Quarta-feira</span><span style="font-size:12px;color:#6E6E78">6 eventos · 5h30 ocupadas</span></div>
+        </div>
+        <div style="display:grid;grid-template-columns:60px minmax(0,1fr);height:600px;overflow-y:auto">
+          <div style="display:flex;flex-direction:column">
+            <sc-for list="{{ hours }}" as="hr" hint-placeholder-count="14">
+              <div style="height:56px;flex-shrink:0;font-family:'Geist Mono';font-size:10px;color:#6E6E78;text-align:right;padding-right:8px;transform:translateY(-6px)">{{ hr }}</div>
+            </sc-for>
+          </div>
+          <div style="position:relative;border-left:1px solid #1F1F24;height:784px;background-image:linear-gradient(#1B1B1F 1px,transparent 1px);background-size:100% 56px">
+            <sc-for list="{{ dayEvents }}" as="ev" hint-placeholder-count="4">
+              <div style="position:absolute;left:8px;right:12px;border-radius:9px;padding:8px 12px;overflow:hidden;display:flex;gap:16px;align-items:flex-start;top:{{ ev.top }};height:{{ ev.height }};background:{{ ev.bg }};border:1px solid {{ ev.border }}">
+                <div style="display:flex;flex-direction:column;gap:2px;flex:1;min-width:0">
+                  <span style="font-size:13px;font-weight:600">{{ ev.t }}</span>
+                  <span style="font-family:'Geist Mono';font-size:11px;color:#A6A6B0">{{ ev.range }}</span>
+                </div>
+                <span style="font-size:12px;color:#A6A6B0">{{ ev.where }}</span>
+              </div>
+            </sc-for>
+            <div style="position:absolute;left:-1px;right:0;top:{{ nowTop }};height:2px;background:#EC1889;z-index:2"><span style="position:absolute;left:-5px;top:-4px;width:10px;height:10px;border-radius:50%;background:#EC1889"></span></div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div style="background:#141417;border:1px solid #26262C;border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:10px">
+          <span style="font-size:13px;font-weight:600">Setembro 2026</span>
+          <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center">
+            <sc-for list="{{ dowShort }}" as="ds" hint-placeholder-count="7"><span style="font-size:11px;color:#6E6E78;padding:4px 0">{{ ds }}</span></sc-for>
+            <sc-for list="{{ monthCells }}" as="mc" hint-placeholder-count="35">
+              <span style="height:30px;display:grid;place-items:center;border-radius:7px;font-size:12px;background:{{ mc.numBg }};color:{{ mc.fg }}">{{ mc.num }}</span>
+            </sc-for>
+          </div>
+        </div>
+        <div style="background:#141417;border:1px solid #26262C;border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:10px">
+          <span style="font-size:13px;font-weight:600">Prazos de hoje</span>
+          <sc-for list="{{ todayTasks }}" as="t" hint-placeholder-count="3">
+            <div onClick="{{ t.open }}" style="display:flex;flex-direction:column;gap:4px;padding:10px;border-radius:9px;background:#1B1B1F;cursor:pointer">
+              <span style="font-size:13px;font-weight:500">{{ t.title }}</span>
+              <span style="display:flex;align-items:center;gap:6px;font-size:11px;color:#A6A6B0"><span style="width:6px;height:6px;border-radius:2px;background:{{ t.projColor }}"></span>{{ t.projName }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</sc-if>
+
+<!-- ===================== ANOTAÇÕES ===================== -->
+<sc-if value="{{ pg.notes }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Anotações" style="display:grid;grid-template-columns:320px minmax(0,1fr);height:100%">
+  <div style="border-right:1px solid #1F1F24;display:flex;flex-direction:column;overflow:hidden">
+    <div style="padding:20px 18px 12px;display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <h2 style="margin:0;font-family:'Sora';font-size:20px;font-weight:600">Anotações</h2>
+        <span style="width:30px;height:30px;border-radius:8px;background:#EC1889;display:grid;place-items:center;cursor:pointer"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4"><path d="M12 5v14M5 12h14"></path></svg></span>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <sc-for list="{{ notebooks }}" as="nb" hint-placeholder-count="4">
+          <span style="height:26px;padding:0 10px;border-radius:999px;font-size:12px;display:flex;align-items:center;gap:6px;border:1px solid #26262C;color:#A6A6B0">{{ nb.name }}<span style="font-family:'Geist Mono';font-size:10px;color:#6E6E78">{{ nb.count }}</span></span>
+        </sc-for>
+      </div>
+    </div>
+    <div style="flex:1;overflow-y:auto;padding:0 10px 16px;display:flex;flex-direction:column;gap:2px">
+      <sc-for list="{{ notesList }}" as="n" hint-placeholder-count="5">
+        <div onClick="{{ n.select }}" style="padding:12px;border-radius:10px;display:flex;flex-direction:column;gap:5px;cursor:pointer;background:{{ n.bg }};border:1px solid {{ n.border }}">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+            <span style="font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ n.title }}</span>
+            <span style="font-size:11px;color:#6E6E78;white-space:nowrap">{{ n.date }}</span>
+          </div>
+          <span style="font-size:13px;color:#A6A6B0;line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">{{ n.excerpt }}</span>
+          <span style="font-size:11px;color:#6E6E78">{{ n.book }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+  <div style="overflow-y:auto">
+    <div style="height:48px;display:flex;align-items:center;gap:4px;padding:0 24px;border-bottom:1px solid #1F1F24;color:#A6A6B0;font-size:13px">
+      <span style="padding:5px 9px;border-radius:6px;font-weight:700" style-hover="background:#1B1B1F">B</span>
+      <span style="padding:5px 9px;border-radius:6px;font-style:italic" style-hover="background:#1B1B1F">I</span>
+      <span style="padding:5px 9px;border-radius:6px;text-decoration:underline" style-hover="background:#1B1B1F">U</span>
+      <span style="width:1px;height:18px;background:#26262C;margin:0 6px"></span>
+      <span style="padding:5px 9px;border-radius:6px" style-hover="background:#1B1B1F">H1</span>
+      <span style="padding:5px 9px;border-radius:6px" style-hover="background:#1B1B1F">H2</span>
+      <span style="padding:5px 9px;border-radius:6px" style-hover="background:#1B1B1F">Lista</span>
+      <span style="padding:5px 9px;border-radius:6px" style-hover="background:#1B1B1F">Checklist</span>
+      <span style="padding:5px 9px;border-radius:6px;font-family:'Geist Mono'" style-hover="background:#1B1B1F">&lt;/&gt;</span>
+      <div style="flex:1"></div>
+      <span style="font-size:12px;color:#6E6E78">Salvo automaticamente</span>
+    </div>
+    <article style="max-width:760px;margin:0 auto;padding:48px 40px 80px;display:flex;flex-direction:column;gap:14px">
+      <span style="font-size:12px;color:#6E6E78">{{ note.book }} / {{ note.title }}</span>
+      <h1 style="margin:0;font-family:'Sora';font-size:36px;font-weight:600;letter-spacing:-0.02em;line-height:1.15;text-wrap:pretty">{{ note.title }}</h1>
+      <div style="display:grid;grid-template-columns:120px 1fr;row-gap:8px;font-size:13px;padding:8px 0 16px;border-bottom:1px solid #1F1F24">
+        <span style="color:#6E6E78">Caderno</span><span>{{ note.book }}</span>
+        <span style="color:#6E6E78">Atualizado</span><span>{{ note.date }}</span>
+        <span style="color:#6E6E78">Vinculado a</span><span style="color:#FF5CAE">{{ note.link }}</span>
+      </div>
+      <sc-for list="{{ note.blocks }}" as="bl" hint-placeholder-count="5">
+        <div style="display:flex;flex-direction:column">
+          <sc-if value="{{ bl.isH }}" hint-placeholder-val="{{ false }}"><h3 style="margin:14px 0 0;font-family:'Sora';font-size:20px;font-weight:600">{{ bl.text }}</h3></sc-if>
+          <sc-if value="{{ bl.isP }}" hint-placeholder-val="{{ true }}"><p style="margin:0;font-size:16px;line-height:1.65;color:#D4D4DA;text-wrap:pretty">{{ bl.text }}</p></sc-if>
+          <sc-if value="{{ bl.isTodo }}" hint-placeholder-val="{{ false }}">
+            <div onClick="{{ bl.toggle }}" style="display:flex;align-items:center;gap:10px;cursor:pointer;padding:2px 0">
+              <div style="width:18px;height:18px;border-radius:5px;display:grid;place-items:center;border:1.5px solid {{ bl.border }};background:{{ bl.bg }}">
+                <sc-if value="{{ bl.done }}" hint-placeholder-val="{{ false }}"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5"><path d="m5 12 5 5 9-10"></path></svg></sc-if>
+              </div>
+              <span style="font-size:16px;color:{{ bl.fg }};text-decoration:{{ bl.strike }}">{{ bl.text }}</span>
+            </div>
+          </sc-if>
+          <sc-if value="{{ bl.isCallout }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;gap:12px;padding:14px 16px;border-radius:10px;background:rgba(236,24,137,0.1);border:1px solid rgba(236,24,137,0.3);font-size:15px;line-height:1.55">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FF5CAE" stroke-width="2" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v5M12 16h.01"></path></svg>
+              <span>{{ bl.text }}</span>
+            </div>
+          </sc-if>
+          <sc-if value="{{ bl.isCode }}" hint-placeholder-val="{{ false }}">
+            <pre style="margin:0;padding:14px 16px;border-radius:10px;background:#141417;border:1px solid #26262C;font-family:'Geist Mono';font-size:13px;line-height:1.6;color:#D4D4DA;overflow-x:auto">{{ bl.text }}</pre>
+          </sc-if>
+        </div>
+      </sc-for>
+    </article>
+  </div>
+</div>
+</sc-if>
+
+<!-- ===================== HÁBITOS ===================== -->
+<sc-if value="{{ pg.habits }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Hábitos" style="padding:32px;display:flex;flex-direction:column;gap:24px;max-width:1280px;margin:0 auto">
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap">
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <span style="font-size:13px;color:#6E6E78">Semana 20 – 26 set</span>
+      <h1 style="margin:0;font-family:'Sora';font-size:28px;font-weight:600;letter-spacing:-0.02em">Hábitos</h1>
+    </div>
+    <span style="font-size:14px;color:#A6A6B0">{{ habitsTodayDone }} hoje</span>
+  </div>
+  <div style="background:#141417;border:1px solid #26262C;border-radius:14px;overflow-x:auto">
+    <div style="min-width:760px">
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) repeat(7,52px) 90px 80px;align-items:center;padding:12px 20px;border-bottom:1px solid #1F1F24;font-size:12px;color:#6E6E78">
+        <span>Hábito</span>
+        <sc-for list="{{ weekDays }}" as="wd" hint-placeholder-count="7">
+          <span style="text-align:center;display:flex;flex-direction:column;gap:2px;color:{{ wd.labelFg }}"><span>{{ wd.dow }}</span><span style="font-family:'Geist Mono'">{{ wd.num }}</span></span>
+        </sc-for>
+        <span style="text-align:right">Sequência</span><span style="text-align:right">30 dias</span>
+      </div>
+      <sc-for list="{{ habitRows }}" as="h" hint-placeholder-count="6">
+        <div onClick="{{ h.select }}" style="display:grid;grid-template-columns:minmax(0,1fr) repeat(7,52px) 90px 80px;align-items:center;padding:10px 20px;border-bottom:1px solid #1B1B1F;cursor:pointer;background:{{ h.rowBg }}">
+          <div style="display:flex;align-items:center;gap:12px">
+            <span style="width:10px;height:10px;border-radius:3px;background:{{ h.color }}"></span>
+            <div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:14px;font-weight:500">{{ h.name }}</span><span style="font-size:12px;color:#6E6E78">{{ h.goal }}</span></div>
+          </div>
+          <sc-for list="{{ h.days }}" as="dd" hint-placeholder-count="7">
+            <div style="display:grid;place-items:center">
+              <div onClick="{{ dd.toggle }}" style="width:30px;height:30px;border-radius:9px;display:grid;place-items:center;border:1.5px solid {{ dd.border }};background:{{ dd.bg }};opacity:{{ dd.opacity }}">
+                <sc-if value="{{ dd.on }}" hint-placeholder-val="{{ false }}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2"><path d="m5 12 5 5 9-10"></path></svg></sc-if>
+              </div>
+            </div>
+          </sc-for>
+          <span style="text-align:right;font-family:'Geist Mono';font-size:13px;color:#F7B32B">{{ h.streak }} dias</span>
+          <span style="text-align:right;font-family:'Geist Mono';font-size:13px;color:#A6A6B0">{{ h.rate }}%</span>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:16px">
+    <div style="background:#141417;border:1px solid #26262C;border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:16px;min-width:0">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+        <h3 style="margin:0;font-family:'Sora';font-size:15px;font-weight:600">{{ selHabit.name }} · últimas 26 semanas</h3>
+        <div style="display:flex;align-items:center;gap:4px;font-size:11px;color:#6E6E78">Menos
+          <sc-for list="{{ heatLegend }}" as="hl" hint-placeholder-count="5"><span style="width:12px;height:12px;border-radius:3px;background:{{ hl }}"></span></sc-for>Mais</div>
+      </div>
+      <div style="overflow-x:auto"><div style="display:grid;grid-template-rows:repeat(7,14px);grid-auto-flow:column;grid-auto-columns:14px;gap:4px">
+        <sc-for list="{{ heat }}" as="hc" hint-placeholder-count="60"><span style="border-radius:3px;background:{{ hc }}"></span></sc-for>
+      </div></div>
+    </div>
+    <div style="background:#141417;border:1px solid #26262C;border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:16px">
+      <div style="display:flex;flex-direction:column;gap:4px"><span style="font-size:12px;color:#6E6E78">Sequência atual</span><span style="font-family:'Sora';font-size:28px;font-weight:600">{{ selHabit.streak }} dias</span></div>
+      <div style="display:flex;flex-direction:column;gap:4px"><span style="font-size:12px;color:#6E6E78">Melhor sequência</span><span style="font-family:'Sora';font-size:28px;font-weight:600">{{ selHabit.best }} dias</span></div>
+      <div style="display:flex;flex-direction:column;gap:4px"><span style="font-size:12px;color:#6E6E78">Taxa em 30 dias</span><span style="font-family:'Sora';font-size:28px;font-weight:600">{{ selHabit.rate }}%</span></div>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<!-- ===================== DESIGN SYSTEM ===================== -->
+<sc-if value="{{ pg.system }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Design System" style="padding:48px 40px 96px;max-width:1200px;margin:0 auto;display:flex;flex-direction:column;gap:64px">
+  <section style="display:flex;flex-direction:column;gap:28px">
+    <img src="assets/logo.png" alt="Ebenezer" style="width:280px;max-width:100%"></img>
+    <div style="display:flex;flex-direction:column;gap:12px;max-width:680px">
+      <h1 style="margin:0;font-family:'Sora';font-size:44px;font-weight:600;letter-spacing:-0.03em;line-height:1.1">Design System da plataforma</h1>
+      <p style="margin:0;font-size:16px;line-height:1.6;color:#A6A6B0;text-wrap:pretty">Fundamentos e componentes para gestão de projetos, produtividade e hábitos. Interface escura por padrão, rosa Ebenezer reservado para ações principais, foco e estado ativo.</p>
+    </div>
+  </section>
+
+  <section style="display:flex;flex-direction:column;gap:20px">
+    <div style="display:flex;align-items:baseline;gap:14px"><span style="font-family:'Geist Mono';font-size:12px;color:#EC1889">01</span><h2 style="margin:0;font-family:'Sora';font-size:24px;font-weight:600">Marca</h2></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px">
+      <div style="height:200px;border-radius:14px;background:#000;border:1px solid #26262C;display:grid;place-items:center;padding:32px"><img src="assets/logo.png" alt="" style="width:100%;max-width:220px"></img></div>
+      <div style="height:200px;border-radius:14px;background:#EC1889;display:grid;place-items:center"><img src="assets/icon.png" alt="" style="width:120px;filter:brightness(0)"></img></div>
+      <div style="height:200px;border-radius:14px;background:#141417;border:1px solid #26262C;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px"><img src="assets/loader.gif" alt="Carregando" style="width:88px"></img><span style="font-size:12px;color:#6E6E78">Loader · estados de carregamento</span></div>
+    </div>
+  </section>
+
+  <section style="display:flex;flex-direction:column;gap:24px">
+    <div style="display:flex;align-items:baseline;gap:14px"><span style="font-family:'Geist Mono';font-size:12px;color:#EC1889">02</span><h2 style="margin:0;font-family:'Sora';font-size:24px;font-weight:600">Cores</h2></div>
+    <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px">
+      <div style="height:160px;border-radius:14px;background:#EC1889;padding:20px;display:flex;flex-direction:column;justify-content:space-between"><span style="font-family:'Sora';font-weight:600;font-size:18px;color:#fff">Primary</span><span style="font-family:'Geist Mono';font-size:13px;color:#fff">#EC1889 · pink-500</span></div>
+      <div style="height:160px;border-radius:14px;background:#000;border:1px solid #26262C;padding:20px;display:flex;flex-direction:column;justify-content:space-between"><span style="font-family:'Sora';font-weight:600;font-size:18px">Secondary</span><span style="font-family:'Geist Mono';font-size:13px;color:#A6A6B0">#000000 · black</span></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px"><span style="font-size:13px;font-weight:500;color:#A6A6B0">Pink</span>
+      <div style="display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:6px">
+        <sc-for list="{{ pinkScale }}" as="sw" hint-placeholder-count="10">
+          <div style="display:flex;flex-direction:column;gap:6px"><div style="height:56px;border-radius:8px;background:{{ sw.hex }}"></div><span style="font-size:11px;font-weight:500">{{ sw.k }}</span><span style="font-family:'Geist Mono';font-size:10px;color:#6E6E78">{{ sw.hex }}</span></div>
+        </sc-for>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px"><span style="font-size:13px;font-weight:500;color:#A6A6B0">Neutros (superfícies e texto)</span>
+      <div style="display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:6px">
+        <sc-for list="{{ grayScale }}" as="sw" hint-placeholder-count="12">
+          <div style="display:flex;flex-direction:column;gap:6px"><div style="height:56px;border-radius:8px;border:1px solid #26262C;background:{{ sw.hex }}"></div><span style="font-size:11px;font-weight:500">{{ sw.k }}</span><span style="font-family:'Geist Mono';font-size:10px;color:#6E6E78">{{ sw.hex }}</span></div>
+        </sc-for>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px">
+      <div style="display:flex;flex-direction:column;gap:10px"><span style="font-size:13px;font-weight:500;color:#A6A6B0">Semânticas</span>
+        <sc-for list="{{ semantic }}" as="sw" hint-placeholder-count="4">
+          <div style="display:flex;align-items:center;gap:12px"><span style="width:36px;height:36px;border-radius:8px;background:{{ sw.hex }}"></span><div style="display:flex;flex-direction:column;flex:1"><span style="font-size:13px;font-weight:500">{{ sw.k }}</span><span style="font-size:12px;color:#6E6E78">{{ sw.use }}</span></div><span style="font-family:'Geist Mono';font-size:11px;color:#A6A6B0">{{ sw.hex }}</span></div>
+        </sc-for>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px"><span style="font-size:13px;font-weight:500;color:#A6A6B0">Etiquetas e projetos</span>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <sc-for list="{{ tagPalette }}" as="tg" hint-placeholder-count="6">
+            <span style="font-size:13px;font-weight:500;padding:5px 11px;border-radius:7px;color:{{ tg.color }};background:{{ tg.soft }}">{{ tg.name }}</span>
+          </sc-for>
+        </div>
+        <span style="font-size:12px;color:#6E6E78;line-height:1.5">Fundo com 14% de opacidade da cor e texto na cor cheia.</span>
+      </div>
+    </div>
+  </section>
+
+  <section style="display:flex;flex-direction:column;gap:20px">
+    <div style="display:flex;align-items:baseline;gap:14px"><span style="font-family:'Geist Mono';font-size:12px;color:#EC1889">03</span><h2 style="margin:0;font-family:'Sora';font-size:24px;font-weight:600">Tipografia</h2></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px">
+      <div style="padding:20px;border-radius:14px;background:#141417;border:1px solid #26262C;display:flex;flex-direction:column;gap:8px"><span style="font-family:'Sora';font-size:44px;font-weight:600">Aa</span><span style="font-size:14px;font-weight:600">Sora</span><span style="font-size:12px;color:#6E6E78">Títulos, números de destaque</span></div>
+      <div style="padding:20px;border-radius:14px;background:#141417;border:1px solid #26262C;display:flex;flex-direction:column;gap:8px"><span style="font-size:44px;font-weight:500">Aa</span><span style="font-size:14px;font-weight:600">Geist</span><span style="font-size:12px;color:#6E6E78">Interface, corpo de texto</span></div>
+      <div style="padding:20px;border-radius:14px;background:#141417;border:1px solid #26262C;display:flex;flex-direction:column;gap:8px"><span style="font-family:'Geist Mono';font-size:44px">01</span><span style="font-size:14px;font-weight:600">Geist Mono</span><span style="font-size:12px;color:#6E6E78">Horários, contadores, código</span></div>
+    </div>
+    <div style="display:flex;flex-direction:column;border-top:1px solid #1F1F24">
+      <div style="display:grid;grid-template-columns:160px minmax(0,1fr);align-items:baseline;gap:16px;padding:16px 0;border-bottom:1px solid #1F1F24"><span style="font-family:'Geist Mono';font-size:12px;color:#6E6E78">Display · 44/48</span><span style="font-family:'Sora';font-size:44px;font-weight:600;letter-spacing:-0.03em">Organize sua semana</span></div>
+      <div style="display:grid;grid-template-columns:160px minmax(0,1fr);align-items:baseline;gap:16px;padding:16px 0;border-bottom:1px solid #1F1F24"><span style="font-family:'Geist Mono';font-size:12px;color:#6E6E78">H1 · 28/34</span><span style="font-family:'Sora';font-size:28px;font-weight:600;letter-spacing:-0.02em">Quadro da sprint</span></div>
+      <div style="display:grid;grid-template-columns:160px minmax(0,1fr);align-items:baseline;gap:16px;padding:16px 0;border-bottom:1px solid #1F1F24"><span style="font-family:'Geist Mono';font-size:12px;color:#6E6E78">H2 · 20/28</span><span style="font-family:'Sora';font-size:20px;font-weight:600">Decisões da reunião</span></div>
+      <div style="display:grid;grid-template-columns:160px minmax(0,1fr);align-items:baseline;gap:16px;padding:16px 0;border-bottom:1px solid #1F1F24"><span style="font-family:'Geist Mono';font-size:12px;color:#6E6E78">H3 · 15/22</span><span style="font-family:'Sora';font-size:15px;font-weight:600">Agenda de hoje</span></div>
+      <div style="display:grid;grid-template-columns:160px minmax(0,1fr);align-items:baseline;gap:16px;padding:16px 0;border-bottom:1px solid #1F1F24"><span style="font-family:'Geist Mono';font-size:12px;color:#6E6E78">Body · 14/22</span><span style="font-size:14px;line-height:1.6">Entregar o fluxo de pagamento via Pix e fechar o onboarding da Clínica Vida.</span></div>
+      <div style="display:grid;grid-template-columns:160px minmax(0,1fr);align-items:baseline;gap:16px;padding:16px 0;border-bottom:1px solid #1F1F24"><span style="font-family:'Geist Mono';font-size:12px;color:#6E6E78">Small · 12/16</span><span style="font-size:12px;color:#A6A6B0">Atualizado há 5 minutos por Julia</span></div>
+      <div style="display:grid;grid-template-columns:160px minmax(0,1fr);align-items:baseline;gap:16px;padding:16px 0;border-bottom:1px solid #1F1F24"><span style="font-family:'Geist Mono';font-size:12px;color:#6E6E78">Label · 11 caps</span><span style="font-size:11px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:#6E6E78">Projetos</span></div>
+    </div>
+  </section>
+
+  <section style="display:flex;flex-direction:column;gap:20px">
+    <div style="display:flex;align-items:baseline;gap:14px"><span style="font-family:'Geist Mono';font-size:12px;color:#EC1889">04</span><h2 style="margin:0;font-family:'Sora';font-size:24px;font-weight:600">Espaçamento, raios e elevação</h2></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:24px">
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <span style="font-size:13px;font-weight:500;color:#A6A6B0">Escala base 4px</span>
+        <sc-for list="{{ spacing }}" as="sp" hint-placeholder-count="9">
+          <div style="display:flex;align-items:center;gap:12px"><span style="font-family:'Geist Mono';font-size:11px;color:#6E6E78;width:52px">{{ sp.k }}</span><div style="height:12px;border-radius:3px;background:#EC1889;width:{{ sp.w }}"></div><span style="font-family:'Geist Mono';font-size:11px;color:#A6A6B0">{{ sp.v }}px</span></div>
+        </sc-for>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <span style="font-size:13px;font-weight:500;color:#A6A6B0">Raios</span>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <sc-for list="{{ radii }}" as="rd" hint-placeholder-count="6">
+            <div style="display:flex;flex-direction:column;gap:6px;align-items:center"><div style="width:64px;height:64px;background:#1B1B1F;border:1px solid #33333A;border-radius:{{ rd.r }}"></div><span style="font-family:'Geist Mono';font-size:11px;color:#A6A6B0">{{ rd.k }}</span><span style="font-size:11px;color:#6E6E78">{{ rd.use }}</span></div>
+          </sc-for>
+        </div>
+        <span style="font-size:13px;font-weight:500;color:#A6A6B0">Superfícies</span>
+        <div style="display:flex;gap:12px;padding:16px;border-radius:12px;background:#0B0B0D;border:1px solid #1F1F24">
+          <div style="flex:1;height:72px;border-radius:10px;background:#0F0F12;border:1px solid #1F1F24;padding:8px;font-size:11px;color:#A6A6B0">Nível 0 · app</div>
+          <div style="flex:1;height:72px;border-radius:10px;background:#141417;border:1px solid #26262C;padding:8px;font-size:11px;color:#A6A6B0">Nível 1 · card</div>
+          <div style="flex:1;height:72px;border-radius:10px;background:#1B1B1F;border:1px solid #33333A;padding:8px;font-size:11px;color:#A6A6B0;box-shadow:0 12px 32px rgba(0,0,0,0.5)">Nível 2 · popover</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="display:flex;flex-direction:column;gap:24px">
+    <div style="display:flex;align-items:baseline;gap:14px"><span style="font-family:'Geist Mono';font-size:12px;color:#EC1889">05</span><h2 style="margin:0;font-family:'Sora';font-size:24px;font-weight:600">Componentes</h2></div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:16px">
+      <div style="padding:24px;border-radius:14px;background:#141417;border:1px solid #26262C;display:flex;flex-direction:column;gap:16px">
+        <span style="font-size:13px;font-weight:600">Botões</span>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+          <button style="height:36px;padding:0 16px;border-radius:8px;border:none;background:#EC1889;color:#fff;font-family:'Geist';font-weight:600;font-size:14px;cursor:pointer" style-hover="background:#F23A9C">Primário</button>
+          <button style="height:36px;padding:0 16px;border-radius:8px;border:1px solid #33333A;background:#1B1B1F;color:#F5F5F7;font-family:'Geist';font-weight:500;font-size:14px;cursor:pointer" style-hover="background:#222227">Secundário</button>
+          <button style="height:36px;padding:0 16px;border-radius:8px;border:none;background:transparent;color:#A6A6B0;font-family:'Geist';font-weight:500;font-size:14px;cursor:pointer" style-hover="background:#1B1B1F;color:#F5F5F7">Ghost</button>
+          <button style="height:36px;padding:0 16px;border-radius:8px;border:none;background:rgba(255,90,95,0.14);color:#FF5A5F;font-family:'Geist';font-weight:600;font-size:14px;cursor:pointer">Excluir</button>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+          <button style="height:28px;padding:0 10px;border-radius:7px;border:none;background:#EC1889;color:#fff;font-family:'Geist';font-weight:600;font-size:12px">Pequeno</button>
+          <button style="height:44px;padding:0 20px;border-radius:10px;border:none;background:#EC1889;color:#fff;font-family:'Geist';font-weight:600;font-size:15px">Grande</button>
+          <button style="height:36px;padding:0 16px;border-radius:8px;border:none;background:#26262C;color:#6E6E78;font-family:'Geist';font-weight:500;font-size:14px">Desativado</button>
+          <button style="width:36px;height:36px;border-radius:8px;border:1px solid #33333A;background:#1B1B1F;color:#F5F5F7;display:grid;place-items:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></button>
+        </div>
+      </div>
+
+      <div style="padding:24px;border-radius:14px;background:#141417;border:1px solid #26262C;display:flex;flex-direction:column;gap:14px">
+        <span style="font-size:13px;font-weight:600">Campos</span>
+        <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:500;color:#A6A6B0">Título da tarefa</span><div style="height:38px;border-radius:8px;border:1px solid #33333A;background:#0F0F12;padding:0 12px;display:flex;align-items:center;font-size:14px;color:#6E6E78">Ex.: Revisar layout do checkout</div></div>
+        <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:500;color:#A6A6B0">Em foco</span><div style="height:38px;border-radius:8px;border:1px solid #EC1889;box-shadow:0 0 0 3px rgba(236,24,137,0.22);background:#0F0F12;padding:0 12px;display:flex;align-items:center;font-size:14px">Integração com gateway Pix</div></div>
+        <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:500;color:#A6A6B0">Erro</span><div style="height:38px;border-radius:8px;border:1px solid #FF5A5F;background:#0F0F12;padding:0 12px;display:flex;align-items:center;font-size:14px;color:#6E6E78">dd/mm/aaaa</div><span style="font-size:12px;color:#FF5A5F">Informe um prazo válido</span></div>
+      </div>
+
+      <div style="padding:24px;border-radius:14px;background:#141417;border:1px solid #26262C;display:flex;flex-direction:column;gap:16px">
+        <span style="font-size:13px;font-weight:600">Seleção</span>
+        <div style="display:flex;gap:20px;flex-wrap:wrap;align-items:center;font-size:14px">
+          <span style="display:flex;align-items:center;gap:8px"><span style="width:18px;height:18px;border-radius:5px;background:#EC1889;display:grid;place-items:center"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5"><path d="m5 12 5 5 9-10"></path></svg></span>Marcado</span>
+          <span style="display:flex;align-items:center;gap:8px"><span style="width:18px;height:18px;border-radius:5px;border:1.5px solid #4A4A52"></span>Vazio</span>
+          <span style="display:flex;align-items:center;gap:8px"><span style="width:18px;height:18px;border-radius:50%;border:5px solid #EC1889"></span>Rádio</span>
+        </div>
+        <div style="display:flex;gap:20px;align-items:center;font-size:14px">
+          <span style="display:flex;align-items:center;gap:10px"><span style="width:36px;height:20px;border-radius:999px;background:#EC1889;position:relative"><span style="position:absolute;right:2px;top:2px;width:16px;height:16px;border-radius:50%;background:#fff"></span></span>Lembretes</span>
+          <span style="display:flex;align-items:center;gap:10px"><span style="width:36px;height:20px;border-radius:999px;background:#33333A;position:relative"><span style="position:absolute;left:2px;top:2px;width:16px;height:16px;border-radius:50%;background:#A6A6B0"></span></span>Fins de semana</span>
+        </div>
+        <div style="display:flex;gap:4px;padding:3px;background:#0F0F12;border:1px solid #26262C;border-radius:9px;align-self:flex-start">
+          <span style="padding:6px 14px;border-radius:6px;background:#26262C;font-size:13px;font-weight:500">Dia</span><span style="padding:6px 14px;font-size:13px;color:#A6A6B0">Semana</span><span style="padding:6px 14px;font-size:13px;color:#A6A6B0">Mês</span>
+        </div>
+      </div>
+
+      <div style="padding:24px;border-radius:14px;background:#141417;border:1px solid #26262C;display:flex;flex-direction:column;gap:16px">
+        <span style="font-size:13px;font-weight:600">Status e prioridade</span>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <sc-for list="{{ statusPalette }}" as="st" hint-placeholder-count="5">
+            <span style="font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px;display:flex;align-items:center;gap:6px;color:{{ st.color }};background:{{ st.soft }}"><span style="width:6px;height:6px;border-radius:50%;background:{{ st.color }}"></span>{{ st.label }}</span>
+          </sc-for>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <sc-for list="{{ prPalette }}" as="pr" hint-placeholder-count="4">
+            <span style="font-size:11px;font-weight:600;padding:3px 8px;border-radius:6px;color:{{ pr.color }};background:{{ pr.soft }}">{{ pr.label }}</span>
+          </sc-for>
+        </div>
+        <div style="display:flex;align-items:center;gap:16px">
+          <div style="display:flex">
+            <sc-for list="{{ team }}" as="m" hint-placeholder-count="4"><div style="width:30px;height:30px;border-radius:50%;margin-left:-8px;border:2px solid #141417;display:grid;place-items:center;font-size:11px;font-weight:700;color:#0B0B0D;background:{{ m.color }}">{{ m.ini }}</div></sc-for>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;gap:6px"><div style="display:flex;justify-content:space-between;font-size:12px;color:#A6A6B0"><span>Progresso</span><span style="font-family:'Geist Mono'">68%</span></div><div style="height:6px;border-radius:6px;background:#26262C"><div style="height:100%;width:68%;border-radius:6px;background:#EC1889"></div></div></div>
+        </div>
+      </div>
+
+      <div style="padding:24px;border-radius:14px;background:#141417;border:1px solid #26262C;display:flex;flex-direction:column;gap:14px">
+        <span style="font-size:13px;font-weight:600">Cartão de tarefa</span>
+        <div style="background:#18181C;border:1px solid #2A2A30;border-radius:11px;padding:12px;display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;gap:4px"><span style="font-size:11px;font-weight:500;padding:2px 7px;border-radius:5px;color:#9B7BFF;background:rgba(155,123,255,0.14)">Backend</span></div>
+          <span style="font-size:14px;font-weight:500">Integração com gateway Pix</span>
+          <div style="height:4px;border-radius:4px;background:#26262C"><div style="height:100%;width:60%;background:#EC1889;border-radius:4px"></div></div>
+          <div style="display:flex;align-items:center;gap:12px;font-size:12px;color:#8A8A94"><span style="color:#FF5CAE">23 set</span><span>3/5</span><span>6 comentários</span></div>
+        </div>
+      </div>
+
+      <div style="padding:24px;border-radius:14px;background:#141417;border:1px solid #26262C;display:flex;flex-direction:column;gap:14px">
+        <span style="font-size:13px;font-weight:600">Feedback</span>
+        <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:10px;background:#1B1B1F;border:1px solid #33333A;box-shadow:0 12px 32px rgba(0,0,0,0.5)">
+          <span style="width:22px;height:22px;border-radius:50%;background:#2BD47D;display:grid;place-items:center"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#0B0B0D" stroke-width="3.5"><path d="m5 12 5 5 9-10"></path></svg></span>
+          <span style="font-size:13px;flex:1">Tarefa movida para <b>Concluído</b></span><span style="font-size:13px;color:#FF5CAE;font-weight:500">Desfazer</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px"><span style="padding:6px 10px;border-radius:7px;background:#F5F5F7;color:#0B0B0D;font-size:12px;font-weight:500">Atalho: C para criar tarefa</span><span style="font-size:12px;color:#6E6E78">Tooltip</span></div>
+        <div style="display:flex;align-items:center;gap:12px;padding:10px 0"><img src="assets/loader.gif" alt="" style="width:32px"></img><span style="font-size:13px;color:#A6A6B0">Sincronizando tarefas…</span></div>
+      </div>
+    </div>
+  </section>
+</div>
+</sc-if>
+
+  </div>
+</main>
+
+<sc-if value="{{ hasOpen }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ closeTask }}" style="position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:20"></div>
+  <aside style="position:fixed;top:0;right:0;bottom:0;width:520px;max-width:100%;background:#111114;border-left:1px solid #26262C;z-index:21;overflow-y:auto;display:flex;flex-direction:column;box-shadow:-24px 0 48px rgba(0,0,0,0.4)">
+    <div style="height:52px;display:flex;align-items:center;gap:10px;padding:0 20px;border-bottom:1px solid #1F1F24;font-size:12px;color:#6E6E78">
+      <span style="width:7px;height:7px;border-radius:2px;background:{{ ot.projColor }}"></span>{{ ot.projName }}<span>/</span><span>TSK-{{ ot.id }}</span>
+      <div style="flex:1"></div>
+      <span onClick="{{ closeTask }}" style="width:30px;height:30px;border-radius:7px;display:grid;place-items:center;cursor:pointer;font-size:18px;color:#A6A6B0" style-hover="background:#1B1B1F">×</span>
+    </div>
+    <div style="padding:28px 28px 40px;display:flex;flex-direction:column;gap:22px">
+      <h2 style="margin:0;font-family:'Sora';font-size:26px;font-weight:600;letter-spacing:-0.02em;line-height:1.2;text-wrap:pretty">{{ ot.title }}</h2>
+      <div style="display:grid;grid-template-columns:130px 1fr;row-gap:14px;align-items:center;font-size:13px">
+        <span style="color:#6E6E78">Status</span><span><span style="font-size:12px;font-weight:500;padding:3px 8px;border-radius:6px;color:{{ ot.statusColor }};background:{{ ot.statusSoft }}">{{ ot.statusLabel }}</span></span>
+        <span style="color:#6E6E78">Prioridade</span><span style="display:flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:50%;background:{{ ot.prColor }}"></span>{{ ot.pr }}</span>
+        <span style="color:#6E6E78">Responsáveis</span>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <sc-for list="{{ ot.people }}" as="pp" hint-placeholder-count="1"><span style="display:flex;align-items:center;gap:6px"><span style="width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:9px;font-weight:700;color:#0B0B0D;background:{{ pp.color }}">{{ pp.ini }}</span>{{ pp.name }}</span></sc-for>
+        </div>
+        <span style="color:#6E6E78">Prazo</span><span style="font-family:'Geist Mono';color:{{ ot.dueColor }}">{{ ot.due }} 2026</span>
+        <span style="color:#6E6E78">Tags</span>
+        <div style="display:flex;gap:4px"><sc-for list="{{ ot.tagList }}" as="tg" hint-placeholder-count="1"><span style="font-size:11px;font-weight:500;padding:2px 7px;border-radius:5px;color:{{ tg.color }};background:{{ tg.soft }}">{{ tg.name }}</span></sc-for></div>
+      </div>
+      <div style="height:1px;background:#1F1F24"></div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <span style="font-size:13px;font-weight:600">Descrição</span>
+        <p style="margin:0;font-size:14px;line-height:1.65;color:#D4D4DA">{{ ot.desc }}</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;justify-content:space-between"><span style="font-size:13px;font-weight:600">Subtarefas</span><span style="font-family:'Geist Mono';font-size:12px;color:#A6A6B0">{{ ot.checkText }}</span></div>
+        <sc-for list="{{ ot.subs }}" as="sb" hint-placeholder-count="3">
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;background:#18181C">
+            <span style="width:16px;height:16px;border-radius:4px;display:grid;place-items:center;border:1.5px solid {{ sb.border }};background:{{ sb.bg }}"><sc-if value="{{ sb.done }}" hint-placeholder-val="{{ false }}"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5"><path d="m5 12 5 5 9-10"></path></svg></sc-if></span>
+            <span style="font-size:13px;color:{{ sb.fg }}">{{ sb.t }}</span>
+          </div>
+        </sc-for>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <span style="font-size:13px;font-weight:600">Comentários · {{ ot.com }}</span>
+        <div style="display:flex;gap:10px">
+          <span style="width:28px;height:28px;border-radius:50%;background:#EC1889;display:grid;place-items:center;font-size:11px;font-weight:600;flex-shrink:0">RM</span>
+          <div style="flex:1;height:38px;border-radius:8px;border:1px solid #33333A;background:#0F0F12;padding:0 12px;display:flex;align-items:center;font-size:13px;color:#6E6E78">Escreva um comentário… use @ para mencionar</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;startPage&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;dashboard&quot;,&quot;tasks&quot;,&quot;kanban&quot;,&quot;calendar&quot;,&quot;notes&quot;,&quot;habits&quot;,&quot;system&quot;],&quot;default&quot;:&quot;dashboard&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;calendarView&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;day&quot;,&quot;week&quot;,&quot;month&quot;],&quot;default&quot;:&quot;week&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+const hexA=(h,a)=>h+Math.round(a*255).toString(16).padStart(2,'0');
+const PROJ={pay:{name:'Ebenezer Pay',color:'#EC1889',pct:68},vida:{name:'App Clínica Vida',color:'#9B7BFF',pct:45},imobi:{name:'Portal Imobi',color:'#4C9BFF',pct:32},site:{name:'Site Institucional',color:'#2DD4BF',pct:12},int:{name:'Interno',color:'#F7B32B',pct:80}};
+const PEOPLE={RM:{name:'Rafael',color:'#EC1889'},JS:{name:'Julia',color:'#9B7BFF'},LC:{name:'Lucas',color:'#4C9BFF'},AB:{name:'Ana',color:'#2DD4BF'},TF:{name:'Thiago',color:'#F7B32B'}};
+const ST=[{key:'backlog',label:'Backlog',color:'#8A8A94'},{key:'todo',label:'A fazer',color:'#4C9BFF'},{key:'doing',label:'Em andamento',color:'#EC1889'},{key:'review',label:'Em revisão',color:'#F7B32B'},{key:'done',label:'Concluído',color:'#2BD47D'}];
+const PR={Urgente:'#FF5A5F',Alta:'#F7B32B','Média':'#4C9BFF',Baixa:'#8A8A94'};
+const TAGC={Backend:'#9B7BFF',Frontend:'#4C9BFF',Design:'#FF5CAE',QA:'#2BD47D',Mobile:'#2DD4BF',DevOps:'#F7B32B'};
+const TASKS=[
+{id:101,title:'Integração com gateway Pix',status:'doing',pr:'Urgente',who:['RM','LC'],due:'23 set',today:true,proj:'pay',tags:['Backend'],check:[3,5],com:6},
+{id:102,title:'Tela de agendamento de consultas',status:'doing',pr:'Alta',who:['JS'],due:'24 set',proj:'vida',tags:['Mobile','Design'],check:[2,4],com:3},
+{id:103,title:'Revisar fluxo de onboarding',status:'review',pr:'Média',who:['AB'],due:'23 set',today:true,proj:'vida',tags:['Design'],check:[4,4],com:9},
+{id:104,title:'Configurar pipeline CI/CD',status:'todo',pr:'Alta',who:['TF'],due:'25 set',proj:'int',tags:['DevOps'],check:[0,3],com:1},
+{id:105,title:'Filtro de imóveis por mapa',status:'todo',pr:'Média',who:['LC'],due:'29 set',proj:'imobi',tags:['Frontend'],check:[0,5],com:2},
+{id:106,title:'Testes E2E do checkout',status:'review',pr:'Alta',who:['TF','RM'],due:'23 set',today:true,proj:'pay',tags:['QA'],check:[4,5],com:4},
+{id:107,title:'Nova home do site institucional',status:'backlog',pr:'Baixa',who:['JS'],due:'06 out',proj:'site',tags:['Design','Frontend'],check:[0,0],com:0},
+{id:108,title:'Notificações push de lembrete',status:'backlog',pr:'Média',who:['AB'],due:'10 out',proj:'vida',tags:['Mobile'],check:[0,2],com:1},
+{id:109,title:'Documentar API de pagamentos',status:'done',pr:'Média',who:['RM'],due:'20 set',proj:'pay',tags:['Backend'],check:[5,5],com:2},
+{id:110,title:'Design system v2 no Figma',status:'done',pr:'Alta',who:['JS','AB'],due:'19 set',proj:'int',tags:['Design'],check:[5,5],com:15},
+{id:111,title:'Relatório mensal para cliente Imobi',status:'todo',pr:'Urgente',who:['RM'],due:'23 set',today:true,proj:'imobi',tags:[],check:[1,3],com:0},
+{id:112,title:'Otimizar consultas do banco',status:'doing',pr:'Média',who:['LC'],due:'26 set',proj:'imobi',tags:['Backend'],check:[1,4],com:2}];
+const TLR={101:[16,23],102:[18,24],103:[15,23],104:[22,25],105:[24,29],106:[19,23],107:[28,36],108:[30,40],109:[14,20],110:[8,19],111:[21,23],112:[22,26]};
+const TL0=14,TLN=29,TLW=40;
+const SUBS=['Levantar requisitos','Implementação','Testes unitários','Code review','Deploy em staging'];
+const MEV=[[1,'09:00','Kickoff Clínica Vida','#9B7BFF'],[2,'10:00','Sprint planning','#EC1889'],[4,'16:00','Entrega Portal Imobi','#4C9BFF'],[7,'','Independência do Brasil','#8A8A94'],[8,'14:00','1:1 Julia','#9B7BFF'],[10,'11:00','Review Ebenezer Pay','#EC1889'],[14,'09:30','Workshop de design','#FF5CAE'],[15,'15:00','Deploy produção','#2BD47D'],[17,'10:00','Reunião cliente Imobi','#4C9BFF'],[18,'16:00','Retrospectiva','#EC1889'],[21,'09:00','Planning Sprint 14','#EC1889'],[21,'15:00','Call Imobi','#4C9BFF'],[22,'14:00','1:1 Julia','#9B7BFF'],[23,'09:00','Daily','#EC1889'],[23,'10:30','Review de design','#9B7BFF'],[23,'14:00','Call cliente Pay','#EC1889'],[23,'15:30','Foco: testes E2E','#2BD47D'],[23,'18:30','Academia','#2DD4BF'],[24,'11:00','Demo Clínica Vida','#9B7BFF'],[25,'14:00','Deploy','#2BD47D'],[26,'08:00','Corrida','#2DD4BF'],[28,'16:00','Mentoria','#F7B32B'],[30,'17:00','Fechamento do mês','#F7B32B']];
+const WEV=[
+[0,9,10,'Leitura','#2DD4BF',''],
+[1,9,11,'Planning Sprint 14','#EC1889',''],[1,12,13.5,'Almoço com a equipe','#F7B32B',''],[1,15,16,'Call Imobi','#4C9BFF',''],
+[2,9,9.5,'Daily','#EC1889',''],[2,10,12.5,'Foco: integração Pix','#EC1889',''],[2,14,14.5,'1:1 Julia','#9B7BFF',''],
+[3,9,9.5,'Daily','#EC1889','Google Meet'],[3,10.5,11.5,'Review de design','#9B7BFF','Sala 2'],[3,12,13,'Almoço','#F7B32B',''],[3,14,15,'Call cliente Pay','#EC1889','Zoom · 4 pessoas'],[3,15.5,17.5,'Foco: testes E2E','#2BD47D','Bloqueio de agenda'],[3,18.5,19.5,'Academia','#2DD4BF','Pessoal'],
+[4,9,9.5,'Daily','#EC1889',''],[4,11,12,'Demo Clínica Vida','#9B7BFF',''],[4,16,17,'Mentoria','#F7B32B',''],
+[5,9,9.5,'Daily','#EC1889',''],[5,14,15,'Deploy','#2BD47D',''],[5,16,17,'Retrospectiva','#EC1889',''],
+[6,8,9,'Corrida','#2DD4BF','']];
+const HABITS=[
+{name:'Beber 2L de água',goal:'Diário',color:'#4C9BFF',week:[1,1,1,0,0,0,0],streak:12,best:31,rate:87},
+{name:'Leitura 20 min',goal:'Diário',color:'#9B7BFF',week:[1,0,1,1,0,0,0],streak:2,best:18,rate:64},
+{name:'Exercício físico',goal:'4x por semana',color:'#2BD47D',week:[0,1,0,0,0,0,0],streak:5,best:22,rate:71},
+{name:'Meditação',goal:'Diário',color:'#2DD4BF',week:[1,1,1,1,0,0,0],streak:24,best:24,rate:92},
+{name:'Estudar inglês',goal:'5x por semana',color:'#F7B32B',week:[0,1,1,0,0,0,0],streak:3,best:14,rate:58},
+{name:'Dormir antes das 23h',goal:'Diário',color:'#EC1889',week:[1,0,1,0,0,0,0],streak:1,best:9,rate:49}];
+const NOTES=[
+{title:'Ata — Planning Sprint 14',book:'Ebenezer',date:'Hoje, 11:20',link:'Sprint 14',excerpt:'Entregar o fluxo de pagamento via Pix no Ebenezer Pay e fechar o onboarding da Clínica Vida.',blocks:[['h','Objetivo da sprint'],['p','Entregar o fluxo de pagamento via Pix no Ebenezer Pay e fechar o onboarding da Clínica Vida até 04 de outubro.'],['h','Responsáveis'],['todo','Rafael finaliza a integração com o gateway até quinta',0],['todo','Julia envia o protótipo do agendamento',1],['todo','Thiago configura o ambiente de staging',0],['callout','Deploy em produção congelado entre 28/09 e 02/10.'],['h','Próximos passos'],['p','Revisar a cobertura de testes do checkout na review de sexta e validar os textos do onboarding com o cliente.']]},
+{title:'Ideias para o app de hábitos',book:'Ideias',date:'Ontem',link:'Interno',excerpt:'Streaks compartilhados entre membros da equipe e lembretes baseados em localização.',blocks:[['p','Streaks compartilhados entre membros da equipe e lembretes baseados em localização.'],['h','Hipóteses'],['todo','Metas semanais convertem melhor que diárias',0],['todo','Lembrete às 20h aumenta a conclusão',1]]},
+{title:'Briefing — Portal Imobi',book:'Clientes',date:'21 set',link:'Portal Imobi',excerpt:'Cliente quer busca por mapa, filtros salvos e integração com CRM próprio.',blocks:[['p','Cliente quer busca por mapa, filtros salvos e integração com CRM próprio.'],['callout','Prazo do MVP: 15 de novembro.'],['h','Endpoint de busca'],['code','GET /api/imoveis?lat=-23.55&lng=-46.63&raio=3km']]},
+{title:'Leituras de setembro',book:'Pessoal',date:'18 set',link:'Hábito · Leitura',excerpt:'Três livros em andamento e anotações dos capítulos sobre foco profundo.',blocks:[['p','Três livros em andamento e anotações dos capítulos sobre foco profundo.'],['todo','Terminar capítulo 6',1],['todo','Resumo para o time',0]]},
+{title:'Checklist de release mobile',book:'Ebenezer',date:'15 set',link:'App Clínica Vida',excerpt:'Passos obrigatórios antes de publicar na App Store e Google Play.',blocks:[['p','Passos obrigatórios antes de publicar na App Store e Google Play.'],['todo','Atualizar versão e build number',1],['todo','Screenshots das lojas',1],['todo','Testar deep links',0],['todo','Revisar política de privacidade',0]]}];
+const DOW=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+const fmtH=h=>`${String(Math.floor(h)).padStart(2,'0')}:${h%1?'30':'00'}`;
+const HEAT=['#1B1B1F','#4D062D','#780946','#C80E71','#EC1889'];
+
+class Component extends DCLogic {
+  state={page:null,calView:null,openId:null,drag:null,over:null,filter:'all',note:0,sel:0,
+    tasks:TASKS.map(t=>({...t})),habits:HABITS.map(h=>({...h,week:[...h.week]})),notes:NOTES.map(n=>({...n,blocks:n.blocks.map(b=>[...b])}))};
+  go=p=>()=>this.setState({page:p,openId:null});
+  setTask(id,patch){this.setState(s=>({tasks:s.tasks.map(t=>t.id===id?{...t,...patch}:t)}));}
+  toggleHabit(i,d){this.setState(s=>({habits:s.habits.map((h,j)=>j!==i?h:{...h,week:h.week.map((v,k)=>k===d?(v?0:1):v),streak:d===3?h.streak+(h.week[3]?-1:1):h.streak})}));}
+  dec(t){
+    const st=ST.find(x=>x.key===t.status),done=t.status==='done',p=PROJ[t.proj];
+    return {...t,done,statusLabel:st.label,statusColor:st.color,statusSoft:hexA(st.color,.14),prColor:PR[t.pr],prSoft:hexA(PR[t.pr],.14),
+      projName:p.name,projColor:p.color,people:t.who.map(k=>({ini:k,...PEOPLE[k]})),tagList:t.tags.map(n=>({name:n,color:TAGC[n],soft:hexA(TAGC[n],.14)})),
+      hasCheck:t.check[1]>0,checkText:`${t.check[0]}/${t.check[1]}`,checkW:t.check[1]?`${t.check[0]/t.check[1]*100}%`:'0%',checkColor:t.check[0]===t.check[1]?'#2BD47D':'#EC1889',
+      dueColor:done?'#6E6E78':t.today?'#FF5CAE':'#A6A6B0',titleColor:done?'#6E6E78':'#F5F5F7',strike:done?'line-through':'none',
+      checkBg:done?'#EC1889':'transparent',checkBorder:done?'#EC1889':'#4A4A52',
+      open:()=>this.setState({openId:t.id}),
+      toggle:e=>{e.stopPropagation();this.setTask(t.id,{status:done?'todo':'done',prev:t.status});},
+      opacity:this.state.drag===t.id?0.4:1,
+      onDragStart:e=>{e.dataTransfer.effectAllowed='move';this.setState({drag:t.id});},
+      onDragEnd:()=>this.setState({drag:null,over:null})};
+  }
+  renderVals(){
+    const s=this.state;
+    const page=s.page??this.props.startPage??'dashboard';
+    const calView=s.calView??this.props.calendarView??'week';
+    const tasks=s.tasks.map(t=>this.dec(t));
+    const navKeys=['dashboard','tasks','kanban','calendar','notes','habits','system'];
+    const nav={};navKeys.forEach(k=>nav[k]={bg:page===k?'#1F1F24':'transparent',fg:page===k?'#F5F5F7':'#A6A6B0',ic:page===k?'#EC1889':'#6E6E78',go:this.go(k)});
+    const pg={};navKeys.forEach(k=>pg[k]=page===k);
+    const titles={dashboard:'Dashboard',tasks:'Tarefas',kanban:'Kanban',calendar:'Calendário',notes:'Anotações',habits:'Hábitos',system:'Design System'};
+    const projects=Object.values(PROJ).map(p=>({...p,w:p.pct+'%'}));
+    const team=Object.entries(PEOPLE).map(([k,v])=>({ini:k,...v}));
+
+    const filt={all:()=>true,mine:t=>t.who.includes('RM'),today:t=>t.today,urgent:t=>t.pr==='Urgente'};
+    const filters=[['all','Todas'],['mine','Minhas'],['today','Hoje'],['urgent','Urgentes']].map(([k,l])=>({label:l,onClick:()=>this.setState({filter:k}),bg:s.filter===k?hexA('#EC1889',.14):'transparent',fg:s.filter===k?'#FF5CAE':'#A6A6B0',border:s.filter===k?hexA('#EC1889',.4):'#26262C'}));
+    const ft=tasks.filter(filt[s.filter]);
+    const groups=ST.map(st=>({...st,soft:hexA(st.color,.14),rows:ft.filter(t=>t.status===st.key)})).filter(g=>g.rows.length).map(g=>({...g,count:g.rows.length}));
+
+    const taskView=s.taskView??'table';
+    const tv={table:taskView==='table',timeline:taskView==='timeline',goTable:()=>this.setState({taskView:'table'}),goTimeline:()=>this.setState({taskView:'timeline'}),
+      tableFg:taskView==='table'?'#F5F5F7':'#A6A6B0',tableBd:taskView==='table'?'#EC1889':'transparent',tlFg:taskView==='timeline'?'#F5F5F7':'#A6A6B0',tlBd:taskView==='timeline'?'#EC1889':'transparent'};
+    const tlDays=Array.from({length:TLN},(_,i)=>{const d=new Date(2026,8,TL0+i);const today=d.getMonth()===8&&d.getDate()===23;const we=d.getDay()===0||d.getDay()===6;
+      return {num:d.getDate(),dow:DOW[d.getDay()][0],we,bg:today?'#EC1889':'transparent',numFg:today?'#fff':we?'#6E6E78':'#D4D4DA',fg:today?'#FF5CAE':'#6E6E78'};});
+    const sepDays=30-TL0+1;
+    const tlRows=[];let bodyH=0;
+    Object.entries(PROJ).forEach(([k,p])=>{const ts=ft.filter(t=>t.proj===k);if(!ts.length)return;
+      tlRows.push({isGroup:true,isTask:false,name:p.name,color:p.color,count:ts.length});bodyH+=37;
+      ts.forEach(t=>{const [a,b]=TLR[t.id];const a2=Math.max(a,TL0);
+        tlRows.push({...t,isGroup:false,isTask:true,left:`${(a2-TL0)*TLW+3}px`,w:`${(b-a2+1)*TLW-6}px`,label:t.title,
+          barBg:hexA(p.color,.2),barBd:hexA(p.color,.45),fill:hexA(p.color,.45),barOpacity:t.done?0.5:1,checkW:t.hasCheck?t.checkW:'0%'});bodyH+=45;});});
+    const tl={width:`${TLN*TLW}px`,days:tlDays,rows:tlRows,weekends:tlDays.map((d,i)=>d.we?`${i*TLW}px`:null).filter(Boolean),
+      months:[{label:'Setembro',w:`${sepDays*TLW}px`},{label:'Outubro',w:`${(TLN-sepDays)*TLW}px`}],
+      todayLeft:`${(23-TL0)*TLW+TLW/2-1}px`,bodyH:`${bodyH}px`};
+    const columns=ST.map(st=>{const cards=tasks.filter(t=>t.status===st.key);const over=s.over===st.key&&s.drag;
+      return {...st,cards,count:cards.length,bg:over?hexA('#EC1889',.06):'#111114',border:over?hexA('#EC1889',.5):'#1F1F24',
+        onDragOver:e=>{e.preventDefault();if(s.over!==st.key)this.setState({over:st.key});},
+        onDragLeave:()=>{},
+        onDrop:e=>{e.preventDefault();if(s.drag)this.setTask(s.drag,{status:st.key});this.setState({drag:null,over:null});}};});
+
+    const todayTasks=tasks.filter(t=>t.today);
+    const ev=(e)=>({t:e[3],c:e[4],where:e[5],bg:hexA(e[4],.16),border:hexA(e[4],.35),top:`${(e[1]-7)*56+2}px`,height:`${(e[2]-e[1])*56-4}px`,range:`${fmtH(e[1])} – ${fmtH(e[2])}`,time:fmtH(e[1]),dur:`${(e[2]-e[1])*60} min`});
+    const dayEvents=WEV.filter(e=>e[0]===3).map(ev);
+    const weekCols=DOW.map((d,i)=>({bg:i===3?'#131317':'transparent',now:i===3,events:WEV.filter(e=>e[0]===i).map(ev)}));
+    const weekDays=DOW.map((d,i)=>({dow:d,num:20+i,bg:i===3?'#EC1889':'transparent',fg:i===3?'#fff':'#F5F5F7',labelFg:i===3?'#FF5CAE':'#6E6E78'}));
+    const hours=Array.from({length:14},(_,i)=>`${String(7+i).padStart(2,'0')}:00`);
+    const monthCells=[];const start=new Date(2026,7,30);
+    for(let i=0;i<35;i++){const d=new Date(2026,7,30+i);const inM=d.getMonth()===8,n=d.getDate(),today=inM&&n===23;
+      const evs=inM?MEV.filter(e=>e[0]===n).map(e=>({h:e[1],t:e[2],c:e[3],bg:hexA(e[3],.16)})):[];
+      monthCells.push({num:n,fg:today?'#fff':inM?'#F5F5F7':'#4A4A52',numBg:today?'#EC1889':'transparent',cellBg:inM?'#121215':'#0E0E11',events:evs.slice(0,3),hasMore:evs.length>3,more:`+${evs.length-3} mais`});}
+    const calTabs=[['day','Dia'],['week','Semana'],['month','Mês']].map(([k,l])=>({label:l,onClick:()=>this.setState({calView:k}),bg:calView===k?'#26262C':'transparent',fg:calView===k?'#F5F5F7':'#A6A6B0'}));
+    const calTitle={day:'23 de setembro de 2026',week:'20 – 26 de setembro',month:'Setembro 2026'}[calView];
+
+    const habitRows=s.habits.map((h,i)=>({...h,rowBg:s.sel===i?'#18181C':'transparent',select:()=>this.setState({sel:i}),
+      days:h.week.map((v,d)=>({on:!!v,bg:v?h.color:'transparent',border:v?h.color:d>3?'#26262C':'#3A3A42',opacity:d>3?0.4:1,
+        toggle:e=>{e.stopPropagation();if(d<=3)this.toggleHabit(i,d);}}))}));
+    const habitsToday=s.habits.map((h,i)=>({name:h.name,streak:h.streak,on:!!h.week[3],bg:h.week[3]?h.color:'transparent',border:h.week[3]?h.color:'#4A4A52',toggle:()=>this.toggleHabit(i,3)}));
+    const doneToday=s.habits.filter(h=>h.week[3]).length;
+    const sh=s.habits[s.sel];
+    let seed=s.sel*97+13;const rnd=()=>{seed=(seed*9301+49297)%233280;return seed/233280;};
+    const heat=Array.from({length:182},(_,i)=>{if(i>178)return '#141417';const r=rnd();const p=sh.rate/100;return HEAT[r>p?0:r>p*.7?1:r>p*.45?2:r>p*.2?3:4];});
+
+    const notesList=s.notes.map((n,i)=>({...n,bg:s.note===i?'#18181C':'transparent',border:s.note===i?'#2A2A30':'transparent',select:()=>this.setState({note:i})}));
+    const cn=s.notes[s.note];
+    const note={...cn,blocks:cn.blocks.map((b,bi)=>({isH:b[0]==='h',isP:b[0]==='p',isTodo:b[0]==='todo',isCallout:b[0]==='callout',isCode:b[0]==='code',text:b[1],done:!!b[2],
+      bg:b[2]?'#EC1889':'transparent',border:b[2]?'#EC1889':'#4A4A52',fg:b[2]?'#6E6E78':'#D4D4DA',strike:b[2]?'line-through':'none',
+      toggle:()=>this.setState(st=>({notes:st.notes.map((n,ni)=>ni!==st.note?n:{...n,blocks:n.blocks.map((x,xi)=>xi===bi?[x[0],x[1],x[2]?0:1]:x)})}))}))};
+
+    const o=tasks.find(t=>t.id===s.openId);
+    const ot=o?{...o,desc:`Parte da entrega de ${o.projName}. Critérios de aceite e links de referência ficam nesta página; atualize o status ao mover o cartão no quadro.`,
+      subs:SUBS.slice(0,Math.max(o.check[1],2)).map((t,i)=>{const d=i<o.check[0];return {t,done:d,bg:d?'#EC1889':'transparent',border:d?'#EC1889':'#4A4A52',fg:d?'#6E6E78':'#F5F5F7'};})}:{people:[],tagList:[],subs:[]};
+
+    return {nav,pg,pageTitle:titles[page],projects,team,openCount:tasks.filter(t=>!t.done).length,
+      stats:[{label:'Tarefas para hoje',value:`${todayTasks.filter(t=>!t.done).length}`,delta:`de ${todayTasks.length}`,deltaColor:'#6E6E78'},{label:'Concluídas na semana',value:'23',delta:'+12% vs. anterior',deltaColor:'#2BD47D'},{label:'Horas de foco',value:'14h 20m',delta:'meta 20h',deltaColor:'#6E6E78'},{label:'Hábitos em dia',value:`${doneToday}/${s.habits.length}`,delta:'hoje',deltaColor:'#6E6E78'}],
+      todayTasks,todayEvents:dayEvents,habitsToday,habitsTodayDone:`${doneToday} de ${s.habits.length}`,
+      weekBars:[2,7,9,5,0,0,0].map((v,i)=>({v:i>3?'':v,d:DOW[i].slice(0,3),h:i>3?'6px':`${v*12}px`,bg:i===3?'#EC1889':i>3?'#1F1F24':'#3A3A42',labelColor:i===3?'#FF5CAE':'#6E6E78'})),
+      filters,groups,columns,tv,tl,
+      cal:{day:calView==='day',week:calView==='week',month:calView==='month'},calTabs,calTitle,dowLabels:DOW,dowShort:DOW.map(d=>d[0]),monthCells,weekDays,weekCols,hours,dayEvents,nowTop:`${(14+40/60-7)*56}px`,
+      habitRows,selHabit:sh,heat,heatLegend:HEAT,
+      notebooks:[{name:'Ebenezer',count:12},{name:'Clientes',count:8},{name:'Pessoal',count:5},{name:'Ideias',count:9}],notesList,note,
+      hasOpen:!!o,ot,closeTask:()=>this.setState({openId:null}),
+      pinkScale:[['50','#FFF0F7'],['100','#FFD6EA'],['200','#FFADD5'],['300','#FF7DBE'],['400','#F7479F'],['500','#EC1889'],['600','#C80E71'],['700','#A00B5B'],['800','#780946'],['900','#4D062D']].map(([k,hex])=>({k,hex})),
+      grayScale:[['0','#FFFFFF'],['50','#F5F5F7'],['100','#D4D4DA'],['200','#A6A6B0'],['300','#8A8A94'],['400','#6E6E78'],['500','#4A4A52'],['600','#33333A'],['700','#26262C'],['800','#1B1B1F'],['900','#141417'],['950','#0B0B0D']].map(([k,hex])=>({k,hex})),
+      semantic:[{k:'Sucesso',hex:'#2BD47D',use:'Concluído, hábito feito'},{k:'Atenção',hex:'#F7B32B',use:'Em revisão, sequência'},{k:'Erro',hex:'#FF5A5F',use:'Atrasado, urgente, excluir'},{k:'Informação',hex:'#4C9BFF',use:'A fazer, links neutros'}],
+      tagPalette:Object.entries(TAGC).map(([name,color])=>({name,color,soft:hexA(color,.14)})),
+      statusPalette:ST.map(x=>({...x,soft:hexA(x.color,.14)})),
+      prPalette:Object.entries(PR).map(([label,color])=>({label,color,soft:hexA(color,.14)})),
+      spacing:[1,2,3,4,5,6,8,10,12,16].map(n=>({k:`space-${n}`,v:n*4,w:`${n*4*3}px`})),
+      radii:[['4','4px','Tag'],['6','6px','Pill'],['8','8px','Botão'],['12','12px','Card'],['16','16px','Modal'],['full','999px','Avatar']].map(([k,r,use])=>({k,r,use}))};
+  }
+}
+</script>
+</body>
+</html>

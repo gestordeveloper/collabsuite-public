@@ -1,0 +1,67 @@
+/* Headline editor + live headline (js/headlines.js). The editor reuses the .sub-* controls
+   and the font picker styles from subtitles.css. */
+
+/* --------------------------------------------------------------------------
+   Live headline in the player: a canvas covering the overlay layer, plus a
+   transparent handle over the drawn block for dragging.
+-------------------------------------------------------------------------- */
+.live-headline {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  will-change: transform;
+}
+.live-headline.hidden { display: none !important; }
+.live-headline canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.hl-hit {
+  position: absolute;
+  pointer-events: auto;
+  cursor: move;
+  touch-action: none;
+  outline: none;
+  border-radius: 6px;
+}
+.hl-hit[hidden] { display: none; }
+.hl-hit:hover,
+.hl-hit:focus-visible,
+.hl-hit.dragging {
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.6);
+}
+/* Shown while paused outside the headline's time window, so edits are always visible */
+.live-headline.is-sample .hl-hit {
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.45);
+  outline: 1px dashed rgba(255, 255, 255, 0.45);
+  outline-offset: 3px;
+}
+
+/* --------------------------------------------------------------------------
+   Form fields above the editor
+-------------------------------------------------------------------------- */
+.hl-textarea {
+  resize: vertical;
+  min-height: 62px;
+  line-height: 1.4;
+  font-family: var(--font-body);
+}
+.form-row-even { grid-template-columns: 1fr 1fr; }
+#tab-headlines input[type="number"].text-input { width: 100%; }
+
+/* --------------------------------------------------------------------------
+   Preset cards
+-------------------------------------------------------------------------- */
+.hl-preset-card { flex: 0 0 176px; }
+.hl-sample {
+  border-radius: var(--radius-xs);
+  background: linear-gradient(135deg, #3A3A42 0%, #141417 55%, #26262C 100%);
+  overflow: hidden;
+  line-height: 0;
+}
+.hl-sample canvas { width: 100%; height: auto; display: block; }
+
+.sub-section[hidden] { display: none; }

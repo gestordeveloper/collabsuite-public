@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Collabsuite</title>
+
+  <!-- Aplica o tema antes do primeiro paint (evita flash claro). Escuro é o padrão. -->
+  <script>
+    try {
+      var d = localStorage.getItem("collab_dark");
+      if (d === null || d === "true") document.documentElement.classList.add("dark");
+      var c = localStorage.getItem("collab_color");
+      if (c && c.toLowerCase() !== "#4f46e5") document.documentElement.style.setProperty("--primary", c);
+    } catch (e) { document.documentElement.classList.add("dark"); }
+  </script>
+  <style>html{background:#0B0B0D}html:not(.dark){background:#F6F6F8}</style>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon-16x16.png" />
+  <link rel="icon" type="image/png" href="/assets/images/icon.png" />
+
+  <!-- PWA / Mobile -->
+  <meta name="theme-color" content="#0B0B0D" />
+  <meta name="color-scheme" content="dark light" />
+  <meta name="description" content="Sistema completo para gerenciar projetos, tarefas (Kanban), reunioes e agenda integrada, com colaboracao em tempo real." />
+  <meta name="application-name" content="Collabsuite" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Collabsuite" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="format-detection" content="telephone=no" />
+
+  <!-- Apple touch icon -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/apple-touch-icon-180x180.png" />
+  <link rel="apple-touch-icon" href="/assets/images/apple-touch-icon.png" />
+
+  <!-- Splash screens -->
+  <link rel="apple-touch-startup-image" href="/assets/images/pwa-512x512.png" />
+
+  <!-- Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Material+Icons" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+
+</html>

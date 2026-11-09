@@ -1,0 +1,89 @@
+/* LUT, zoom on the cuts, transitions: see js/fx.js and js/looks.js */
+
+/* ---- the preview canvas that replaces the <video> while a LUT / zoom / transition needs drawing ---- */
+.fx-canvas { position: absolute; left: 0; top: 0; width: 100%; height: 100%; object-fit: contain; pointer-events: none; z-index: 0; }
+.fx-veil { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+
+/* ---- templates tab: saved templates that can be applied to the open video ---- */
+.tpl-list { display: flex; flex-direction: column; gap: 8px; }
+.tpl-card { display: flex; flex-direction: column; gap: 6px; padding: 10px 12px; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); }
+.tpl-card.is-default { border-color: var(--accent); }
+.tpl-card-head { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.tpl-card-name { flex: 1; min-width: 0; font-weight: 600; font-size: var(--fs-small); color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tpl-badge { font-size: 10px; padding: 1px 6px; border-radius: 999px; background: var(--pink-soft); color: var(--accent); }
+.tpl-card-info { margin: 0; font-size: 11px; line-height: 1.4; color: var(--text-muted); }
+.tpl-card-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+
+/* ---- LUT cards ---- */
+.lut-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+.lut-card { position: relative; display: flex; flex-direction: column; gap: 5px; padding: 6px; cursor: pointer; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); transition: border-color 0.15s, background 0.15s; min-width: 0; }
+.lut-card:hover { background: var(--bg-surface-hover); border-color: var(--border-medium); }
+.lut-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.lut-card.active { border-color: var(--accent); background: var(--pink-soft); }
+.lut-sw { display: flex; height: 26px; border-radius: 3px; overflow: hidden; }
+.lut-sw i { flex: 1; display: block; }
+.lut-sw i.lut-none { flex: 1; display: flex; align-items: center; justify-content: center; font-style: normal; font-size: 10px; color: var(--text-muted); background: repeating-linear-gradient(45deg, rgba(255,255,255,.04) 0 6px, transparent 6px 12px); }
+.lut-name { font-size: 11px; font-weight: 600; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lut-del { position: absolute; top: 3px; right: 3px; width: 18px; height: 18px; border-radius: 50%; border: 0; background: rgba(0, 0, 0, 0.7); color: #fff; font-size: 10px; line-height: 18px; padding: 0; cursor: pointer; opacity: 0; }
+.lut-card:hover .lut-del, .lut-del:focus-visible { opacity: 1; }
+#lut-strength-box { margin-top: 10px; }
+
+/* ---- demo of a transition ---- */
+.tx-demo-box { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); }
+.tx-demo-stage { position: relative; display: flex; border-radius: 6px; overflow: hidden; background: #000; box-shadow: 0 0 0 1px var(--border-medium); max-width: 100%; }
+.tx-demo-stage canvas { display: block; width: 100%; max-width: 100%; height: auto; max-height: 190px; }
+.tx-demo-stage canvas.portrait { width: auto; height: 190px; }
+.tx-demo-veil { position: absolute; inset: 0; pointer-events: none; opacity: 0; }
+.tx-demo-label { font-family: var(--font-heading); font-weight: 600; font-size: 12px; color: var(--text-primary); min-height: 16px; }
+.tx-card-body { display: flex; gap: 10px; align-items: flex-start; }
+.tx-card-icon { font-size: 18px; line-height: 1.1; flex-shrink: 0; }
+
+/* --- Transitions: library buttons, builder, sound, popover of one cut (js/transitions.js) --- */
+.fx-overlay { position: absolute; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; z-index: 2; }
+.tx-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.tx-actions:first-child { margin-top: 0; }
+.tx-card-actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.tx-card-btn { background: transparent; border: 1px solid var(--line-strong, #33333A); color: var(--text-secondary); border-radius: 6px; padding: 2px 8px; font-size: 11px; cursor: pointer; }
+.tx-card-btn:hover { color: var(--text-primary); border-color: var(--accent); }
+.tx-sound-extra { display: none; margin-top: 8px; }
+#tx-sound-box.has-sound .tx-sound-extra { display: block; }
+.tx-builder-card { max-width: 560px; width: calc(100vw - 32px); max-height: calc(100vh - 32px); display: flex; flex-direction: column; }
+.tx-builder-card .modal-body { overflow-y: auto; }
+.tx-b-top { display: flex; gap: 14px; align-items: flex-start; flex-wrap: wrap; margin-bottom: 8px; }
+.tx-b-top .tx-demo-stage { flex: 0 0 auto; }
+.tx-b-meta { flex: 1 1 160px; min-width: 150px; }
+.tx-fx { border: 1px solid var(--line-strong, #33333A); border-radius: 10px; padding: 10px 12px; margin-bottom: 10px; background: rgba(255,255,255,.02); }
+.tx-fx-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+.tx-media-row { display: flex; gap: 8px; align-items: center; }
+.tx-media-row select { flex: 1; min-width: 0; }
+.tx-warn { color: #ffb86b; }
+.tx-warn:empty { display: none; }
+.clip-transition-badge { pointer-events: auto; cursor: pointer; }
+.clip-transition-badge:hover { transform: translateY(-50%) scale(1.25); }
+.clip-transition-badge.custom { background: #fff; color: var(--accent); box-shadow: 0 0 0 2px var(--accent); }
+.cut-pop { position: fixed; z-index: 1200; width: 280px; max-width: calc(100vw - 16px); background: var(--surface-2, #1B1B1F); border: 1px solid var(--line-strong, #33333A);
+  border-radius: 12px; padding: 12px; box-shadow: 0 12px 40px rgba(0,0,0,.55); }
+.cut-pop-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+.cut-pop-actions { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+
+/* --- Split-screen lane of the timeline (js/splitscreen.js) --- */
+:root { --split-color: var(--teal); }
+.track-split { height: 44px; }
+.track-split .track-content { overflow: hidden; }
+.track-split .track-label { flex-direction: column; gap: 2px; padding: 0 4px; box-sizing: border-box; border-left: 3px solid var(--split-color); }
+.track-split .tl-name { font-size: 9px; white-space: nowrap; color: var(--split-color); }
+.track-split .track-content.empty::after { content: attr(data-hint); position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 11px; color: var(--text-muted); white-space: nowrap; pointer-events: none; }
+.split-clip { position: absolute; top: 3px; border: 1.5px solid var(--split-color); border-radius: var(--radius-xs); overflow: hidden; cursor: grab;
+  box-sizing: border-box; user-select: none; background: color-mix(in srgb, var(--split-color) 18%, var(--surface-0)); }
+.split-clip.fixed { cursor: pointer; }
+.split-clip img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .55; pointer-events: none; }
+.split-clip:hover img { opacity: .75; }
+.split-clip.selected { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); z-index: 5; }
+.sc-label { position: absolute; left: 6px; right: 6px; bottom: 3px; font-size: 10px; font-weight: 600; color: #fff; text-shadow: 0 1px 3px #000, 0 0 2px #000;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; pointer-events: none; }
+.sc-handle { position: absolute; top: 0; bottom: 0; width: 6px; cursor: ew-resize; z-index: 2; }
+.sc-handle.left { left: 0; }
+.sc-handle.right { right: 0; }
+.sc-handle:hover { background: rgba(255,255,255,.35); }
+.split-clip.fixed .sc-handle { display: none; }
+.split-clip.tiny .sc-label, .split-clip.tiny .sc-handle { display: none; }

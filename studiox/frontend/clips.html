@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0B0B0D">
+  <title>Cortes com IA | StudioX</title>
+  <link rel="icon" type="image/svg+xml" href="images/icon.svg">
+  <meta name="description" content="Envie uma gravação longa: a IA lê a transcrição, acha os melhores trechos e cada corte vira um projeto com legenda e título, pronto para o ajuste fino.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/tokens.css?v=1">
+  <link rel="stylesheet" href="css/studio.css?v=8">
+  <link rel="stylesheet" href="css/pages.css?v=15">
+  <link rel="stylesheet" href="css/clips.css?v=2">
+  <link rel="stylesheet" href="css/embed.css?v=1">
+  <script src="js/embed.js?v=1"></script>
+</head>
+<body class="dark-theme page-body">
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Navegação principal">
+      <a href="/studiox/" class="sidebar-brand brand-link" title="StudioX" aria-label="StudioX">
+        <img src="images/logo-white.svg" alt="StudioX" class="brand-logo">
+        <img src="images/icon.svg" alt="" class="brand-icon">
+      </a>
+      <nav class="sidebar-nav" aria-label="Telas">
+        <span class="nav-label">Workspace</span>
+        <a href="/studiox/" class="nav-item" title="Projetos">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="9" rx="1.5"></rect><rect x="14" y="3" width="7" height="5" rx="1.5"></rect><rect x="14" y="12" width="7" height="9" rx="1.5"></rect><rect x="3" y="16" width="7" height="5" rx="1.5"></rect></svg>
+          <span class="nav-text">Projetos</span>
+        </a>
+        <a href="/studiox/clips.html" class="nav-item active" title="Cortes com IA" aria-current="page">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path></svg>
+          <span class="nav-text">Cortes com IA</span>
+        </a>
+        <a href="/studiox/queue.html" class="nav-item" title="Fila de edição">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h11M4 12h11M4 18h7"></path><path d="m18 14 4 3-4 3z"></path></svg>
+          <span class="nav-text">Fila de edição</span><span class="nav-count" id="nav-queue-count"></span>
+        </a>
+        <a href="/studiox/editor.html" class="nav-item" title="Editor">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6" cy="6" r="3"></circle><circle cx="6" cy="18" r="3"></circle><path d="M20 4 8.12 15.88M14.47 14.48 20 20M8.12 8.12 12 12"></path></svg>
+          <span class="nav-text">Editor</span>
+        </a>
+        <a href="/studiox/settings.html" class="nav-item" title="Configurações">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"></path><circle cx="15" cy="6" r="2"></circle><circle cx="9" cy="12" r="2"></circle><circle cx="17" cy="18" r="2"></circle></svg>
+          <span class="nav-text">Configurações</span>
+        </a>
+      </nav>
+    </aside>
+
+    <div class="app-main">
+      <header class="app-header">
+        <div class="header-left">
+          <nav class="crumbs" aria-label="Você está em"><span class="crumb-root">StudioX</span><span class="crumb-sep">/</span><span class="crumb-current">Cortes com IA</span></nav>
+        </div>
+        <div class="header-right">
+          <a href="/studiox/queue.html" class="btn btn-secondary btn-sm">Ver a fila de edição</a>
+        </div>
+      </header>
+
+      <div class="page-scroll">
+        <main class="page-main">
+          <div class="page-head">
+            <div>
+              <h1 class="page-title">Cortes com IA</h1>
+              <p class="page-sub">Envie uma gravação longa. A IA lê a transcrição, acha os melhores trechos e cada corte vira um projeto com a legenda e o título do template, pronto para o ajuste fino no editor.</p>
+            </div>
+          </div>
+
+          <div id="outdated" class="info-alert sub-notice warn" hidden style="margin-bottom:16px">
+            O servidor do StudioX está rodando uma versão antiga e não tem os cortes com IA. Feche a janela do servidor (start.bat / run.py), abra de novo e recarregue esta página com Ctrl+F5.
+          </div>
+
+          <div class="clips-layout">
+            <div class="stack">
+              <!-- 1. The long video -->
+              <section class="pcard">
+                <div class="pcard-title">
+                  <span>1. Vídeo longo</span>
+                  <select id="video-select" class="text-input video-select" title="Vídeos longos que você já enviou"><option value="">Vídeos já enviados…</option></select>
+                </div>
+
+                <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="Escolher o vídeo longo">
+                  <div><strong>Arraste o vídeo longo aqui</strong> ou clique para escolher</div>
+                  <div class="muted" style="margin-top:4px">MP4, MOV, MKV, WEBM ou AVI. Pode ter 20 minutos, 1 hora, 2 horas.</div>
+                  <input type="file" id="file-input" accept="video/*,.mkv,.mov" hidden>
+                </div>
+
+                <div id="upload-box" class="upload-box" hidden>
+                  <div class="upload-head"><span id="upload-name" class="upload-name"></span><span id="upload-pct" class="mono"></span></div>
+                  <div class="progress-bar-container"><div class="progress-bar-fill" id="upload-bar" style="width: 0%;"></div></div>
+                  <div id="upload-msg" class="field-hint"></div>
+                </div>
+
+                <div id="video-card" class="video-card" hidden>
+                  <div class="video-thumb"><img id="video-thumb" alt=""></div>
+                  <div class="video-info">
+                    <div id="video-name" class="video-name"></div>
+                    <div id="video-meta" class="video-meta"></div>
+                    <div id="video-chips" class="video-chips"></div>
+                  </div>
+                </div>
+              </section>
+
+              <!-- 2. What the person wants -->
+              <section class="pcard" id="card-config" hidden>
+                <div class="pcard-title"><span>2. O que você quer</span></div>
+
+                <div class="form-group">
+                  <label>Tipo de corte</label>
+                  <div class="seg-toggle" id="mode">
+                    <button type="button" data-mode="viral" class="active">Cortes virais</button>
+                    <button type="button" data-mode="topics">Um corte por assunto</button>
+                  </div>
+                  <span class="field-hint" id="mode-hint"></span>
+                </div>
+
+                <div class="form-group">
+                  <label>Duração de cada corte</label>
+                  <div class="dur-chips" id="dur-chips"></div>
+                  <div class="dur-range">
+                    <span>de</span><input type="number" id="min-s" class="text-input" min="10" max="600" step="5">
+                    <span>a</span><input type="number" id="max-s" class="text-input" min="15" max="900" step="5">
+                    <span>segundos</span>
+                  </div>
+                </div>
+
+                <div class="form-grid-2">
+                  <div class="form-group">
+                    <label for="count">Quantos cortes</label>
+                    <select id="count" class="text-input"></select>
+                  </div>
+                  <div class="form-group">
+                    <label for="focus">Foco (opcional)</label>
+                    <input type="text" id="focus" class="text-input" maxlength="200" placeholder="Ex.: dicas de vendas, histórias pessoais" spellcheck="false">
+                  </div>
+                </div>
+
+                <details class="adv">
+                  <summary>Opções avançadas</summary>
+                  <div class="form-grid-2" style="margin-top:12px">
+                    <div class="form-group">
+                      <label for="language">Idioma da fala</label>
+                      <select id="language" class="text-input"><option value="pt">Português</option><option value="en">Inglês</option><option value="es">Espanhol</option></select>
+                    </div>
+                    <div class="form-group">
+                      <label for="engine">Transcrição (se o vídeo ainda não tiver)</label>
+                      <select id="engine" class="text-input"><option value="auto">Automático</option><option value="elevenlabs">ElevenLabs Scribe</option><option value="groq">Groq Whisper (large-v3)</option><option value="groq_turbo">Groq Whisper (turbo, mais rápido)</option><option value="whisper">Whisper local</option></select>
+                    </div>
+                  </div>
+                  <div class="form-group" style="margin-top:12px">
+                    <label for="ai-select">IA que escolhe os cortes</label>
+                    <select id="ai-select" class="text-input"></select>
+                    <span class="field-hint" id="ai-hint"></span>
+                  </div>
+                  <div class="form-group" style="margin-top:12px">
+                    <label for="instructions">Instruções extras para a IA (opcional)</label>
+                    <textarea id="instructions" class="text-input" rows="3" maxlength="600" spellcheck="false" placeholder="Ex.: prefira cortes com humor; evite qualquer trecho que cite preço."></textarea>
+                  </div>
+                </details>
+
+                <div class="analyze-bar">
+                  <span class="muted" id="analyze-hint"></span>
+                  <button id="btn-analyze" class="btn btn-accent">Analisar com IA</button>
+                </div>
+              </section>
+
+              <!-- 3. Progress and the cuts found -->
+              <section class="pcard" id="card-results" hidden>
+                <div class="pcard-title"><span>3. Cortes encontrados</span><span class="badge badge-dim" id="engine-badge" hidden></span></div>
+
+                <div id="run-box" class="run-box" hidden>
+                  <img src="images/loader.gif" alt="" class="loader loader-lg">
+                  <div class="run-body">
+                    <div id="run-stage" class="run-stage"></div>
+                    <div id="run-msg" class="run-msg"></div>
+                    <div class="progress-bar-container"><div class="progress-bar-fill" id="run-bar" style="width: 0%;"></div></div>
+                    <details class="run-log"><summary>Ver o que está acontecendo</summary><pre id="run-log"></pre></details>
+                  </div>
+                  <button id="btn-cancel" class="btn btn-ghost btn-sm">Cancelar</button>
+                </div>
+
+                <div id="error-box" class="info-alert sub-notice warn" hidden></div>
+                <div id="warn-box" class="info-alert sub-notice warn" hidden></div>
+
+                <div id="results" hidden>
+                  <div class="res-toolbar">
+                    <div><strong id="res-count"></strong> <span class="muted" id="res-sel"></span></div>
+                    <div class="res-actions">
+                      <select id="sort" class="text-input" title="Ordem da lista"><option value="score">Melhor nota primeiro</option><option value="time">Ordem no vídeo</option></select>
+                      <button id="btn-sel-all" class="btn btn-ghost btn-xs">Todos</button>
+                      <button id="btn-sel-top" class="btn btn-ghost btn-xs">Só nota 80+</button>
+                      <button id="btn-sel-none" class="btn btn-ghost btn-xs">Nenhum</button>
+                    </div>
+                  </div>
+                  <div id="cand-list" class="cand-list"></div>
+
+                  <div class="create-bar">
+                    <div class="form-group create-tpl">
+                      <label for="tpl-select">Template aplicado aos cortes</label>
+                      <select id="tpl-select" class="text-input"></select>
+                      <span class="field-hint" id="tpl-hint"></span>
+                    </div>
+                    <button id="btn-create" class="btn btn-accent btn-lg">Criar projetos</button>
+                  </div>
+                  <div id="create-status" class="create-status" hidden></div>
+                </div>
+              </section>
+            </div>
+
+            <!-- Preview of the long video: plays the chosen stretch -->
+            <aside class="stack clips-side">
+              <section class="pcard">
+                <div class="pcard-title"><span>Prévia do trecho</span></div>
+                <div class="preview-stage"><video id="preview" controls playsinline preload="metadata"></video></div>
+                <div id="preview-label" class="field-hint">Use “Ver” em um corte para tocar só aquele trecho do vídeo longo.</div>
+              </section>
+            </aside>
+          </div>
+        </main>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="js/icons.js?v=1"></script>
+  <script src="js/common.js?v=2"></script>
+  <script src="js/headlines.js?v=3"></script>
+  <script src="js/clips.js?v=4"></script>
+</body>
+</html>

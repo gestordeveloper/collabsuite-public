@@ -1,0 +1,19 @@
+node_modules/
+build/
+dist/
+dev-dist/
+coverage/
+.DS_Store
+*.log
+.env*
+!.env.example
+uploads/
+
+# StudioX (editor de vídeo): dados do usuário, venv local e dependências do sidecar Remotion
+studiox/storage/
+studiox/.venv/
+studiox/motion/node_modules/
+studiox/motion/.bundle/
+__pycache__/
+# Gravações das sessões SSH (conteúdo sensível: nunca versionar)
+.ssh-recordings/
